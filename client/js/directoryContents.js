@@ -67,7 +67,7 @@ function createFileElement(name, size, path) {
 	fileElement.querySelector(".name").innerText = getFileName(name);
 	fileElement.querySelector(".extension").innerText = getFileExtension(name);
 	fileElement.querySelector(".size").innerText = getFileSizeWithPrefix(size);
-	fileElement.querySelector("a").setAttribute("href", "/download?path=" + encodeURIComponent(getCookie("path") + name));
+	fileElement.querySelector("a").setAttribute("href", "/download?path=" + encodeURIComponent(window.location.pathname + name));
 	fileElement.querySelector("a").setAttribute("target", "_blank");
 	fileElement.querySelector(".path").innerText = path;
 
