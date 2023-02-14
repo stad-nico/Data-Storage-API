@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { Socket } from "socket.io";
 
 const { randomUUID } = require("crypto");
@@ -25,17 +25,22 @@ fs.watch(dpath, { recursive: true }, function (event, name) {
 
 app.use(express.static(path.join(__dirname, "..", "client")));
 
+app.get("/download", function (req: Request, res: Response) {
+	res.send("hi");
+	try {
+		let fullPath = path.join(dpath, req.query.path);
+		let filename = fullPath.match(/[^/\\]+$/im)[0];
+		console.log(fullPath, filename);
+		res.download(fullPath, filename, { dotfiles: "allow" });
+	} catch (e) {
+		console.log(e);
+	}
+});
+
 app.get("*", function (req: Request, res: Response) {
 	res.sendFile("index.html", {
 		root: path.join(__dirname, "..", "client"),
 	});
-});
-
-app.get("/download", function (req: Request, res: Response) {
-	let fullPath = path.join(dpath, req.query.path);
-	let filename = fullPath.match(/[^/\\]+$/im)[0];
-	console.log(fullPath, filename);
-	res.download(fullPath, filename, { dotfiles: "allow" });
 });
 
 io.on("connection", function (socket: Socket) {
