@@ -16,6 +16,10 @@
 		}
 	}
 
+	*:not(.icon) {
+		pointer-events: none;
+	}
+
 	.extension {
 		color: rgb(169, 174, 199);
 
