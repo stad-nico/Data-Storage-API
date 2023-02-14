@@ -26,7 +26,6 @@ fs.watch(dpath, { recursive: true }, function (event, name) {
 app.use(express.static(path.join(__dirname, "..", "client")));
 
 app.get("/download", function (req: Request, res: Response) {
-	res.send("hi");
 	try {
 		let fullPath = path.join(dpath, req.query.path);
 		let filename = fullPath.match(/[^/\\]+$/im)[0];
