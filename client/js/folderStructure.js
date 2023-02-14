@@ -1,7 +1,7 @@
 import { getCookie, setCookie } from "./cookies.js";
 import setInteractivePath from "./interactivePath.js";
 import { load } from "./navigation.js";
-import { createDraggable } from "./dropzone.js";
+import { makeDraggable, makeDropZone } from "./dropzone.js";
 
 export function createFolderStructureElement(parentDirectoryElement, name, relPath, hasSubDirectories) {
 	let template = document.querySelector("#folder-structure-folder-template");
@@ -44,7 +44,8 @@ export function createFolderStructureElement(parentDirectoryElement, name, relPa
 		});
 	});
 
-	createDraggable(folder.querySelector(".head"));
+	makeDraggable(folder.querySelector(".head"));
+	makeDropZone(folder.querySelector(".head"));
 
 	parentDirectoryElement.querySelector(".content").appendChild(folder);
 
@@ -72,7 +73,8 @@ export function createDefaultDirectoryElement() {
 		toggleFolder(this.closest(".collapsable-folder-structure-element"));
 	});
 
-	createDraggable(folder.querySelector(".head"));
+	makeDraggable(folder.querySelector(".head"));
+	makeDropZone(folder.querySelector(".head"));
 
 	document.querySelector("#folder-structure").appendChild(folder);
 }

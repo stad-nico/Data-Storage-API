@@ -1,14 +1,15 @@
 // block the "move/copy/etc allowed" visuals for external files
-window.addEventListener(
-	"dragover",
-	function (e) {
-		e = e || event;
-		e.preventDefault();
-		e.dataTransfer.dropEffect = "none";
-		e.dataTransfer.effectAllowed = "none";
-	},
-	false
-);
+// window.addEventListener("dragover", () => console.log("over"));
+const DRAG_SOURCE_ATTRIBUTE = "data-drag-source";
+const DRAG_HOVER_CSS_CLASS = "drag-hover";
+
+window.addEventListener("dragenter", function (e) {
+	if (!e.target.hasAttribute("data-drop-zone")) {
+		this.addEventListener("dragover", preventDroppingContentsFromOtherWindows);
+	} else {
+		this.removeEventListener("dragover", preventDroppingContentsFromOtherWindows);
+	}
+});
 
 window.addEventListener("drop", function (e) {
 	e.preventDefault();
@@ -16,131 +17,89 @@ window.addEventListener("drop", function (e) {
 	e.dataTransfer.dropEffect = "none";
 });
 
-export function createDraggable(element) {
+export function makeDraggable(element) {
 	element.setAttribute("draggable", true);
 
-	element.addEventListener("dragover", block_2);
+	element.addEventListener("dragstart", e => markAsDragSourceElement(e.target));
 
-	element.addEventListener("dragstart", function (e) {
-		this.classList.add("drag-hover");
-		e.dataTransfer.setData("path", this.querySelector(".path").innerText);
-		e.dataTransfer.setData("class", this.getAttribute("data-drag-class"), "");
-
-		e.dataTransfer.effectAllowed = "all";
-		e.dataTransfer.setDragImage(this.querySelector(".file-icon") || this.querySelector(".folder-icon"), 0, 0);
-	});
-
-	element.addEventListener("dragenter", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		this.classList.add("drag-hover");
-
-		if (this.classList.contains("file")) {
-			this.removeEventListener("dragover", block_2);
-			this.closest("#directory-contents").removeEventListener("dragover", block);
-		} else if (
-			e.dataTransfer.types[0] === this.getAttribute("data-drag-class") &&
-			e.dataTransfer.types[1] === this.querySelector(".path").innerText
-		) {
-			this.removeEventListener("dragover", block_2);
-		} else {
-			this.addEventListener("dragover", block_2);
-		}
-	});
-
-	element.addEventListener("dragend", function (e) {
-		this.classList.remove("drag-hover");
-	});
-
-	element.addEventListener("dragleave", function (e) {
-		if (e.dataTransfer.types[0] !== this.getAttribute("data-drag-class") || e.dataTransfer.types[1] !== this.querySelector(".path").innerText) {
-			this.classList.remove("drag-hover");
-		}
-
-		if (this.classList.contains("file")) {
-			this.closest("#directory-contents").addEventListener("dragover", block);
-		}
-		e.stopPropagation();
-	});
-
-	element.addEventListener("drop", function (e) {
-		let oldPath = e.dataTransfer.getData("path");
-		let o = oldPath.match(/[^\/]+\/$/gim)[0];
-		let newPath = this.querySelector(".path").innerText + o;
-
-		if (oldPath === newPath) {
-			return;
-		}
-
-		window.socket.emit("rename-directory", oldPath, newPath, function (error) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log("successfully moved directory");
-			}
-		});
+	element.addEventListener("dragend", function () {
+		removeDragSourceAttribute(this);
+		removeDragHoverCSSClass(this);
 	});
 }
 
-export function createDropzoneForExternalOnly(element) {
-	// mark as valid drop zone
-	element.addEventListener("dragover", block);
-	element.addEventListener("dragenter", function (e) {
-		// only allow external files to be dropped
-		if (e?.dataTransfer?.types[0] === "Files" || e?.dataTransfer?.types[0] === "out") {
-			this.classList.add("drag-hover");
-		} else {
-			this.classList.remove("drag-hover");
-		}
-	});
+export function makeDropZone(element, allowOnlyExternalDrops = false) {
+	element.setAttribute("data-drop-zone", true);
 
-	element.addEventListener("dragend", function (e) {
-		e.dataTransfer.effectAllowed = "none";
-		this.classList.remove("drag-hover");
-	});
+	element.addEventListener("dragenter", e => e.preventDefault());
 
-	element.addEventListener("dragleave", function (e) {
-		e.dataTransfer.effectAllowed = "none";
-		this.classList.remove("drag-hover");
-	});
+	if (allowOnlyExternalDrops) {
+		element.addEventListener("dragover", allowDropIfExternalContent);
+	} else {
+		element.addEventListener("dragover", allowDropIfNotDragSourceElement);
+	}
 
-	element.addEventListener("drop", function (e) {
-		e.preventDefault();
+	element.addEventListener("dragleave", e => removeDragHoverCSSClassIfNotDragSourceElement(e.target));
 
-		this.classList.remove("drag-hover");
-
-		let oldPath = e.dataTransfer.getData("path");
-		let o = oldPath.match(/[^\/]+\/$/gim)[0];
-		let newPath = window.location.pathname + o;
-
-		if (oldPath === newPath) {
-			return;
-		}
-
-		window.socket.emit("rename-directory", oldPath, newPath, function (error) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log("successfully moved directory");
-			}
-		});
-	});
-
-	let content = element.querySelector("#contents");
-
-	content.addEventListener("dragenter", function (e) {
-		e.stopPropagation();
-		this.closest("#directory-contents").removeEventListener("dragover", block);
-	});
+	element.addEventListener("drop", drop);
 }
 
-function block(e) {
-	e.preventDefault();
-	e.stopPropagation();
+function drop(event) {
+	removeDragHoverCSSClass(event.target);
+
+	// dragging from other windows doesnt set a data-drag-source as no dragstart event is fired
+	let dragSourceElement = document.querySelector(`*[${DRAG_HOVER_CSS_CLASS}]`);
+	if (dragSourceElement) {
+		removeDragHoverCSSClass(dragSourceElement);
+		removeDragSourceAttribute(dragSourceElement);
+	}
 }
 
-function block_2(e) {
-	e.preventDefault();
-	e.stopPropagation();
-	this.classList.add("drag-hover");
+function removeDragSourceAttribute(element) {
+	element.removeAttribute(DRAG_SOURCE_ATTRIBUTE);
+}
+
+function preventDroppingContentsFromOtherWindows(event) {
+	event.preventDefault();
+	event.dataTransfer.dropEffect = "none";
+	event.dataTransfer.effectAllowed = "none";
+}
+
+function removeDragHoverCSSClassIfNotDragSourceElement(element) {
+	if (!element.hasAttribute(DRAG_SOURCE_ATTRIBUTE)) {
+		removeDragHoverCSSClass(element);
+	}
+}
+
+function removeDragHoverCSSClass(element) {
+	element.classList.remove(DRAG_HOVER_CSS_CLASS);
+}
+
+function allowDropIfExternalContent(event) {
+	if (
+		!document.querySelector(`*[${DRAG_SOURCE_ATTRIBUTE}]`) ||
+		!document.querySelector("#directory-contents #contents").contains(document.querySelector(`*[${DRAG_SOURCE_ATTRIBUTE}`))
+	) {
+		allowDropIfNotDragSourceElement(event);
+	} else {
+		removeDragHoverCSSClass(this);
+	}
+}
+
+function allowDropIfNotDragSourceElement(event) {
+	if (!event.target.hasAttribute(DRAG_SOURCE_ATTRIBUTE) && !event.target.classList.contains("file")) {
+		allowDrop(event);
+	}
+}
+
+function allowDrop(event) {
+	if (!event.target.classList.contains(DRAG_HOVER_CSS_CLASS)) {
+		event.target.classList.add(DRAG_HOVER_CSS_CLASS);
+	}
+	event.preventDefault();
+}
+
+function markAsDragSourceElement(elem) {
+	elem.classList.add(DRAG_HOVER_CSS_CLASS);
+	elem.setAttribute(DRAG_SOURCE_ATTRIBUTE, true);
 }
