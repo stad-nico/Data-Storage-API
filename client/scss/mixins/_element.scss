@@ -30,12 +30,12 @@
 	}
 
 	&.drag-hover {
-		.delete-icon {
-			display: none;
-		}
-
 		* {
 			pointer-events: none;
+		}
+
+		&:not([data-drag-source]) .delete-icon {
+			display: none;
 		}
 	}
 
