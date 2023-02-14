@@ -16,7 +16,7 @@
 		}
 	}
 
-	*:not(.icon) {
+	> *:not(.icon) {
 		pointer-events: none;
 	}
 
