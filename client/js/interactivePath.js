@@ -16,7 +16,7 @@ export default function setInteractivePath(value) {
 			let interactivePathComponent = this.closest(".interactive-path-component");
 
 			if (interactivePathElement.lastChild !== interactivePathComponent) {
-				let newPath = getCompleteRelativePathFromInteractivePathComponent(interactivePathComponent);
+				getCompleteRelativePathFromInteractivePathComponent(interactivePathComponent);
 			}
 		});
 	}
@@ -27,6 +27,8 @@ function createInteractivePathComponent(value) {
 
 	let interactivePathComponent = template.content.cloneNode(true).querySelector("div.interactive-path-component");
 	interactivePathComponent.querySelector(".value").innerText = value;
+	let completePath = getCompleteRelativePathFromInteractivePathComponent(interactivePathComponent) + value;
+	interactivePathComponent.querySelector(".path").innerText = completePath.endsWith("/") ? completePath : completePath + "/";
 	interactivePathComponent.addEventListener("click", function (e) {
 		let path = getCompleteRelativePathFromInteractivePathComponent(this);
 		window.history.pushState(path, "", path);
