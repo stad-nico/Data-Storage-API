@@ -13,7 +13,7 @@ import sendDirectoryContents from "./src/sendDirectoryContents";
 import sendDirectoryFolderStructureRecursive from "./src/sendDirectoryFolderStructure";
 import createDirectory from "./src/createDirectory";
 import deleteDirectory from "./src/deleteDirectory";
-import renameDirectory from "./src/renameDirectory";
+import rename from "./src/rename";
 import copyDirectory from "./src/copyDirectory";
 
 let dpath = "C:/Users/stadl/Desktop/File-Server/files/";
@@ -99,9 +99,9 @@ io.on("connection", function (socket: Socket) {
 		}
 	});
 
-	socket.on("rename-directory", async (oldPath: string, newPath: string, callback: (error?: unknown) => void) => {
+	socket.on("rename", async (oldPath: string, newPath: string, callback: (error?: unknown) => void) => {
 		try {
-			await renameDirectory(socket, dpath, oldPath, newPath);
+			await rename(socket, dpath, oldPath, newPath);
 			callback && callback();
 		} catch (error) {
 			callback && callback(error);

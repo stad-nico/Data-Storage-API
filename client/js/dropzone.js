@@ -45,14 +45,42 @@ export function makeDropZone(element, allowOnlyExternalDrops = false) {
 }
 
 function drop(event) {
+	event.preventDefault();
+	event.stopPropagation();
+
 	removeDragHoverCSSClass(event.target);
 
-	// dragging from other windows doesnt set a data-drag-source as no dragstart event is fired
-	let dragSourceElement = document.querySelector(`*[${DRAG_HOVER_CSS_CLASS}]`);
-	if (dragSourceElement) {
+	if (event.dataTransfer.types.includes("Files")) {
+		// dragging from other window!
+		console.log("EXTERNAL");
+	} else {
+		// dragging from other windows doesnt set a data-drag-source as no dragstart event is fired
+		let dragSourceElement = document.querySelector(`*[${DRAG_SOURCE_ATTRIBUTE}]`);
+
+		if (!dragSourceElement) {
+			console.error("something went wrong; no drag source element found");
+			return;
+		}
+
 		removeDragHoverCSSClass(dragSourceElement);
 		removeDragSourceAttribute(dragSourceElement);
+
+		let oldPath = dragSourceElement.querySelector(".path").innerText;
+		let part = oldPath.match(/[^\/]+\/?$/gim)[0];
+		let newPath = getPathFromDropZone(event.target) + part;
+
+		window.socket.emit("rename", oldPath, newPath, error => {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log("successfully moved content");
+			}
+		});
 	}
+}
+
+function getPathFromDropZone(element) {
+	return (element.querySelector(".path") || element.parentNode.querySelector(".path")).innerText;
 }
 
 function removeDragSourceAttribute(element) {
