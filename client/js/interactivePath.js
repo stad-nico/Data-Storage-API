@@ -1,5 +1,6 @@
 import { setCookie } from "./cookies.js";
 import { load } from "./navigation.js";
+import { makeDraggable, makeDropZone } from "./dropzone.js";
 
 export default function setInteractivePath(value) {
 	let interactivePathElement = document.querySelector("#interactive-path");
@@ -23,6 +24,7 @@ export default function setInteractivePath(value) {
 
 function createInteractivePathComponent(value) {
 	let template = document.querySelector("#interactive-path-component-template");
+
 	let interactivePathComponent = template.content.cloneNode(true).querySelector("div.interactive-path-component");
 	interactivePathComponent.querySelector(".value").innerText = value;
 	interactivePathComponent.addEventListener("click", function (e) {
@@ -30,6 +32,9 @@ function createInteractivePathComponent(value) {
 		window.history.pushState(path, "", path);
 		load();
 	});
+
+	makeDropZone(interactivePathComponent.querySelector(".value"));
+	makeDraggable(interactivePathComponent.querySelector(".value"));
 
 	return interactivePathComponent;
 }
