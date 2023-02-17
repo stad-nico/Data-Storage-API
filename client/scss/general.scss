@@ -1,5 +1,7 @@
 @use "./mixins/flex" as *;
 @import "./mixins/element";
+@import "./mixins/folder-icon";
+@import "./mixins/file-icon";
 
 * {
 	margin: 0;
@@ -30,4 +32,42 @@ body {
 
 .element {
 	@include element();
+}
+
+#drag-icon {
+	width: 52px;
+	height: 52px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	position: absolute;
+
+	background-color: white;
+	border-radius: 5px;
+
+	pointer-events: none;
+
+	opacity: 0.8;
+
+	&.folder {
+		& > .folder-icon.icon {
+			@include folder-icon-closed(white, false);
+			width: 48px;
+			height: 48px;
+			position: absolute;
+
+			--folder-icon-border-radius: 5px;
+		}
+	}
+
+	&.file {
+		& > .file-icon.icon {
+			@include file-icon(red, white);
+			width: 48px;
+			height: 48px;
+			position: absolute;
+		}
+	}
 }

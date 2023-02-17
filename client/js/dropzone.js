@@ -23,11 +23,16 @@ export function makeDraggable(element) {
 	element.addEventListener("dragstart", function (e) {
 		markAsDragSourceElement(e.target);
 		showTooltip(e);
+
+		document.addEventListener("dragover", updateTooltipPosition);
 	});
 
 	element.addEventListener("dragend", function () {
 		removeDragSourceAttribute(this);
 		removeDragHoverCSSClass(this);
+
+		document.removeEventListener("dragover", updateTooltipPosition);
+		hideTooltip();
 	});
 }
 
@@ -47,12 +52,44 @@ export function makeDropZone(element, allowOnlyExternalDrops = false) {
 	element.addEventListener("drop", drop);
 }
 
-function showTooltip(event) {}
+function showTooltip(event) {
+	let icon = document.querySelector("#drag-icon");
+	icon.style.display = "flex";
+
+	if (event.target.classList.contains("file")) {
+		icon.classList.add("file");
+		icon.classList.remove("folder");
+	} else if (
+		event.target.classList.contains("folder") ||
+		event.target.parentNode.classList.contains("interactive-path-component") ||
+		event.target.parentNode.classList.contains("collapsable-folder-structure-element")
+	) {
+		icon.classList.add("folder");
+		icon.classList.remove("file");
+	}
+
+	// set the data image to null to show nothing (drag image is translucent by default, so a workaround is needed)
+	event.dataTransfer.setDragImage(new Image(), 0, 0);
+	// display own icon at cursor position
+	icon.style.left = event.pageX + "px";
+	icon.style.top = event.pageY + "px";
+}
+
+function updateTooltipPosition(event) {
+	let icon = document.querySelector("#drag-icon");
+	icon.style.left = event.pageX + "px";
+	icon.style.top = event.pageY + "px";
+}
+
+function hideTooltip() {
+	document.querySelector("#drag-icon").style.display = "none";
+}
 
 function drop(event) {
 	event.preventDefault();
 	event.stopPropagation();
 
+	hideTooltip();
 	removeDragHoverCSSClass(event.target);
 
 	if (event.dataTransfer.types.includes("Files")) {

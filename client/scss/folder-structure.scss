@@ -33,10 +33,25 @@
 			&:hover + .content,
 			&.drag-hover + .content {
 				background-color: rgb(246, 249, 255);
+
+				.folder-icon .triangle {
+					border-color: rgb(246, 249, 255) transparent transparent transparent;
+				}
+			}
+
+			&:hover,
+			&.drag-hover {
+				.folder-icon {
+					@include folder-icon-opened(rgb(235, 240, 254), false);
+				}
+
+				.open-in-new-tab-icon {
+					display: block;
+				}
 			}
 
 			.folder-icon {
-				@include folder-icon-opened(false);
+				@include folder-icon-opened(rgb(246, 249, 255), false);
 			}
 
 			.expand-icon {
@@ -45,12 +60,13 @@
 		}
 	}
 
-	.head {
-		&:hover {
+	&:not(.open) .head {
+		&:hover,
+		&.drag-hover {
 			cursor: pointer;
 
-			.folder-icon div.back span.triangle {
-				border-color: rgb(235, 240, 254) transparent transparent transparent;
+			.folder-icon {
+				@include folder-icon-closed(rgb(235, 240, 254), false);
 			}
 
 			.name {
@@ -63,7 +79,7 @@
 		}
 
 		.folder-icon {
-			@include folder-icon-closed(false);
+			@include folder-icon-closed(white, false);
 		}
 
 		.expand-icon {
@@ -75,15 +91,15 @@
 				fill: rgb(57, 97, 237);
 			}
 		}
+	}
 
-		.open-in-new-tab-icon {
-			fill: rgb(169, 174, 199);
-			margin-left: auto;
-			display: none;
+	.open-in-new-tab-icon {
+		fill: rgb(169, 174, 199);
+		margin-left: auto;
+		display: none;
 
-			&:hover {
-				fill: rgb(57, 97, 237);
-			}
+		&:hover {
+			fill: rgb(57, 97, 237);
 		}
 	}
 

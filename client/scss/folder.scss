@@ -23,11 +23,11 @@
 		cursor: pointer;
 
 		.folder-icon {
-			@include folder-icon-opened;
+			@include folder-icon-opened(rgb(235, 240, 254), true);
 		}
 	}
 
 	.folder-icon {
-		@include folder-icon-open-on-hover;
+		@include folder-icon-open-on-hover(rgb(235, 240, 254), true);
 	}
 }
