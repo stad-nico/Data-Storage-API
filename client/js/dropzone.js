@@ -21,6 +21,11 @@ export function makeDraggable(element) {
 	element.setAttribute("draggable", true);
 
 	element.addEventListener("dragstart", function (e) {
+		if (!e.target.hasAttribute("draggable")) {
+			e.preventDefault();
+			return;
+		}
+
 		markAsDragSourceElement(e.target);
 		showTooltip(e);
 

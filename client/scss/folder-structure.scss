@@ -115,4 +115,12 @@
 
 		overflow: hidden;
 	}
+
+	.name {
+		pointer-events: none;
+	}
+
+	.folder-icon {
+		pointer-events: none;
+	}
 }

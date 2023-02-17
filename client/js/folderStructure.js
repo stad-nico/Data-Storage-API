@@ -73,7 +73,6 @@ export function createDefaultDirectoryElement() {
 		toggleFolder(this.closest(".collapsable-folder-structure-element"));
 	});
 
-	makeDraggable(folder.querySelector(".head"));
 	makeDropZone(folder.querySelector(".head"));
 
 	document.querySelector("#folder-structure").appendChild(folder);
