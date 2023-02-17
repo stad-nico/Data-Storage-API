@@ -1,3 +1,5 @@
+@import "./mixins/folder-icon.scss";
+
 #directory-contents {
 	position: relative;
 
@@ -29,5 +31,9 @@
 
 	&.drag-hover {
 		background-color: rgb(235, 240, 254);
+
+		*.folder-icon.icon .triangle {
+			border-color: rgb(235, 240, 254) transparent transparent transparent;
+		}
 	}
 }
