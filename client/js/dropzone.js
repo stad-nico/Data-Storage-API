@@ -20,7 +20,10 @@ window.addEventListener("drop", function (e) {
 export function makeDraggable(element) {
 	element.setAttribute("draggable", true);
 
-	element.addEventListener("dragstart", e => markAsDragSourceElement(e.target));
+	element.addEventListener("dragstart", function (e) {
+		markAsDragSourceElement(e.target);
+		showTooltip(e);
+	});
 
 	element.addEventListener("dragend", function () {
 		removeDragSourceAttribute(this);
@@ -43,6 +46,8 @@ export function makeDropZone(element, allowOnlyExternalDrops = false) {
 
 	element.addEventListener("drop", drop);
 }
+
+function showTooltip(event) {}
 
 function drop(event) {
 	event.preventDefault();
@@ -68,6 +73,11 @@ function drop(event) {
 		let oldPath = dragSourceElement.querySelector(".path").innerText;
 		let part = oldPath.match(/[^\/]+\/?$/gim)[0];
 		let newPath = getPathFromDropZone(event.target) + part;
+
+		console.log(oldPath, newPath);
+		if (oldPath === newPath) {
+			return;
+		}
 
 		window.socket.emit("rename", oldPath, newPath, error => {
 			if (error) {
