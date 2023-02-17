@@ -64,8 +64,15 @@ export function createDefaultDirectoryElement() {
 		openFolder(this.parentNode);
 	});
 
+	folder.querySelector(".head").ondragstart = e => {
+		e.preventDefault();
+	};
+
 	let openInNew = folder.querySelector(".open-in-new-tab-icon");
 	openInNew.setAttribute("href", "/");
+	openInNew.ondragstart = e => {
+		e.preventDefault();
+	};
 
 	folder.querySelector(".expand-icon").addEventListener("click", function (e) {
 		e.stopPropagation();
