@@ -31,7 +31,8 @@
 	&.open {
 		> .head {
 			&:hover + .content,
-			&.drag-hover + .content {
+			&.drag-hover + .content,
+			&.active + .content {
 				background-color: rgb(246, 249, 255);
 
 				.folder-icon .triangle {
@@ -40,7 +41,8 @@
 			}
 
 			&:hover,
-			&.drag-hover {
+			&.drag-hover,
+			&.active {
 				.folder-icon {
 					@include folder-icon-opened(rgb(235, 240, 254), false);
 				}

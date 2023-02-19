@@ -14,31 +14,29 @@ type FolderObject = {
 	contents?: FolderObject[];
 };
 
-export default async function sendDirectoryFolderStructureRecursive(socket: Socket, defaultDirectoryPath: string, relativePath: string) {
-	try {
-		let folderObjects: FolderObject[] = [];
+export async function sendDirectoryFolderStructure(socket: Socket, defaultDirectoryPath: string, relativePath: string) {
+	socket.emit("receive-directory-folder-structure", await getDirectoryFolderStructure(defaultDirectoryPath, relativePath, true));
+}
 
-		if (relativePath === "/") {
-			var paths = [""];
-		} else {
-			var paths = relativePath.replace(/\/$/gim, "").split("/");
-		}
+export async function sendDirectoryFolderStructureRecursive(socket: Socket, defaultDirectoryPath: string, relativePath: string) {
+	let folderObjects: FolderObject[] = [];
 
-		let rel = "/";
-
-		for (let part of paths) {
-			rel = path.join(rel, part).replaceAll("\\", "/");
-			folderObjects.push(await getDirectoryFolderStructure(defaultDirectoryPath, rel, true));
-		}
-
-		socket.emit("receive-directory-folder-structure-recursive", {
-			folderObjects: folderObjects,
-		});
-	} catch (error) {
-		if (isNodeJSErrnoException(error)) {
-			sendErrorMessageToSocket(socket, error.toString(), error.errno, error.code);
-		}
+	if (relativePath === "/") {
+		var paths = [""];
+	} else {
+		var paths = relativePath.replace(/\/$/gim, "").split("/");
 	}
+
+	let rel = "/";
+
+	for (let part of paths) {
+		rel = path.join(rel, part).replaceAll("\\", "/");
+		folderObjects.push(await getDirectoryFolderStructure(defaultDirectoryPath, rel, true));
+	}
+
+	socket.emit("receive-directory-folder-structure-recursive", {
+		folderObjects: folderObjects,
+	});
 }
 
 async function getDirectoryFolderStructure(defaultDirectoryPath: string, relPath: string, includeContents: boolean = false) {

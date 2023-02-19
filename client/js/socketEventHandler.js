@@ -1,5 +1,5 @@
 import { clearDirectoryContentElements, createDirectoryContentElement } from "./directoryContents.js";
-import { createFolderStructureElement, createDefaultDirectoryElement, clearFolderStructureElements } from "./folderStructure.js";
+import { createFolderStructureElement, createDefaultDirectoryElement, createFolderStructureElementRecursive } from "./folderStructure.js";
 import getFolderElementByPath from "./getFolderElementByPath.js";
 
 export default function registerSocketEventHandlers(socket) {
@@ -10,31 +10,62 @@ export default function registerSocketEventHandlers(socket) {
 		} else {
 			document.querySelector("#directory-contents #contents").classList.remove("empty");
 		}
-		for (let file of data) {
-			createDirectoryContentElement(file.name, file.size, file.path.replaceAll(/\\/gi, "/"), file.isDirectory);
+		for (let element of data) {
+			createDirectoryContentElement(element.name, element.size, element.path.replaceAll(/\\/gi, "/"), element.isDirectory);
 		}
 	});
 
 	socket.on("receive-directory-folder-structure-recursive", data => {
-		clearFolderStructureElements();
+		let parent;
 
-		for (let i = 0; i < data.folderObjects.length; i++) {
-			let object = data.folderObjects[i];
-			if (object.path === "/") {
-				createDefaultDirectoryElement();
+		for (let folderObject of data.folderObjects) {
+			if (getFolderElementByPath(folderObject.path)) {
+				parent = getFolderElementByPath(folderObject.path);
+			} else {
+				if (folderObject.path === "/") {
+					parent = createDefaultDirectoryElement();
+				} else {
+					parent = createFolderStructureElement(parent, folderObject.name, folderObject.path, folderObject.hasSubDirectories);
+				}
 			}
 
-			let folder = getFolderElementByPath(object.path);
-			folder.classList.add("open");
+			parent.classList.add("open");
+			if (folderObject.contents.length !== 0) {
+				parent.classList.remove("contents-not-loaded");
 
-			for (let elem of object.contents) {
-				createFolderStructureElement(folder, elem.name, elem.path, elem.hasSubDirectories);
+				for (let content of folderObject.contents) {
+					if (!getFolderElementByPath(content.path)) {
+						createFolderStructureElement(parent, content.name, content.path, content.hasSubDirectories);
+					}
+				}
 			}
 		}
 	});
 
-	socket.on("reload", () => {
+	socket.on("receive-directory-folder-structure", data => {
+		let folderElement = getFolderElementByPath(data.path);
+
+		for (let entry of data.contents) {
+			createFolderStructureElement(folderElement, entry.name, entry.path, entry.hasSubDirectories);
+		}
+	});
+
+	socket.on("deleted-directory", path => {
+		let folderElement = getFolderElementByPath(path);
+
+		if (folderElement) {
+			let parentFolderElement = folderElement.parentElement.closest(".collapsable-folder-structure-element");
+			getFolderElementByPath(path).remove();
+			if (parentFolderElement.querySelector(".content").childElementCount === 0) {
+				parentFolderElement.classList.add("no-contents");
+			}
+		}
+
 		socket.emit("send-directory-contents", window.location.pathname);
-		socket.emit("send-directory-folder-structure-recursive", window.location.pathname);
+	});
+
+	socket.on("created-directory", path => {
+		createFolderStructureElementRecursive(path, false);
+		socket.emit("send-directory-contents", window.location.pathname);
 	});
 }

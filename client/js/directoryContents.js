@@ -2,6 +2,7 @@ import { setCookie, getCookie } from "./cookies.js";
 import setInteractivePath from "./interactivePath.js";
 import { load } from "./navigation.js";
 import { makeDraggable, makeDropZone } from "./dropzone.js";
+import getFolderElementByPath from "./getFolderElementByPath.js";
 
 export function clearDirectoryContentElements() {
 	document.querySelector("#directory-contents #contents").replaceChildren();
@@ -46,6 +47,7 @@ function createFolderElement(name, path) {
 			return;
 		}
 
+		getFolderElementByPath(this.closest(".folder").querySelector(".path").innerText).setAttribute("data-deleted", true);
 		window.socket.emit("delete-directory", this.closest(".folder").querySelector(".path").innerText, error => {
 			if (error) {
 				console.log(error);

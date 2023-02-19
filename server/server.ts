@@ -10,7 +10,7 @@ const io = require("socket.io")(http);
 const path = require("path");
 
 import sendDirectoryContents from "./src/sendDirectoryContents";
-import sendDirectoryFolderStructureRecursive from "./src/sendDirectoryFolderStructure";
+import { sendDirectoryFolderStructureRecursive, sendDirectoryFolderStructure } from "./src/sendDirectoryFolderStructure";
 import createDirectory from "./src/createDirectory";
 import deleteDirectory from "./src/deleteDirectory";
 import rename from "./src/rename";
@@ -69,6 +69,16 @@ io.on("connection", function (socket: Socket) {
 		}
 	});
 
+	socket.on("send-directory-folder-structure", async (relPath: string, callback?: (error?: unknown) => void) => {
+		try {
+			await sendDirectoryFolderStructure(socket, dpath, relPath);
+			callback && callback();
+		} catch (error) {
+			callback && callback(error);
+			console.log(error);
+		}
+	});
+
 	socket.on("send-directory-contents", async (relPath: string, callback?: (error?: unknown) => void) => {
 		try {
 			await sendDirectoryContents(socket, dpath, relPath);
@@ -82,6 +92,7 @@ io.on("connection", function (socket: Socket) {
 	socket.on("create-directory", async (relPath: string, callback?: (error?: unknown) => void) => {
 		try {
 			await createDirectory(socket, dpath, relPath);
+			io.sockets.emit("created-directory", relPath);
 			callback && callback();
 		} catch (error) {
 			callback && callback(error);
@@ -92,6 +103,7 @@ io.on("connection", function (socket: Socket) {
 	socket.on("delete-directory", async (relPath: string, callback: (error?: unknown) => void) => {
 		try {
 			await deleteDirectory(socket, dpath, relPath);
+			io.sockets.emit("deleted-directory", relPath);
 			callback && callback();
 		} catch (error) {
 			callback && callback(error);
