@@ -112,7 +112,7 @@ function drop(event) {
 		removeDragHoverCSSClass(dragSourceElement);
 		removeDragSourceAttribute(dragSourceElement);
 
-		let oldPath = dragSourceElement.querySelector(".path").innerText;
+		let oldPath = (dragSourceElement.querySelector(".path") || dragSourceElement.parentElement.querySelector(".path")).innerText;
 		let part = oldPath.match(/[^\/]+\/?$/gim)[0];
 		let newPath = getPathFromDropZone(event.target) + part;
 

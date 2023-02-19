@@ -1,6 +1,7 @@
 import { clearDirectoryContentElements, createDirectoryContentElement } from "./directoryContents.js";
 import { createFolderStructureElement, createDefaultDirectoryElement, createFolderStructureElementRecursive } from "./folderStructure.js";
 import getFolderElementByPath from "./getFolderElementByPath.js";
+import { load } from "./navigation.js";
 
 export default function registerSocketEventHandlers(socket) {
 	socket.on("receive-directory-contents", data => {
@@ -89,7 +90,12 @@ export default function registerSocketEventHandlers(socket) {
 				.innerText.replace(oldPath.replace(/[^\/]+\/$/im, ""), newPath.replace(/[^\/]+\/$/im, ""));
 		}
 
-		socket.emit("send-directory-contents", window.location.pathname);
+		if (window.location.pathname.startsWith(oldPath)) {
+			window.history.pushState(oldPath.replace(/[^\/]+\/$/im, ""), "", oldPath.replace(/[^\/]+\/$/im, ""));
+			load();
+		} else {
+			socket.emit("send-directory-contents", window.location.pathname);
+		}
 	});
 
 	socket.on("moved-file", (oldPath, newPath) => {
