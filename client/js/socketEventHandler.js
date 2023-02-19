@@ -68,4 +68,31 @@ export default function registerSocketEventHandlers(socket) {
 		createFolderStructureElementRecursive(path, false);
 		socket.emit("send-directory-contents", window.location.pathname);
 	});
+
+	socket.on("moved-directory", (oldPath, newPath) => {
+		let old = getFolderElementByPath(oldPath);
+		old.querySelector(".path").innerText = newPath;
+		let newParent = getFolderElementByPath(newPath.replace(/[^\/]+\/$/im, ""));
+		let oldParent = getFolderElementByPath(oldPath.replace(/[^\/]+\/$/im, ""));
+
+		newParent.querySelector(".content").append(old);
+		newParent.classList.remove("no-contents");
+		newParent.classList.add("open");
+
+		if (oldParent.querySelector(".content").childElementCount === 0) {
+			oldParent.classList.add("no-contents");
+		}
+
+		for (let elem of Array.from(old.querySelectorAll(".collapsable-folder-structure-element"))) {
+			elem.querySelector(".path").innerText = elem
+				.querySelector(".path")
+				.innerText.replace(oldPath.replace(/[^\/]+\/$/im, ""), newPath.replace(/[^\/]+\/$/im, ""));
+		}
+
+		socket.emit("send-directory-contents", window.location.pathname);
+	});
+
+	socket.on("moved-file", (oldPath, newPath) => {
+		socket.emit("send-directory-contents", window.location.pathname);
+	});
 }

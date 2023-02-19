@@ -114,6 +114,13 @@ io.on("connection", function (socket: Socket) {
 	socket.on("rename", async (oldPath: string, newPath: string, callback: (error?: unknown) => void) => {
 		try {
 			await rename(socket, dpath, oldPath, newPath);
+
+			if (newPath.endsWith("/") && oldPath.endsWith("/")) {
+				io.sockets.emit("moved-directory", oldPath, newPath);
+			} else {
+				io.sockets.emit("moved-file", oldPath, newPath);
+			}
+
 			callback && callback();
 		} catch (error) {
 			callback && callback(error);
