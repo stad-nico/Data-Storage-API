@@ -101,4 +101,8 @@ export default function registerSocketEventHandlers(socket) {
 	socket.on("moved-file", (oldPath, newPath) => {
 		socket.emit("send-directory-contents", window.location.pathname);
 	});
+
+	socket.on("reload", () => {
+		socket.emit("send-directory-contents", window.location.pathname);
+	});
 }

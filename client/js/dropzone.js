@@ -3,6 +3,8 @@
 const DRAG_SOURCE_ATTRIBUTE = "data-drag-source";
 const DRAG_HOVER_CSS_CLASS = "drag-hover";
 
+var number = 0;
+
 window.addEventListener("dragenter", function (e) {
 	if (!e.target.hasAttribute("data-drop-zone")) {
 		this.addEventListener("dragover", preventDroppingContentsFromOtherWindows);
@@ -90,6 +92,46 @@ function hideTooltip() {
 	document.querySelector("#drag-icon").style.display = "none";
 }
 
+function read(entry, callback) {
+	if (entry.isFile) {
+		number++;
+		entry.file(file => callback(entry.fullPath, file));
+	} else if (entry.isDirectory) {
+		let reader = entry.createReader();
+		reader.readEntries(entries => {
+			for (let entry of entries) {
+				if (entry.isDirectory) {
+					read(entry, callback);
+				} else {
+					number++;
+					entry.file(file => callback(entry.fullPath, file));
+				}
+			}
+		});
+	}
+}
+
+function uploadFiles(destination, files) {
+	let formData = new FormData();
+
+	formData.append("destination", destination);
+	for (let item of files) {
+		formData.append("path", item.path);
+		formData.append("file", item.file);
+	}
+
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", "http://localhost:3000/upload", true);
+	xhr.addEventListener("readystatechange", function (e) {
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			console.log("DONE");
+		} else if (xhr.readyState === 4 && xhr.status !== 200) {
+			console.log("ERROR");
+		}
+	});
+	xhr.send(formData);
+}
+
 function drop(event) {
 	event.preventDefault();
 	event.stopPropagation();
@@ -98,8 +140,27 @@ function drop(event) {
 	removeDragHoverCSSClass(event.target);
 
 	if (event.dataTransfer.types.includes("Files")) {
+		let destination;
+		if (event.target.getAttribute("id") === "directory-contents") {
+			destination = window.location.pathname;
+		} else {
+			destination = (event.target.querySelector(".path") || event.target.parentElement.querySelector(".path")).innerText;
+		}
 		// dragging from other window!
-		console.log("EXTERNAL");
+		let files = [];
+		let items = event.dataTransfer.items;
+		for (let item of items) {
+			let entry = item.webkitGetAsEntry();
+			read(entry, (fullPath, file) => {
+				files.push({
+					path: fullPath,
+					file: file,
+				});
+				if (files.length === number) {
+					uploadFiles(destination, files);
+				}
+			});
+		}
 	} else {
 		// dragging from other windows doesnt set a data-drag-source as no dragstart event is fired
 		let dragSourceElement = document.querySelector(`*[${DRAG_SOURCE_ATTRIBUTE}]`);
@@ -116,7 +177,6 @@ function drop(event) {
 		let part = oldPath.match(/[^\/]+\/?$/gim)[0];
 		let newPath = getPathFromDropZone(event.target) + part;
 
-		console.log(oldPath, newPath);
 		if (oldPath === newPath) {
 			return;
 		}

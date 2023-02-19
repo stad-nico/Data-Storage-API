@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { Socket } from "socket.io";
 
 const { randomUUID } = require("crypto");
@@ -8,6 +8,27 @@ const app = require("express")();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const path = require("path");
+const multer = require("multer");
+
+const dpath = "C:/Users/stadl/Desktop/File-Server/files/";
+const tempPath = "C:/Users/stadl/Desktop/File-Server/temp/";
+
+const storage = multer.diskStorage({
+	destination: function (req, file, callback) {
+		let paths = [].concat(req.body.path);
+		let pathname = paths[paths.length - 1].replace(/[^\/]+\/?$/im, "");
+		let fullPath = path.join(tempPath, pathname);
+		fs.mkdirSync(fullPath, { recursive: true });
+		callback(null, fullPath);
+	},
+	filename: function (req, file, callback) {
+		callback(null, Buffer.from(file.originalname, "latin1").toString("utf-8"));
+	},
+});
+
+const upload = multer({
+	storage: storage,
+});
 
 import sendDirectoryContents from "./src/sendDirectoryContents";
 import { sendDirectoryFolderStructureRecursive, sendDirectoryFolderStructure } from "./src/sendDirectoryFolderStructure";
@@ -16,7 +37,11 @@ import deleteDirectory from "./src/deleteDirectory";
 import rename from "./src/rename";
 import copyDirectory from "./src/copyDirectory";
 
-let dpath = "C:/Users/stadl/Desktop/File-Server/files/";
+declare module "express" {
+	interface Request {
+		files: any;
+	}
+}
 
 fs.watch(dpath, { recursive: true }, function (event, name) {
 	console.info("change in directory detected; sending updates to sockets");
@@ -33,6 +58,30 @@ app.get("/download", function (req: Request, res: Response) {
 		res.download(fullPath, filename, { dotfiles: "allow" });
 	} catch (e) {
 		console.log(e);
+	}
+});
+
+app.post("/upload", upload.any(), async function (req: Request, res: Response) {
+	console.log("FINISHED UPLOADING");
+
+	let names = await fs.promises.readdir(tempPath);
+
+	for (let name of names) {
+		try {
+			await fs.promises.rename(path.join(tempPath, name), path.join(dpath, req.body.destination, name));
+		} catch (e) {
+			// folder already present in destination, this error only gets thrown for directories, see https://github.com/nodejs/node/issues/21957
+			try {
+				await fs.promises.cp(path.join(tempPath, name), path.join(dpath, req.body.destination, name), {
+					force: true,
+					recursive: true,
+				});
+
+				await fs.promises.rm(path.join(tempPath, name), { recursive: true });
+			} catch (e) {
+				console.log(e);
+			}
+		}
 	}
 });
 

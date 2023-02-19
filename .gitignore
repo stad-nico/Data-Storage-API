@@ -1,3 +1,4 @@
 node_modules
 /files/
+/temp/
 /client/css
