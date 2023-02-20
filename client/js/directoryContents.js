@@ -29,9 +29,8 @@ function createFolderElement(name, path) {
 
 	folderElement.addEventListener("click", function () {
 		if (!this.closest(".folder").classList.contains("active")) {
-			document.querySelectorAll(".folder.active").forEach(elem => elem.classList.remove("active"));
+			document.querySelectorAll("#directory-contents .active").forEach(elem => elem.classList.remove("active"));
 			this.closest(".folder").classList.add("active");
-			return;
 		} else {
 			window.history.pushState(path, "", path);
 			load();
@@ -47,7 +46,6 @@ function createFolderElement(name, path) {
 			return;
 		}
 
-		getFolderElementByPath(this.closest(".folder").querySelector(".path").innerText).setAttribute("data-deleted", true);
 		window.socket.emit("delete-directory", this.closest(".folder").querySelector(".path").innerText, error => {
 			if (error) {
 				console.log(error);
@@ -55,6 +53,10 @@ function createFolderElement(name, path) {
 				console.log("successfully removed dir");
 			}
 		});
+	});
+
+	folderElement.querySelector("div.download-icon").addEventListener("click", function (event) {
+		event.stopPropagation();
 	});
 
 	makeDraggable(folderElement);
@@ -67,12 +69,39 @@ function createFileElement(name, size, path) {
 	let template = document.querySelector("#directory-content-file-template");
 
 	let fileElement = template.content.cloneNode(true).querySelector("div");
-	fileElement.querySelector(".name").innerText = getFileName(name);
-	fileElement.querySelector(".extension").innerText = getFileExtension(name);
+	fileElement.querySelector(".name").innerText = name;
 	fileElement.querySelector(".size").innerText = getFileSizeWithPrefix(size);
 	fileElement.querySelector("a").setAttribute("href", "/download?path=" + encodeURIComponent(window.location.pathname + name));
 	fileElement.querySelector("a").setAttribute("target", "_blank");
 	fileElement.querySelector(".path").innerText = path;
+
+	fileElement.addEventListener("click", function () {
+		if (!this.closest(".file").classList.contains("active")) {
+			document.querySelectorAll("#directory-contents .active").forEach(elem => elem.classList.remove("active"));
+			this.closest(".file").classList.add("active");
+		} else {
+			window.history.pushState(path, "", path);
+			load();
+		}
+	});
+
+	fileElement.querySelector("div.delete-icon").addEventListener("click", function (event) {
+		event.stopPropagation();
+
+		let d = window.confirm("Delete?");
+
+		if (!d) {
+			return;
+		}
+
+		window.socket.emit("delete-file", this.closest(".file").querySelector(".path").innerText, error => {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log("successfully removed file");
+			}
+		});
+	});
 
 	makeDraggable(fileElement);
 

@@ -30,6 +30,8 @@
 
 	&.open {
 		> .head {
+			margin-bottom: 0;
+
 			&:hover + .content,
 			&.drag-hover + .content,
 			&.active + .content {

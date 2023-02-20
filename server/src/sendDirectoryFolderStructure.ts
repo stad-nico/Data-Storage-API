@@ -2,10 +2,7 @@ import * as fs from "fs";
 const path = require("path");
 import { Socket } from "socket.io";
 
-import sendErrorMessageToSocket from "./sendErrorMessageToSocket";
-
-import { getContentNames, getFileStats, hasSubDirectories } from "./fsHelpers";
-import isNodeJSErrnoException from "./isNodeJSErrnoException";
+import { getContentNames, getFileStats, hasSubDirectories, decodePath } from "./fsHelpers";
 
 type FolderObject = {
 	name: string;
@@ -15,10 +12,14 @@ type FolderObject = {
 };
 
 export async function sendDirectoryFolderStructure(socket: Socket, defaultDirectoryPath: string, relativePath: string) {
+	defaultDirectoryPath = decodePath(defaultDirectoryPath);
+	relativePath = decodePath(relativePath);
 	socket.emit("receive-directory-folder-structure", await getDirectoryFolderStructure(defaultDirectoryPath, relativePath, true));
 }
 
 export async function sendDirectoryFolderStructureRecursive(socket: Socket, defaultDirectoryPath: string, relativePath: string) {
+	defaultDirectoryPath = decodePath(defaultDirectoryPath);
+	relativePath = decodePath(relativePath);
 	let folderObjects: FolderObject[] = [];
 
 	if (relativePath === "/") {
@@ -40,7 +41,10 @@ export async function sendDirectoryFolderStructureRecursive(socket: Socket, defa
 }
 
 async function getDirectoryFolderStructure(defaultDirectoryPath: string, relPath: string, includeContents: boolean = false) {
-	let fullPath = path.join(defaultDirectoryPath, relPath);
+	defaultDirectoryPath = decodePath(defaultDirectoryPath);
+	relPath = decodePath(relPath);
+
+	let fullPath = decodePath(path.join(defaultDirectoryPath, relPath));
 
 	if (!(await getFileStats(fullPath)).isDirectory()) {
 		throw Error("path not a directory");
@@ -56,9 +60,9 @@ async function getDirectoryFolderStructure(defaultDirectoryPath: string, relPath
 		folderObject.contents = [];
 
 		for (let name of await getContentNames(fullPath)) {
-			if ((await getFileStats(path.join(fullPath, name))).isDirectory()) {
+			if ((await getFileStats(decodePath(path.join(fullPath, name)))).isDirectory()) {
 				folderObject.contents.push(
-					await getDirectoryFolderStructure(defaultDirectoryPath, path.join(relPath, name).replaceAll("\\", "/"), false)
+					await getDirectoryFolderStructure(defaultDirectoryPath, decodePath(path.join(relPath, name)).replaceAll("\\", "/"), false)
 				);
 			}
 		}

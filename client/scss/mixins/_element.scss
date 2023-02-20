@@ -20,12 +20,15 @@
 	&.drag-hover {
 		cursor: pointer;
 		background-color: rgb(235, 240, 254);
+
+		.icons {
+			display: flex;
+		}
+	}
+
+	&.active {
 		.name {
 			color: rgb(57, 97, 237);
-		}
-
-		.delete-icon {
-			display: block;
 		}
 	}
 
@@ -34,7 +37,7 @@
 			pointer-events: none;
 		}
 
-		&:not([data-drag-source]) .delete-icon {
+		&:not([data-drag-source]) .icons {
 			display: none;
 		}
 	}
@@ -52,7 +55,7 @@
 
 		flex-shrink: 0;
 
-		fill: rgb(102, 113, 168);
+		fill: rgb(169, 174, 199);
 
 		&:hover {
 			fill: rgb(57, 97, 237);
@@ -62,7 +65,7 @@
 	.name {
 		margin-left: 8px;
 
-		max-width: 80%;
+		width: 50%;
 		font-family: Montserrat Medium;
 		font-weight: 500;
 
@@ -76,15 +79,23 @@
 		flex-shrink: 1;
 	}
 
-	.delete-icon {
-		display: none;
-
+	.icons {
 		margin-left: auto;
 
-		fill: rgb(102, 113, 168);
+		display: none;
+		align-items: flex-start;
+		justify-content: center;
+		flex-direction: row;
+	}
 
-		&:hover {
-			fill: rgb(57, 97, 237);
+	.download-icon {
+		a {
+			width: 24px;
+			height: 24px;
+
+			display: block;
+
+			position: absolute;
 		}
 	}
 }

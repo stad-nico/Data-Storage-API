@@ -11,6 +11,19 @@ export default function registerSocketEventHandlers(socket) {
 		} else {
 			document.querySelector("#directory-contents #contents").classList.remove("empty");
 		}
+
+		data = data.sort((a, b) => {
+			if (a.isDirectory && !b.isDirectory) {
+				return -1;
+			}
+
+			if (!a.isDirectory && b.isDirectory) {
+				return 1;
+			}
+
+			return a.name - b.name;
+		});
+
 		for (let element of data) {
 			createDirectoryContentElement(element.name, element.size, element.path.replaceAll(/\\/gi, "/"), element.isDirectory);
 		}
@@ -65,12 +78,20 @@ export default function registerSocketEventHandlers(socket) {
 		socket.emit("send-directory-contents", window.location.pathname);
 	});
 
+	socket.on("deleted-file", () => {
+		socket.emit("send-directory-contents", window.location.pathname);
+	});
+
 	socket.on("created-directory", path => {
-		createFolderStructureElementRecursive(path, false);
+		createFolderStructureElementRecursive(decodeURIComponent(path), false);
+
 		socket.emit("send-directory-contents", window.location.pathname);
 	});
 
 	socket.on("moved-directory", (oldPath, newPath) => {
+		oldPath = decodeURIComponent(oldPath);
+		newPath = decodeURIComponent(newPath);
+
 		let old = getFolderElementByPath(oldPath);
 		old.querySelector(".path").innerText = newPath;
 		let newParent = getFolderElementByPath(newPath.replace(/[^\/]+\/$/im, ""));

@@ -52,6 +52,9 @@ export function createFolderStructureElement(parentDirectoryElement, name, relPa
 	});
 
 	folder.querySelector(".open-in-new-tab-icon").setAttribute("href", path);
+	folder.querySelector(".open-in-new-tab-icon").addEventListener("click", function (e) {
+		e.stopPropagation();
+	});
 
 	if (hasSubDirectories) {
 		folder.querySelector(".expand-icon").addEventListener("click", function (e) {

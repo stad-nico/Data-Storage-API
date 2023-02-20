@@ -10,6 +10,21 @@ const io = require("socket.io")(http);
 const path = require("path");
 const multer = require("multer");
 
+import { emptyDirectory } from "./src/fsHelpers";
+import sendDirectoryContents from "./src/sendDirectoryContents";
+import { sendDirectoryFolderStructureRecursive, sendDirectoryFolderStructure } from "./src/sendDirectoryFolderStructure";
+import createDirectory from "./src/createDirectory";
+import deleteDirectory from "./src/deleteDirectory";
+import rename from "./src/rename";
+import copyDirectory from "./src/copyDirectory";
+import deleteFile from "./src/deleteFile";
+
+declare module "express" {
+	interface Request {
+		files: any;
+	}
+}
+
 const dpath = "C:/Users/stadl/Desktop/File-Server/files/";
 const tempPath = "C:/Users/stadl/Desktop/File-Server/temp/";
 
@@ -30,19 +45,6 @@ const upload = multer({
 	storage: storage,
 });
 
-import sendDirectoryContents from "./src/sendDirectoryContents";
-import { sendDirectoryFolderStructureRecursive, sendDirectoryFolderStructure } from "./src/sendDirectoryFolderStructure";
-import createDirectory from "./src/createDirectory";
-import deleteDirectory from "./src/deleteDirectory";
-import rename from "./src/rename";
-import copyDirectory from "./src/copyDirectory";
-
-declare module "express" {
-	interface Request {
-		files: any;
-	}
-}
-
 fs.watch(dpath, { recursive: true }, function (event, name) {
 	console.info("change in directory detected; sending updates to sockets");
 	io.sockets.emit("reload");
@@ -57,6 +59,7 @@ app.get("/download", function (req: Request, res: Response) {
 		console.log(fullPath, filename);
 		res.download(fullPath, filename, { dotfiles: "allow" });
 	} catch (e) {
+		res.sendStatus(404);
 		console.log(e);
 	}
 });
@@ -64,24 +67,42 @@ app.get("/download", function (req: Request, res: Response) {
 app.post("/upload", upload.any(), async function (req: Request, res: Response) {
 	console.log("FINISHED UPLOADING");
 
+	let err = false;
 	let names = await fs.promises.readdir(tempPath);
 
 	for (let name of names) {
+		let fullTempPath = decodeURIComponent(path.join(tempPath, name));
+		let fullDestinationPath = decodeURIComponent(path.join(dpath, req.body.destination, name));
 		try {
-			await fs.promises.rename(path.join(tempPath, name), path.join(dpath, req.body.destination, name));
+			await fs.promises.rename(fullTempPath, fullDestinationPath);
 		} catch (e) {
 			// folder already present in destination, this error only gets thrown for directories, see https://github.com/nodejs/node/issues/21957
 			try {
-				await fs.promises.cp(path.join(tempPath, name), path.join(dpath, req.body.destination, name), {
+				await fs.promises.cp(fullTempPath, fullDestinationPath, {
 					force: true,
 					recursive: true,
 				});
-
-				await fs.promises.rm(path.join(tempPath, name), { recursive: true });
 			} catch (e) {
+				err = true;
 				console.log(e);
 			}
 		}
+	}
+
+	// empty the temp folder
+	try {
+		console.log("clearing temp");
+		await emptyDirectory(tempPath);
+		console.log("done");
+	} catch (e) {
+		err = true;
+		console.log(e);
+	}
+
+	if (err) {
+		res.sendStatus(404);
+	} else {
+		res.sendStatus(200);
 	}
 });
 
@@ -105,7 +126,7 @@ io.on("connection", function (socket: Socket) {
 	});
 
 	socket.on("is-path-valid", async (relPath: string, callback: (valid?: boolean) => void) => {
-		callback(fs.existsSync(path.join(dpath, relPath)));
+		callback(fs.existsSync(path.join(dpath, decodeURIComponent(relPath))));
 	});
 
 	socket.on("send-directory-folder-structure-recursive", async (relPath: string, callback?: (error?: unknown) => void) => {
@@ -153,6 +174,17 @@ io.on("connection", function (socket: Socket) {
 		try {
 			await deleteDirectory(socket, dpath, relPath);
 			io.sockets.emit("deleted-directory", relPath);
+			callback && callback();
+		} catch (error) {
+			callback && callback(error);
+			console.log(error);
+		}
+	});
+
+	socket.on("delete-file", async (relPath: string, callback: (error?: unknown) => void) => {
+		try {
+			await deleteFile(socket, dpath, relPath);
+			io.sockets.emit("deleted-file", relPath);
 			callback && callback();
 		} catch (error) {
 			callback && callback(error);

@@ -4,13 +4,14 @@ import { Socket } from "socket.io";
 import FileStats from "./FileStats";
 import FolderStats from "./FolderStats";
 
-import { getContentNames, createStatsObject } from "./fsHelpers";
-import isNodeJSErrnoException from "./isNodeJSErrnoException";
-import sendErrorMessageToSocket from "./sendErrorMessageToSocket";
+import { getContentNames, createStatsObject, decodePath } from "./fsHelpers";
 
 export default async function sendDirectoryContents(socket: Socket, defaultDirectoryPath: string, relativePath: string) {
+	defaultDirectoryPath = decodePath(defaultDirectoryPath);
+	relativePath = decodePath(relativePath);
+
 	try {
-		let absolutePath = path.join(defaultDirectoryPath, relativePath);
+		let absolutePath = decodePath(path.join(defaultDirectoryPath, relativePath));
 		let data: (FileStats | FolderStats)[] = [];
 
 		let names = await getContentNames(absolutePath);
@@ -21,8 +22,6 @@ export default async function sendDirectoryContents(socket: Socket, defaultDirec
 
 		socket.emit("receive-directory-contents", data);
 	} catch (error) {
-		if (isNodeJSErrnoException(error)) {
-			sendErrorMessageToSocket(socket, error.toString(), error.errno, error.code);
-		}
+		console.log(error);
 	}
 }

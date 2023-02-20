@@ -1,13 +1,9 @@
-import setInteractivePath from "./interactivePath.js";
-import { clearDirectoryContentElements, createDirectoryContentElement } from "./directoryContents.js";
-import { createDefaultDirectoryElement, createFolderStructureElement, clearFolderStructureElements } from "./folderStructure.js";
-import getFolderElementByPath from "./getFolderElementByPath.js";
 import { load } from "./navigation.js";
 import registerSocketEventHandlers from "./socketEventHandler.js";
 import { makeDropZone } from "./dropzone.js";
 
 window.onload = () => {
-	makeDropZone(document.querySelector("#directory-contents"), true);
+	makeDropZone(document.querySelector("#directory-contents #contents"), true);
 
 	let pathname = window.location.pathname;
 

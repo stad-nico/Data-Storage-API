@@ -1,5 +1,3 @@
-import { getCookie } from "./cookies.js";
-
 let createDirectoryButton = document.querySelector("#create-folder-icon");
 createDirectoryButton.addEventListener("click", () => createDirectory());
 
@@ -67,6 +65,7 @@ function nameFieldCallback(folderElement, editableNameField, error) {
 function makeEditableFolderElementPermanent(folderElement) {
 	folderElement.classList.remove("editable");
 	folderElement.querySelector(".name").removeAttribute("contenteditable");
+	document.querySelectorAll("#directory-contents .active").forEach(element => element.classList.remove("active"));
 }
 
 function removeEditableFolderElement() {

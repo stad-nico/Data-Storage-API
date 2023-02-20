@@ -3,9 +3,9 @@ import * as fs from "fs";
 import path from "path";
 import { decodePath } from "./fsHelpers";
 
-export default async function deleteDirectory(socket: Socket, defaultDirectoryPath: string, relPath: string) {
+export default async function deleteFile(socket: Socket, defaultDirectoryPath: string, relPath: string) {
 	defaultDirectoryPath = decodePath(defaultDirectoryPath);
 	relPath = decodePath(relPath);
 	let fullPath = path.join(defaultDirectoryPath, relPath);
-	await fs.promises.rmdir(fullPath, { recursive: true });
+	await fs.promises.rm(fullPath);
 }

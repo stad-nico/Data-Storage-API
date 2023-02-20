@@ -5,10 +5,6 @@
 }
 
 .element.folder {
-	*:not(.icon) {
-		pointer-events: none;
-	}
-
 	&.editable {
 		background-color: rgb(235, 240, 254);
 
@@ -16,6 +12,10 @@
 		.name[contenteditable="true"] {
 			min-width: 2px;
 		}
+	}
+
+	> *:not(.icons) {
+		pointer-events: none;
 	}
 
 	&:hover,

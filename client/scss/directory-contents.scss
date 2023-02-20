@@ -9,11 +9,30 @@
 
 	background-color: rgb(251, 252, 255);
 	border-radius: 0 25px 25px 0;
-	padding: 20px;
 
-	overflow-y: scroll;
+	overflow: hidden;
 
 	#contents {
+		position: relative;
+		overflow: scroll;
+
+		width: 100%;
+		height: 100%;
+
+		padding: 20px;
+
+		&.drag-hover {
+			background-color: rgb(235, 240, 254);
+
+			*.folder-icon.icon {
+				@include folder-icon-closed(rgb(235, 240, 254));
+			}
+
+			*.file-icon.icon {
+				@include file-icon(red, rgb(235, 240, 254));
+			}
+		}
+
 		&.empty::after {
 			position: absolute;
 
@@ -27,18 +46,6 @@
 			font-size: large;
 			text-align: center;
 			color: rgb(102, 113, 168);
-		}
-	}
-
-	&.drag-hover {
-		background-color: rgb(235, 240, 254);
-
-		*.folder-icon.icon {
-			@include folder-icon-closed(rgb(235, 240, 254));
-		}
-
-		*.file-icon.icon {
-			@include file-icon(red, rgb(235, 240, 254));
 		}
 	}
 }

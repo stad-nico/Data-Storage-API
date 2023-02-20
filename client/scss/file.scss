@@ -2,30 +2,13 @@
 
 .element.file {
 	&:hover {
-		.extension,
-		.size {
-			color: rgb(57, 97, 237);
-		}
-
-		.download-icon svg {
-			fill: rgb(57, 97, 237);
-		}
-
 		.file-icon {
 			@include file-icon(red, rgb(235, 240, 254));
 		}
 	}
 
-	> *:not(.icon) {
+	> *:not(.icons) {
 		pointer-events: none;
-	}
-
-	.extension {
-		color: rgb(169, 174, 199);
-
-		margin-right: auto;
-
-		cursor: default;
 	}
 
 	.size {
@@ -34,7 +17,9 @@
 
 		cursor: default;
 
-		margin-left: auto;
+		text-align: right;
+		width: 60px;
+
 		user-select: none;
 		color: rgb(169, 174, 199);
 	}
@@ -45,23 +30,5 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.download-icon {
-		position: relative;
-
-		margin-left: 8px;
-
-		fill: rgb(169, 174, 199);
-
-		cursor: pointer;
-		a {
-			width: 24px;
-			height: 24px;
-
-			display: block;
-
-			position: absolute;
-		}
 	}
 }

@@ -6,7 +6,7 @@ document.querySelector("#forward-icon").addEventListener("click", forward);
 document.querySelector("#layer-up-icon").addEventListener("click", up);
 
 export function load() {
-	let path = window.location.pathname;
+	let path = decodeURIComponent(window.location.pathname);
 	setInteractivePath(path);
 	setDocumentTitle(path);
 	socket.emit("send-directory-contents", path);

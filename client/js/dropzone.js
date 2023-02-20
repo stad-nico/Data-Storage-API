@@ -112,6 +112,7 @@ function read(entry, callback) {
 }
 
 function uploadFiles(destination, files) {
+	console.log("HI");
 	let formData = new FormData();
 
 	formData.append("destination", destination);
@@ -124,15 +125,16 @@ function uploadFiles(destination, files) {
 	xhr.open("POST", "http://localhost:3000/upload", true);
 	xhr.addEventListener("readystatechange", function (e) {
 		if (xhr.readyState === 4 && xhr.status === 200) {
-			console.log("DONE");
+			console.info("uploaded " + number + " items to server");
 		} else if (xhr.readyState === 4 && xhr.status !== 200) {
-			console.log("ERROR");
+			console.log("error while uploading");
 		}
 	});
 	xhr.send(formData);
 }
 
 function drop(event) {
+	console.log(event);
 	event.preventDefault();
 	event.stopPropagation();
 
@@ -141,21 +143,26 @@ function drop(event) {
 
 	if (event.dataTransfer.types.includes("Files")) {
 		let destination;
-		if (event.target.getAttribute("id") === "directory-contents") {
+		if (event.target.getAttribute("id") === "contents") {
 			destination = window.location.pathname;
 		} else {
 			destination = (event.target.querySelector(".path") || event.target.parentElement.querySelector(".path")).innerText;
 		}
 		// dragging from other window!
+		number = 0;
 		let files = [];
 		let items = event.dataTransfer.items;
+
 		for (let item of items) {
+			console.log(item);
 			let entry = item.webkitGetAsEntry();
 			read(entry, (fullPath, file) => {
 				files.push({
 					path: fullPath,
 					file: file,
 				});
+
+				console.log(files.length, number);
 				if (files.length === number) {
 					uploadFiles(destination, files);
 				}
@@ -176,7 +183,6 @@ function drop(event) {
 		let oldPath = (dragSourceElement.querySelector(".path") || dragSourceElement.parentElement.querySelector(".path")).innerText;
 		let part = oldPath.match(/[^\/]+\/?$/gim)[0];
 		let newPath = getPathFromDropZone(event.target) + part;
-
 		if (oldPath === newPath) {
 			return;
 		}
@@ -192,6 +198,10 @@ function drop(event) {
 }
 
 function getPathFromDropZone(element) {
+	if (element.getAttribute("id") === "contents") {
+		return window.location.pathname;
+	}
+
 	return (element.querySelector(".path") || element.parentNode.querySelector(".path")).innerText;
 }
 
@@ -221,8 +231,6 @@ function allowDropIfExternalContent(event) {
 		!document.querySelector("#directory-contents #contents").contains(document.querySelector(`*[${DRAG_SOURCE_ATTRIBUTE}`))
 	) {
 		allowDropIfNotDragSourceElement(event);
-	} else {
-		removeDragHoverCSSClass(this);
 	}
 }
 
