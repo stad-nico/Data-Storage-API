@@ -1,0 +1,88 @@
+@import "./mixins/folder-icon";
+@import "./mixins/file-icon";
+#drag-icon {
+	width: 52px;
+	height: 52px;
+
+	display: none;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	position: absolute;
+
+	pointer-events: none;
+
+	& > .icon {
+		opacity: 0.8;
+
+		width: 48px;
+		height: 48px;
+		flex-shrink: 0;
+	}
+
+	&.folder {
+		& .folder-icon.icon {
+			@include folder-icon-closed(white, false);
+			width: 48px;
+			height: 48px;
+			position: absolute;
+			--folder-icon-border-radius: 5px;
+		}
+	}
+
+	&.file {
+		& .file-icon.icon {
+			@include file-icon(red, white);
+			width: 48px;
+			height: 48px;
+			position: absolute;
+		}
+	}
+
+	.tooltip {
+		background-color: white;
+		border-radius: 15px;
+
+		width: fit-content;
+
+		white-space: nowrap;
+
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+
+		padding: 4px 12px 4px 8px;
+
+		&.source-only {
+			.icon {
+				display: none;
+			}
+
+			padding-right: 8px;
+		}
+
+		.icon {
+			display: block;
+
+			width: 18px;
+			height: 18px;
+
+			margin-right: 4px;
+
+			fill: rgb(102, 113, 168);
+		}
+
+		p {
+			color: rgb(102, 113, 168);
+			font-size: small;
+			width: fit-content;
+
+			white-space: nowrap;
+
+			span.highlight {
+				color: rgb(57, 97, 237);
+			}
+		}
+	}
+}

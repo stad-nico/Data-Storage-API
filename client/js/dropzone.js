@@ -54,7 +54,11 @@ export function makeDropZone(element, allowOnlyExternalDrops = false) {
 		element.addEventListener("dragover", allowDropIfNotDragSourceElement);
 	}
 
-	element.addEventListener("dragleave", e => removeDragHoverCSSClassIfNotDragSourceElement(e.target));
+	element.addEventListener("dragleave", e => {
+		removeDragHoverCSSClassIfNotDragSourceElement(e.target);
+		emptyTooltipDescription();
+		setTooltipDescriptionSourceOnly();
+	});
 
 	element.addEventListener("drop", drop);
 }
@@ -75,11 +79,27 @@ function showTooltip(event) {
 		icon.classList.remove("file");
 	}
 
+	emptyTooltipDescription();
+
+	setTooltipDescriptionSourceOnly();
+
 	// set the data image to null to show nothing (drag image is translucent by default, so a workaround is needed)
 	event.dataTransfer.setDragImage(new Image(), 0, 0);
 	// display own icon at cursor position
 	icon.style.left = event.pageX + "px";
 	icon.style.top = event.pageY + "px";
+}
+
+function emptyTooltipDescription() {
+	document.querySelectorAll("#drag-icon span").forEach(elem => (elem.innerText = ""));
+}
+
+function setTooltipDescriptionSourceOnly() {
+	let icon = document.querySelector("#drag-icon");
+	if (document.querySelector(`*[${DRAG_SOURCE_ATTRIBUTE}]`)) {
+		icon.querySelector(".tooltip").classList.add("source-only");
+		icon.querySelector(".tooltip span.source").innerText = getNameFromPath(getPathFromDragSourceElement());
+	}
 }
 
 function updateTooltipPosition(event) {
@@ -90,6 +110,13 @@ function updateTooltipPosition(event) {
 
 function hideTooltip() {
 	document.querySelector("#drag-icon").style.display = "none";
+}
+
+function updateTooltipDestination(stringDest) {
+	console.log(stringDest);
+	document.querySelector("#drag-icon .action").innerText = " verschieben nach ";
+	document.querySelector("#drag-icon .dest").innerText = stringDest;
+	document.querySelector("#drag-icon .tooltip").classList.remove("source-only");
 }
 
 function read(entry, callback) {
@@ -197,6 +224,38 @@ function drop(event) {
 	}
 }
 
+function getPathFromDragElement(element) {
+	if (!element) {
+		return "";
+	}
+
+	if (element.querySelector(".path")) {
+		return element.querySelector(".path").innerText;
+	}
+
+	if (element.parentElement.querySelector(".path")) {
+		return element.parentElement.querySelector(".path").innerText;
+	}
+}
+
+function getPathFromDragSourceElement() {
+	return getPathFromDragElement(document.querySelector(`*[${DRAG_SOURCE_ATTRIBUTE}]`));
+}
+
+function getNameFromPath(path) {
+	let match = path.match(/([^\/]+\/?$)|^\/$/gim);
+
+	if (!match) {
+		return "";
+	}
+
+	if (match[0] === "/") {
+		return match[0];
+	}
+
+	return match[0].endsWith("/") ? match[0].slice(0, -1) : match[0];
+}
+
 function getPathFromDropZone(element) {
 	if (element.getAttribute("id") === "contents") {
 		return window.location.pathname;
@@ -244,6 +303,9 @@ function allowDrop(event) {
 	if (!event.target.classList.contains(DRAG_HOVER_CSS_CLASS)) {
 		event.target.classList.add(DRAG_HOVER_CSS_CLASS);
 	}
+
+	console.log(event.target);
+	updateTooltipDestination(getNameFromPath(getPathFromDragElement(event.target)));
 	event.preventDefault();
 }
 

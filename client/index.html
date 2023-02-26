@@ -19,6 +19,7 @@
 		<link href="/css/file.css" rel="stylesheet" />
 		<link href="/css/context-menus.css" rel="stylesheet" />
 		<link href="/css/folder.css" rel="stylesheet" />
+		<link href="/css/drag-icon.css" rel="stylesheet" />
 
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/js/dropzone.js" type="module"></script>
@@ -218,22 +219,34 @@
 			</footer>
 		</nav> -->
 
-		<div id="drag-icon">
-			<div class="folder-icon icon">
-				<div class="back">
-					<span class="top"></span>
-					<span class="triangle"></span>
-					<span class="basic"></span>
+		<div id="drag-icon" class="folder">
+			<div class="icon">
+				<div class="folder-icon icon">
+					<div class="back">
+						<span class="top"></span>
+						<span class="triangle"></span>
+						<span class="basic"></span>
+					</div>
+					<span class="front"></span>
 				</div>
-				<span class="front"></span>
-			</div>
-			<div class="file-icon icon">
-				<div class="background">
-					<div class="dog-ear">
-						<div class="negative">
+				<div class="file-icon icon">
+					<div class="background">
+						<div class="dog-ear">
+							<div class="negative">
+							</div>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="tooltip">
+				<div class="icon">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+						<path
+							d="M452 868q-11-11-11.5-28t10.5-28l196-196H200q-17 0-28.5-11.5T160 576q0-17 11.5-28.5T200 536h447L451 340q-11-11-10.5-28t11.5-28q11-11 28-11t28 11l264 264q6 5 8.5 12.5T783 576q0 8-2.5 15t-8.5 13L508 868q-11 11-28 11t-28-11Z" />
+					</svg>
+				</div>
+				<p><span class="highlight source"></span><span class="action"></span><span
+						class="highlight dest"></span></p>
 			</div>
 		</div>
 		<template id="interactive-path-component-template">
