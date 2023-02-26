@@ -34,6 +34,10 @@ body {
 	@include element();
 }
 
+.hidden {
+	display: none !important;
+}
+
 #drag-icon {
 	width: 52px;
 	height: 52px;
