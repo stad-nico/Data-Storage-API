@@ -1,4 +1,2 @@
-node_modules
-/files/
-/temp/
-/client/css
+/node_modules/
+/out/

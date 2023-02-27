@@ -1,5 +1,24 @@
 {
-  "dependencies": {
-    "multer": "^1.4.5-lts.1"
-  }
+	"name": "file-server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"compile": "tsc"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/stad-nico/File-Server.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/stad-nico/File-Server/issues"
+	},
+	"homepage": "https://github.com/stad-nico/File-Server#readme",
+	"dependencies": {
+		"typescript": "^4.9.5"
+	}
 }
