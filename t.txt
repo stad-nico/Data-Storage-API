@@ -1,1 +1,0 @@
-https://github.com/microsoft/vscode/blob/827830bed3f1c60cc0804ce7a0bc2fa3404755b8/src/vs/workbench/browser/parts/paneCompositePart.ts#L95

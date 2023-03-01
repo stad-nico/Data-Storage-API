@@ -1,7 +1,3 @@
-export enum ComponentIdentifier {
-	DOMComponent = "interface.components.dom",
-}
-
 export interface ComponentArgs {
 	parent?: Component;
 }
@@ -10,7 +6,7 @@ export abstract class Component {
 	/**
 	 * The unique component identifier
 	 */
-	protected readonly _identifier: ComponentIdentifier;
+	private readonly _identifier: string;
 
 	/**
 	 * The parent
@@ -27,18 +23,13 @@ export abstract class Component {
 	 *
 	 * @param parent The parent
 	 */
-	protected constructor(identifier: ComponentIdentifier, parent?: Component) {
+	protected constructor(identifier: string, parent?: Component) {
 		this._identifier = identifier;
 		this._parent = parent;
 		this._children = [];
-	}
 
-	/**
-	 * This function must be overwritten by extending classes. It will be called by the UserInterfaceService to instantiate Components
-	 *
-	 * @param args ComponentArgs
-	 */
-	public abstract create(args: ComponentArgs): void;
+		this._parent?.append(this);
+	}
 
 	/**
 	 * Set the parent
@@ -60,37 +51,12 @@ export abstract class Component {
 	/**
 	 * Get the ComponentIdentifier
 	 */
-	public getIdentifier(): ComponentIdentifier {
+	public getIdentifier(): string {
 		return this._identifier;
 	}
-}
 
-export interface DOMComponentArgs extends ComponentArgs {
-	documentElement: HTMLElement;
-}
-
-export class DOMComponent extends Component {
-	/**
-	 * The document element that represents the main entry that Child components are injected into.
-	 */
-	private _documentElement: HTMLElement;
-
-	/**
-	 * Creates a new DOMComponent
-	 */
-	constructor() {
-		super(ComponentIdentifier.DOMComponent);
-	}
-
-	/**
-	 * This function will be called by the UserInterfaceService.
-	 *
-	 * @param args DOMComponentArgs
-	 */
-	public override create(args: DOMComponentArgs): DOMComponent {
-		this._documentElement = args.documentElement;
-
-		return this;
+	public append(component: Component) {
+		this._children.push(component);
 	}
 }
 
@@ -133,7 +99,3 @@ export abstract class ComponentCollection<ComponentType> {
 		return Array.from(this._components);
 	}
 }
-
-export const ComponentMap = {
-	[ComponentIdentifier.DOMComponent]: DOMComponent,
-};

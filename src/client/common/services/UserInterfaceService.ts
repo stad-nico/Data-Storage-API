@@ -1,7 +1,6 @@
 import { Service, IService } from "src/client/common/services/Service.js";
 import { Layout } from "src/client/common/ui/Layout.js";
-import { ComponentIdentifier, DOMComponent } from "src/client/common/ui/Component.js";
-import { InstanceLoader } from "src/client/common/InstanceLoader.js";
+import { DOMComponent } from "src/client/common/ui/components/DOMComponent.js";
 
 export interface IUserInterfaceService extends IService {}
 
@@ -26,7 +25,7 @@ export class UserInterfaceService extends Service implements IUserInterfaceServi
 
 		this._layout = layout;
 
-		this._domComponent = InstanceLoader.createInstance(ComponentIdentifier.DOMComponent, { documentElement: document.body });
+		this._domComponent = new DOMComponent(document.body);
 	}
 
 	/**
