@@ -1,6 +1,6 @@
 import { ServiceCollection } from "src/client/common/services/Service.js";
 import { UserInterfaceService, IUserInterfaceService } from "src/client/common/services/UserInterfaceService.js";
-import { Layout } from "src/client/common/ui/Layout.js";
+import { LayoutType } from "src/client/common/ui/Layout.js";
 
 export interface IApplication {
 	userInterfaceService: IUserInterfaceService;
@@ -15,10 +15,10 @@ export abstract class Application extends ServiceCollection implements IApplicat
 	/**
 	 * Creates a new Application instance
 	 */
-	protected constructor(layout: Layout) {
+	protected constructor(layoutType: LayoutType) {
 		super();
 
-		this.userInterfaceService = new UserInterfaceService(layout);
+		this.userInterfaceService = new UserInterfaceService(layoutType);
 		this.registerService(this.userInterfaceService);
 	}
 }

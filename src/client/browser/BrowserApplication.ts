@@ -1,5 +1,5 @@
 import { Application, IApplication } from "src/client/common/Application.js";
-import { Layout } from "src/client/common/ui/Layout.js";
+import { LayoutType } from "src/client/common/ui/Layout.js";
 
 export interface IBrowserApplication extends IApplication {}
 
@@ -7,7 +7,7 @@ export class BrowserApplication extends Application implements IBrowserApplicati
 	/**
 	 * Creates a new BrowserApplication instance
 	 */
-	constructor(layout: Layout) {
-		super(layout);
+	constructor(layoutType: LayoutType) {
+		super(layoutType);
 	}
 }

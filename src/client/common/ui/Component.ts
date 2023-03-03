@@ -1,12 +1,8 @@
-export interface ComponentArgs {
-	parent?: Component;
-}
-
 export abstract class Component {
 	/**
-	 * The unique component identifier
+	 * The unique component identifier (multiple instances of the same component carry the same identifier!)
 	 */
-	private readonly _identifier: string;
+	protected readonly _identifier: string;
 
 	/**
 	 * The parent
@@ -28,8 +24,13 @@ export abstract class Component {
 		this._parent = parent;
 		this._children = [];
 
-		this._parent?.append(this);
+		this._parent?.appendChild(this);
 	}
+
+	/**
+	 * Build function that creates html elements
+	 */
+	public abstract build(): HTMLElement;
 
 	/**
 	 * Set the parent
@@ -38,6 +39,7 @@ export abstract class Component {
 	 */
 	public setParent(parent: Component): void {
 		this._parent = parent;
+		parent.appendChild(this);
 	}
 
 	/**
@@ -55,47 +57,19 @@ export abstract class Component {
 		return this._identifier;
 	}
 
-	public append(component: Component) {
-		this._children.push(component);
-	}
-}
-
-export abstract class ComponentCollection<ComponentType> {
 	/**
-	 * Internal map that stores Components by their id
-	 */
-	protected _components: Map<string, ComponentType>;
-
-	/**
-	 * Creates a new ComponentCollection
-	 */
-	protected constructor() {
-		this._components = new Map<string, ComponentType>();
-	}
-
-	/**
-	 * Set a new Component
+	 * Add child components
 	 *
-	 * @param id Component id
-	 * @param component Component
+	 * @param args The components to add
 	 */
-	public setComponent(id: string, component: ComponentType) {
-		this._components.set(id, component);
+	public appendChild(...args: Component[]): void {
+		this._children.push(...args);
 	}
 
 	/**
-	 * Returns a Component by its id
-	 *
-	 * @param id Component id
+	 * Clears the children array
 	 */
-	public getComponent(id: string): ComponentType | undefined {
-		return this._components.get(id);
-	}
-
-	/**
-	 * Returns an array of key-value pairs of a Component and its id
-	 */
-	public getComponentsAsArray(): [string, ComponentType][] {
-		return Array.from(this._components);
+	public clearChildren(): void {
+		this._children = [];
 	}
 }

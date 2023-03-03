@@ -1,14 +1,15 @@
 import { Service, IService } from "src/client/common/services/Service.js";
-import { Layout } from "src/client/common/ui/Layout.js";
-import { DOMComponent } from "src/client/common/ui/components/DOMComponent.js";
+import { LayoutType } from "src/client/common/ui/Layout.js";
+import { DOMComponent } from "src/client/common/ui/components/DOM.js";
+import { DirectoryContentsCollection } from "../ui/components/DirectoryContentsCollection.js";
 
 export interface IUserInterfaceService extends IService {}
 
 export class UserInterfaceService extends Service implements IUserInterfaceService {
 	/**
-	 * Layout
+	 * Layout type
 	 */
-	private _layout: Layout;
+	private _layoutType: LayoutType;
 
 	/**
 	 * DOMComponent that handles UI Component creation
@@ -18,29 +19,47 @@ export class UserInterfaceService extends Service implements IUserInterfaceServi
 	/**
 	 * Creates a new UserInterfaceService instance
 	 *
-	 * @param layout The layout
+	 * @param layoutType The layout type
 	 */
-	constructor(layout: Layout) {
+	constructor(layoutType: LayoutType) {
 		super();
 
-		this._layout = layout;
+		this._layoutType = layoutType;
 
 		this._domComponent = new DOMComponent(document.body);
+
+		let contentCollection = new DirectoryContentsCollection(this._domComponent);
+		this._buildLayout();
 	}
 
 	/**
-	 * Set the layout
+	 * Parses the layout from this._layoutType and builds it
+	 */
+	private _buildLayout(): void {
+		// this._domComponent.clearChildren();
+		// let componentConfigs: ComponentConfig[] = parseLayoutType(this._layoutType);
+
+		// for (let componentConfig of componentConfigs) {
+		// console.log(componentConfig);
+		// }
+
+		this._domComponent.build();
+	}
+
+	/**
+	 * Update the layout type
 	 *
-	 * @param layout The new layout
+	 * @param layoutType The new layout type
 	 */
-	public setLayout(layout: Layout): void {
-		this._layout = layout;
+	public update(layoutType: LayoutType): void {
+		this._layoutType = layoutType;
+		this._buildLayout();
 	}
 
 	/**
-	 * Get the current layout
+	 * Get the current layout type
 	 */
-	public getLayout(): Layout {
-		return this._layout;
+	public getLayout(): LayoutType {
+		return this._layoutType;
 	}
 }
