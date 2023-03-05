@@ -67,6 +67,15 @@ export abstract class Component {
 	}
 
 	/**
+	 * Prepend child components
+	 *
+	 * @param args The components to add
+	 */
+	public prependChild(...args: Component[]): void {
+		this._children.unshift(...args);
+	}
+
+	/**
 	 * Clears the children array
 	 */
 	public clearChildren(): void {

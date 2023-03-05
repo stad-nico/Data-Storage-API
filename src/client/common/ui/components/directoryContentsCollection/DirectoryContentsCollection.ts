@@ -26,6 +26,9 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"div"> {
 			parent: parent,
 		});
 
-		this._components = [new DirectoryContentFile(this, "hi", "txt", 100), new DirectoryContentFolder(this)];
+		this._components = [
+			new DirectoryContentFile(this, "hi", "txt", 134773, new Date(Date.now())),
+			new DirectoryContentFolder(this, "folder", new Date(Date.now())),
+		];
 	}
 }

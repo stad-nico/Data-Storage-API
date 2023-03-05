@@ -1,6 +1,6 @@
 import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
 
-export class DOMComponent extends HTMLElementComponent<"div"> {
+export class DOMComponent extends HTMLElementComponent<"main"> {
 	/**
 	 * The identifier that maps to this class
 	 */
@@ -14,17 +14,17 @@ export class DOMComponent extends HTMLElementComponent<"div"> {
 	/**
 	 * Creates a new DOMComponent
 	 */
-	constructor(documentBodyElement: HTMLElement) {
-		super("div", {
+	constructor(documentBodyElement: HTMLElement, classes?: string[]) {
+		super("main", {
 			identifier: DOMComponent.identifier,
-			classes: [DOMComponent.identifier],
+			classes: classes ? classes.concat([DOMComponent.identifier]) : [DOMComponent.identifier],
 			parent: undefined,
 		});
 
 		this._documentBodyElement = documentBodyElement;
 	}
 
-	public override build(): HTMLDivElement {
+	public override build(): HTMLElement {
 		let buildElement = super.build();
 		this._documentBodyElement.append(buildElement);
 		return buildElement;

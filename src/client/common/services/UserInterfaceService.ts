@@ -1,7 +1,6 @@
 import { Service, IService } from "src/client/common/services/Service.js";
-import { LayoutType } from "src/client/common/ui/Layout.js";
+import { Layouts, LayoutType } from "src/client/common/ui/Layout.js";
 import { DOMComponent } from "src/client/common/ui/components/DOM.js";
-import { DirectoryContentsCollection } from "../ui/components/DirectoryContentsCollection.js";
 
 export interface IUserInterfaceService extends IService {}
 
@@ -26,9 +25,7 @@ export class UserInterfaceService extends Service implements IUserInterfaceServi
 
 		this._layoutType = layoutType;
 
-		this._domComponent = new DOMComponent(document.body);
-
-		let contentCollection = new DirectoryContentsCollection(this._domComponent);
+		this._domComponent = new DOMComponent(document.body, [LayoutType[this._layoutType]]);
 		this._buildLayout();
 	}
 
@@ -36,12 +33,11 @@ export class UserInterfaceService extends Service implements IUserInterfaceServi
 	 * Parses the layout from this._layoutType and builds it
 	 */
 	private _buildLayout(): void {
-		// this._domComponent.clearChildren();
-		// let componentConfigs: ComponentConfig[] = parseLayoutType(this._layoutType);
+		let config = Layouts[this._layoutType];
 
-		// for (let componentConfig of componentConfigs) {
-		// console.log(componentConfig);
-		// }
+		for (let componentConfig of config) {
+			new componentConfig.component(this._domComponent);
+		}
 
 		this._domComponent.build();
 	}

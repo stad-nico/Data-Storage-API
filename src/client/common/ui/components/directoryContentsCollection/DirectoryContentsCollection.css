@@ -1,0 +1,10 @@
+.directory-contents-collection {
+	position: relative;
+
+	width: 50%;
+	height: 100%;
+
+	display: grid;
+
+	grid-template-columns: repeat(4, 1fr);
+}

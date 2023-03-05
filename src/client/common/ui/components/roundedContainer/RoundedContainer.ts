@@ -1,4 +1,4 @@
-import { HTMLElementComponent, HTMLElementComponentOptions } from "./HTMLElementComponent.js";
+import { HTMLElementComponent, HTMLElementComponentOptions } from "../HTMLElementComponent.js";
 
 export class RoundedContainer extends HTMLElementComponent<"div"> {
 	public static identifier: string = "RoundedContainer";
