@@ -6,7 +6,7 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 	public static identifier: string = "DirectoryContentFolder";
 
 	constructor(parent: Component, name: string, lastEdited: Date) {
-		super(name, lastEdited, {
+		super(name, lastEdited, "folder", {
 			identifier: DirectoryContentFolder.identifier,
 			classes: [DirectoryContentFolder.identifier],
 			parent: parent,

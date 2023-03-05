@@ -1,4 +1,46 @@
 .directory-content-element {
 	grid-column-start: 1;
 	grid-column-end: 5;
+
+	display: grid;
+
+	grid-template-columns: inherit;
+}
+
+.directory-content-element:not(:last-child) {
+	margin-bottom: 2px;
+}
+
+.directory-content-element :is(.name, .last-edited, .size) {
+	pointer-events: none;
+	user-select: none;
+
+	font-family: Montserrat Medium;
+	font-weight: 500;
+	font-size: medium;
+
+	color: rgb(102, 113, 168);
+}
+
+.directory-content-element .wrapper {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.directory-content-element .icon-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 8px;
+
+	grid-column-start: 4;
+}
+
+.directory-content-element :is(.wrapper, .icon-wrapper) .icon {
+	width: 24px;
+	height: 24px;
+
+	background-color: blue;
+	border-radius: 50%;
 }
