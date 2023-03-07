@@ -1,10 +1,14 @@
 .directory-content-element {
+	height: 40px;
+
 	grid-column-start: 1;
 	grid-column-end: 5;
 
 	display: grid;
 
 	grid-template-columns: inherit;
+
+	padding: 0;
 }
 
 .directory-content-element:not(:last-child) {
@@ -19,6 +23,8 @@
 	font-weight: 500;
 	font-size: medium;
 
+	white-space: nowrap;
+
 	color: rgb(102, 113, 168);
 }
 
@@ -26,6 +32,8 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
+
+	margin-left: 8px;
 }
 
 .directory-content-element .icon-wrapper {
@@ -35,6 +43,8 @@
 	gap: 8px;
 
 	grid-column-start: 4;
+
+	margin-right: 15px;
 }
 
 .directory-content-element :is(.wrapper, .icon-wrapper) .icon {

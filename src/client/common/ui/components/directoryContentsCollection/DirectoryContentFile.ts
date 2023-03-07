@@ -1,13 +1,12 @@
-import { withByteSizeSuffix } from "../../../number.js";
-import { toDDMMYYYYWithLeadingZeros } from "../../../string.js";
-import { Component } from "../../Component.js";
-import { DirectoryContentElement } from "./DirectoryContentElement.js";
-import { HTMLElementComponent } from "../HTMLElementComponent.js";
+import { withByteSizeSuffix } from "src/client/common/number.js";
+import { Component } from "src/client/common/ui/Component.js";
+import { DirectoryContentElement } from "src/client/common/ui/components/directoryContentsCollection/DirectoryContentElement.js";
+import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
 
 type Extension = "txt";
 
 export class DirectoryContentFile extends DirectoryContentElement {
-	public static identifier: string = "DirectoryContentFile";
+	public static readonly identifier: string = "DirectoryContentFile";
 
 	private _extension: Extension;
 	private _size: number;
@@ -16,7 +15,10 @@ export class DirectoryContentFile extends DirectoryContentElement {
 	private _sizeComponent: HTMLElementComponent<"p">;
 
 	constructor(parent: Component, name: string, extension: Extension, size: number, lastEdited: Date) {
-		super(name, lastEdited, extension, {
+		super({
+			name: name,
+			lastEdited: lastEdited,
+			type: extension,
 			identifier: DirectoryContentFile.identifier,
 			classes: [DirectoryContentFile.identifier],
 			parent: parent,
@@ -30,21 +32,13 @@ export class DirectoryContentFile extends DirectoryContentElement {
 	}
 
 	private _createExtensionComponent(): void {
-		this._extensionComponent = new HTMLElementComponent("span", {
-			identifier: "Extension",
-			classes: ["Extension"],
-			parent: this.getNameComponent(),
-		});
+		this._extensionComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("span", "Extension", ["Extension"], this.getNameComponent());
 
 		this._extensionComponent.innerText("." + this._extension);
 	}
 
 	private _createSizeComponent(): void {
-		this._sizeComponent = new HTMLElementComponent("p", {
-			identifier: "Size",
-			classes: ["Size"],
-		});
-
+		this._sizeComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("p", "Size", ["Size"]);
 		this.insertAfter(this.getLastEditedComponent(), this._sizeComponent);
 		this._sizeComponent.innerText(withByteSizeSuffix(this._size));
 	}

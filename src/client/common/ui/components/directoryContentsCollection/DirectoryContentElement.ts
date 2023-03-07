@@ -1,66 +1,71 @@
-import { toDDMMYYYYWithLeadingZeros } from "../../../string.js";
+import { toDDMMYYYYWithLeadingZeros, toHHMM } from "../../../string.js";
 import { HTMLElementComponent, HTMLElementComponentOptions } from "../HTMLElementComponent.js";
 import { RoundedContainer } from "../roundedContainer/RoundedContainer.js";
 
 type DirectoryContentElementType = "folder" | "txt";
 
+export interface DirectoryContentElementOptions extends HTMLElementComponentOptions {
+	name: string;
+	lastEdited: Date;
+	shouldShowLastEditedTimestamp?: boolean;
+	type: DirectoryContentElementType;
+}
+
 export class DirectoryContentElement extends RoundedContainer {
-	public static identifier: string = "DirectoryContentElement";
+	public static readonly identifier: string = "DirectoryContentElement";
 
 	private _name: string;
 	private _lastEdited: Date;
 	private _type: DirectoryContentElementType;
 
-	private _iconAndNameWrapperComponent: HTMLElementComponent<"div">;
+	private _iconAndNameWrapperComponent: HTMLElementComponent<"header">;
 	private _iconComponent: HTMLElementComponent<"div">;
 	private _nameComponent: HTMLElementComponent<"p">;
 	private _lastEditedComponent: HTMLElementComponent<"p">;
-	private _iconWrapperComponent: HTMLElementComponent<"div">;
+	private _iconWrapperComponent: HTMLElementComponent<"footer">;
 	private _deleteIconComponent: HTMLElementComponent<"div">;
 	private _downloadIconComponent: HTMLElementComponent<"div">;
 
-	constructor(name: string, lastEdited: Date, type: DirectoryContentElementType, options?: HTMLElementComponentOptions) {
+	constructor(options: DirectoryContentElementOptions) {
 		super({
 			identifier: options?.identifier || DirectoryContentElement.identifier,
 			classes: options?.classes ? options.classes.concat([DirectoryContentElement.identifier]) : [DirectoryContentElement.identifier],
 			parent: options?.parent,
 		});
 
-		this._name = name;
-		this._lastEdited = lastEdited;
-		this._type = type;
+		this._name = options.name;
+		this._lastEdited = options.lastEdited;
+		this._type = options.type;
 
 		this._createIconAndNameWrapperComponent();
 		this._createIconComponent();
 		this._createNameComponent();
-		this._createLastEditedComponent();
+		this._createLastEditedComponent(options?.shouldShowLastEditedTimestamp);
 		this._createIconWrapperComponent();
 		this._createDeleteIconComponent();
 		this._createDownloadIconComponent();
 	}
 
 	private _createDeleteIconComponent(): void {
-		this._deleteIconComponent = new HTMLElementComponent("div", {
-			identifier: "DeleteIcon",
-			classes: ["Icon", "DeleteIcon"],
-			parent: this._iconWrapperComponent,
-		});
+		this._deleteIconComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			"div",
+			"DeleteIcon",
+			["Icon", "DeleteIcon"],
+			this._iconWrapperComponent
+		);
 	}
 
 	private _createDownloadIconComponent(): void {
-		this._downloadIconComponent = new HTMLElementComponent("div", {
-			identifier: "DownloadIcon",
-			classes: ["Icon", "DownloadIcon"],
-			parent: this._iconWrapperComponent,
-		});
+		this._downloadIconComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			"div",
+			"DownloadIcon",
+			["Icon", "DownloadIcon"],
+			this._iconWrapperComponent
+		);
 	}
 
 	private _createIconWrapperComponent(): void {
-		this._iconWrapperComponent = new HTMLElementComponent("div", {
-			identifier: "IconWrapper",
-			classes: ["IconWrapper"],
-			parent: this,
-		});
+		this._iconWrapperComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("footer", "IconWrapper", ["IconWrapper"], this);
 	}
 
 	private _createIconComponent(): void {
@@ -72,31 +77,22 @@ export class DirectoryContentElement extends RoundedContainer {
 	}
 
 	private _createIconAndNameWrapperComponent(): void {
-		this._iconAndNameWrapperComponent = new HTMLElementComponent("div", {
-			identifier: "Wrapper",
-			classes: ["Wrapper"],
-			parent: this,
-		});
+		this._iconAndNameWrapperComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("header", "Wrapper", ["Wrapper"], this);
 	}
 
 	private _createNameComponent(): void {
-		this._nameComponent = new HTMLElementComponent("p", {
-			identifier: "Name",
-			classes: ["Name"],
-			parent: this._iconAndNameWrapperComponent,
-		});
+		this._nameComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("p", "Name", ["Name"], this._iconAndNameWrapperComponent);
 
 		this._nameComponent.innerText(this._name);
 	}
 
-	private _createLastEditedComponent(): void {
-		this._lastEditedComponent = new HTMLElementComponent("p", {
-			identifier: "LastEdited",
-			classes: ["LastEdited"],
-			parent: this,
-		});
-
+	private _createLastEditedComponent(shouldShowLastEditedTimestamp: boolean = false): void {
+		this._lastEditedComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("p", "LastEdited", ["LastEdited"], this);
 		this._lastEditedComponent.innerText(toDDMMYYYYWithLeadingZeros(this._lastEdited, "."));
+
+		if (shouldShowLastEditedTimestamp) {
+			this._lastEditedComponent.addInnerText(" " + toHHMM(this._lastEdited, ":"));
+		}
 	}
 
 	public getNameComponent(): HTMLElementComponent<"p"> {

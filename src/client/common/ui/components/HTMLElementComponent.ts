@@ -1,17 +1,30 @@
 import { Component } from "src/client/common/ui/Component.js";
 import { toKebabCase } from "src/client/common/string.js";
 
-export type HTMLElementComponentOptions = {
+export interface HTMLElementComponentOptions {
 	parent?: Component;
 	identifier?: string;
 	classes?: string[];
-};
+}
 
 export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends Component {
+	public static fromOptionsAsMultipleParameters<T extends keyof HTMLElementTagNameMap>(
+		htmlElement?: HTMLElementTagNameMap[T] | Extract<keyof HTMLElementTagNameMap, T>,
+		identifier?: string,
+		classes?: string[],
+		parent?: Component
+	): HTMLElementComponent<T> {
+		return new HTMLElementComponent(htmlElement, {
+			identifier: identifier,
+			classes: classes,
+			parent: parent,
+		});
+	}
+
 	/**
 	 * The identifier that maps to this class
 	 */
-	public static identifier: string = "HTMLElementComponent";
+	public static readonly identifier: string = "HTMLElementComponent";
 
 	/**
 	 * The HTMLElement contained by this component
@@ -103,11 +116,20 @@ export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends
 	}
 
 	/**
-	 * inner text
+	 * sets the inner text
 	 *
 	 * @param text The text
 	 */
 	public innerText(text: string): void {
 		this._htmlElement.innerText = text;
+	}
+
+	/**
+	 * adds to the inner text
+	 *
+	 * @param text The text
+	 */
+	public addInnerText(text: string): void {
+		this._htmlElement.innerText += text;
 	}
 }

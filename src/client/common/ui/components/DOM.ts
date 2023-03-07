@@ -4,7 +4,7 @@ export class DOMComponent extends HTMLElementComponent<"main"> {
 	/**
 	 * The identifier that maps to this class
 	 */
-	public static identifier: string = "DOMComponent";
+	public static readonly identifier: string = "DOMComponent";
 
 	/**
 	 * The document body element all components will be injected into

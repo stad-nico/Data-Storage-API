@@ -1,7 +1,7 @@
 import { HTMLElementComponent, HTMLElementComponentOptions } from "../HTMLElementComponent.js";
 
 export class RoundedContainer extends HTMLElementComponent<"div"> {
-	public static identifier: string = "RoundedContainer";
+	public static readonly identifier: string = "RoundedContainer";
 
 	constructor(options?: HTMLElementComponentOptions) {
 		super("div", {

@@ -12,3 +12,7 @@ export function toDDMMYYYYWithLeadingZeros(date: Date, separator: string) {
 
 	return dayString + separator + monthString + separator + year;
 }
+
+export function toHHMM(date: Date, separator: string) {
+	return date.getHours() + separator + date.getMinutes();
+}
