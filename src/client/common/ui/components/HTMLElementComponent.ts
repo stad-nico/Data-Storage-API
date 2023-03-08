@@ -132,4 +132,22 @@ export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends
 	public addInnerText(text: string): void {
 		this._htmlElement.innerText += text;
 	}
+
+	/**
+	 * add a class name to the element
+	 *
+	 * @param className The class name to add
+	 */
+	public addClassName(className: string): void {
+		this._htmlElement.classList.add(className);
+	}
+
+	/**
+	 * remove a class name from the element
+	 *
+	 * @param className The class name to remove
+	 */
+	public removeClassName(className: string): void {
+		this._htmlElement.classList.remove(className);
+	}
 }

@@ -2,7 +2,7 @@ import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElemen
 import { Component } from "src/client/common/ui/Component.js";
 import { DirectoryContentFile } from "./DirectoryContentFile.js";
 import { DirectoryContentFolder } from "./DirectoryContentFolder.js";
-import { GridColumnOrderBar } from "./GridColumnOrderBar.js";
+import { GridColumnOrderBar } from "./gridColumnOrderBar/GridColumnOrderBar.js";
 
 type DirectoryContentComponents = DirectoryContentFile | DirectoryContentFolder;
 
@@ -22,6 +22,9 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	 */
 	private _gridColumnOrderBar: GridColumnOrderBar;
 
+	/**
+	 * The container that contains the DirectoryContentComponents
+	 */
 	private _componentsContainer: HTMLElementComponent<"main">;
 
 	/**
@@ -45,5 +48,10 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
 		];
+
+		this.setAttribute("data-first-column", "name");
+		this.setAttribute("data-second-column", "last-edited");
+		this.setAttribute("data-third-column", "size");
+		this.setAttribute("data-fourth-column", "icons");
 	}
 }

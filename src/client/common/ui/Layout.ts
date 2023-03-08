@@ -1,9 +1,5 @@
-import { Component } from "./Component.js";
 import { DirectoryContentsCollection } from "./components/directoryContentsCollection/DirectoryContentsCollection.js";
 import { DOMComponent } from "./components/DOM.js";
-import { DirectoryContentElement } from "./components/directoryContentsCollection/DirectoryContentElement";
-import { HTMLElementComponent } from "./../../../../out/src/client/common/ui/components/HTMLElementComponent";
-
 export enum LayoutType {
 	Floating,
 }
