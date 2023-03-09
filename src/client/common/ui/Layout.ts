@@ -1,6 +1,6 @@
 import { DirectoryContentsCollection } from "./components/directoryContentsCollection/DirectoryContentsCollection.js";
 import { DOMComponent } from "./components/DOM.js";
-export enum LayoutType {
+export enum Layout {
 	Floating,
 }
 
@@ -9,7 +9,7 @@ export interface ComponentMap {
 	DOMComponent: DOMComponent;
 }
 
-export function parseLayoutType(layoutType: LayoutType): any {
+export function parseLayoutType(layoutType: Layout): any {
 	return [];
 }
 
@@ -22,8 +22,8 @@ export function parseLayoutType(layoutType: LayoutType): any {
 // 	args: typeof this.component;
 // };
 
-export const Layouts = {
-	[LayoutType.Floating]: [
+export const LayoutMap = {
+	[Layout.Floating]: [
 		{
 			component: DirectoryContentsCollection,
 		},

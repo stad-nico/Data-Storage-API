@@ -9,7 +9,11 @@
 	width: calc(100% + 2 * 20px);
 
 	margin-left: -20px;
-	padding: 8px 20px;
+	padding: 4px 20px 2px 20px;
+
+	border-top-right-radius: inherit;
+
+	background: inherit;
 }
 
 .grid-column-order-bar .draggable-grid-column-header {
@@ -21,16 +25,18 @@
 
 	white-space: nowrap;
 
-	color: rgb(102, 113, 168);
+	color: var(--directory-contents-order-bar-header-text-color);
 
-	background-color: rgba(255, 0, 0, 0.4);
+	background-color: inherit;
+	border-radius: 5px;
 
+	padding: 2px 5px;
 	margin-right: 5px;
 }
 
 .grid-column-order-bar .draggable-grid-column-header:hover {
 	cursor: pointer;
-	color: rgb(57, 97, 237);
+	color: var(--directory-contents-order-bar-header-hover-text-color);
 }
 
 *[data-first-column="name"] > .grid-column-order-bar .draggable-grid-column-header.name {
@@ -185,7 +191,9 @@
 	position: absolute;
 
 	cursor: pointer;
-	color: rgb(57, 97, 237);
+	color: var(--directory-contents-order-bar-header-hover-text-color);
 
 	grid-column: unset !important;
+
+	box-shadow: 0px 0px 4px 0px rgb(0, 0, 0, 0.2);
 }

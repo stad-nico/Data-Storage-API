@@ -11,15 +11,16 @@ export class GridColumnOrderBar extends HTMLElementComponent<"header"> {
 
 	private _eventEmitter: EventEmitter;
 
-	constructor(parent: Component) {
+	constructor(parent: Component, eventEmitter: EventEmitter) {
 		super("header", {
 			identifier: GridColumnOrderBar.identifier,
 			classes: [GridColumnOrderBar.identifier],
 			parent: parent,
 		});
 
-		this._eventEmitter = new EventEmitter();
+		this._eventEmitter = eventEmitter;
 		this._eventEmitter.on("set", this._setColumn.bind(this));
+		this._eventEmitter.on("dropped", this._onDrop.bind(this));
 
 		this._headings = [
 			new DraggableGridColumnHeader(this, "Name", this._eventEmitter),
@@ -34,10 +35,18 @@ export class GridColumnOrderBar extends HTMLElementComponent<"header"> {
 
 		for (let key in this._htmlElement.dataset) {
 			if (this._htmlElement.dataset[key] === toKebabCase(event.data.identifier)) {
-				console.log(key);
 				this.removeAttribute("data-" + toKebabCase(key));
 			}
 		}
 		this.setAttribute(`data-${numberStrings[event.data.index - 1]}-column`, toKebabCase(event.data.identifier));
+	}
+
+	private _onDrop(event: { data: { index: number; identifier: string } }) {
+		this._setColumn(event);
+		this._eventEmitter.fire("update-column-order", this._htmlElement.dataset);
+
+		for (let key in this._htmlElement.dataset) {
+			this.removeAttribute("data-" + toKebabCase(key));
+		}
 	}
 }

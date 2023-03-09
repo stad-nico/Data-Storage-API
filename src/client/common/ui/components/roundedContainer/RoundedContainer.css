@@ -16,5 +16,5 @@
 .rounded-container:hover {
 	cursor: pointer;
 
-	background-color: rgb(235, 240, 254);
+	background-color: var(--rounded-container-hover-background-color);
 }

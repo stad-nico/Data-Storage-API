@@ -4,9 +4,11 @@
 	box-sizing: border-box;
 }
 
-main {
+main.dom-component {
 	position: relative;
 
 	width: 100vw;
 	height: 100vh;
+
+	background-color: var(--dom-background-color);
 }

@@ -1,14 +1,21 @@
 import { Service, IService } from "src/client/common/services/Service.js";
-import { Layouts, LayoutType } from "src/client/common/ui/Layout.js";
+import { LayoutMap, Layout } from "src/client/common/ui/Layout.js";
 import { DOMComponent } from "src/client/common/ui/components/DOM.js";
+import { toKebabCase } from "../string.js";
+import { Theme } from "../ui/Theme.js";
 
 export interface IUserInterfaceService extends IService {}
 
 export class UserInterfaceService extends Service implements IUserInterfaceService {
 	/**
-	 * Layout type
+	 * Layout
 	 */
-	private _layoutType: LayoutType;
+	private _layout: Layout;
+
+	/**
+	 * Theme
+	 */
+	private _theme: Theme;
 
 	/**
 	 * DOMComponent that handles UI Component creation
@@ -18,22 +25,25 @@ export class UserInterfaceService extends Service implements IUserInterfaceServi
 	/**
 	 * Creates a new UserInterfaceService instance
 	 *
-	 * @param layoutType The layout type
+	 * @param layout The layout
 	 */
-	constructor(layoutType: LayoutType) {
+	constructor(layout: Layout, theme: Theme) {
 		super();
 
-		this._layoutType = layoutType;
+		this._layout = layout;
+		this._theme = theme;
 
-		this._domComponent = new DOMComponent(document.body, [LayoutType[this._layoutType]]);
+		this._domComponent = new DOMComponent(document.body);
 		this._buildLayout();
+		this._domComponent.setAttribute("data-layout", toKebabCase(Layout[layout]));
+		this._domComponent.setAttribute("data-theme", toKebabCase(this._theme));
 	}
 
 	/**
-	 * Parses the layout from this._layoutType and builds it
+	 * Parses the layout from this._layout and builds it
 	 */
 	private _buildLayout(): void {
-		let config = Layouts[this._layoutType];
+		let config = LayoutMap[this._layout];
 
 		for (let componentConfig of config) {
 			new componentConfig.component(this._domComponent);
@@ -43,19 +53,19 @@ export class UserInterfaceService extends Service implements IUserInterfaceServi
 	}
 
 	/**
-	 * Update the layout type
+	 * Update the layout
 	 *
-	 * @param layoutType The new layout type
+	 * @param layout The new layout
 	 */
-	public update(layoutType: LayoutType): void {
-		this._layoutType = layoutType;
+	public update(layout: Layout): void {
+		this._layout = layout;
 		this._buildLayout();
 	}
 
 	/**
-	 * Get the current layout type
+	 * Get the current layout
 	 */
-	public getLayout(): LayoutType {
-		return this._layoutType;
+	public getLayout(): Layout {
+		return this._layout;
 	}
 }

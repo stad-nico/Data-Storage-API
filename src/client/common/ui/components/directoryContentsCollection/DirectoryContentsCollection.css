@@ -7,9 +7,12 @@
 	grid-template-columns: repeat(4, 1fr);
 	grid-auto-rows: max-content;
 
-	background-color: rgb(251, 252, 255);
+	background-color: var(--directory-contents-background-color);
 	border-radius: 0 25px 25px 0;
 	padding: 0 20px 20px 20px;
+
+	display: flex;
+	flex-direction: column;
 }
 
 .directory-contents-collection .directory-contents-container {
@@ -22,4 +25,10 @@
 
 	grid-template-columns: inherit;
 	grid-auto-rows: inherit;
+
+	overflow-y: scroll;
+}
+
+.directory-contents-collection .directory-contents-container::-webkit-scrollbar {
+	display: none;
 }
