@@ -13,14 +13,14 @@ export interface DirectoryContentElementOptions extends HTMLElementComponentOpti
 	type: DirectoryContentElementType;
 }
 
-export class DirectoryContentElement extends RoundedContainer<"div"> {
+export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	public static readonly identifier: string = "DirectoryContentElement";
 
 	private _name: string;
 	private _lastEdited: Date;
 	private _type: DirectoryContentElementType;
 
-	private _iconAndNameWrapperComponent: HTMLElementComponent<"header">;
+	protected _iconAndNameWrapperComponent: HTMLElementComponent<"header">;
 	private _iconComponent: HTMLElementComponent<"div">;
 	private _nameComponent: HTMLElementComponent<"p">;
 	private _lastEditedComponent: HTMLElementComponent<"p">;
@@ -44,7 +44,6 @@ export class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._type = options.type;
 
 		this._createIconAndNameWrapperComponent();
-		this._createIconComponent();
 		this._createNameComponent();
 		this._createLastEditedComponent(options?.shouldShowLastEditedTimestamp);
 		this._createIconWrapperComponent();
@@ -79,14 +78,6 @@ export class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._iconWrapperComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("footer", "IconWrapper", ["IconWrapper"], this);
 	}
 
-	private _createIconComponent(): void {
-		this._iconComponent = new HTMLElementComponent("div", {
-			identifier: this._type === "folder" ? "FolderIcon" : "FileIcon",
-			classes: ["Icon", this._type === "folder" ? "FolderIcon" : "FileIcon"],
-			parent: this._iconAndNameWrapperComponent,
-		});
-	}
-
 	private _createIconAndNameWrapperComponent(): void {
 		this._iconAndNameWrapperComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("header", "Wrapper", ["Wrapper"], this);
 	}
@@ -105,6 +96,8 @@ export class DirectoryContentElement extends RoundedContainer<"div"> {
 			this._lastEditedComponent.addInnerText(" " + toHHMM(this._lastEdited, ":"));
 		}
 	}
+
+	protected abstract _createIconComponent();
 
 	public getNameComponent(): HTMLElementComponent<"p"> {
 		return this._nameComponent;

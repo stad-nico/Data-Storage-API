@@ -60,21 +60,13 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		});
 
 		this._components = [
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
 			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
 			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),

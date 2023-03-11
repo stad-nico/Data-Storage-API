@@ -62,6 +62,19 @@
 	fill: var(--directory-contents-icon-hover-color);
 }
 
+.directory-content-element.directory-content-folder:is(:hover, .selected) .folder-icon .front {
+	display: block;
+	width: 76%;
+	height: 41.666667%;
+	left: calc(8.333333% + calc(var(--border-radius) - 1px));
+	top: 41.666667%;
+	border-radius: calc(var(--border-radius) - 1px);
+	border-bottom-left-radius: 0;
+	background-color: #ffca28;
+	transform: skewX(-10deg);
+	transition: all 0.05s linear;
+}
+
 *[data-first-column="name"] .directory-contents-container .directory-content-element .wrapper {
 	grid-column: 1 / 2;
 	margin-left: 8px;
