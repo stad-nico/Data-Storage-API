@@ -45,7 +45,9 @@ export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends
 		super(options?.identifier || HTMLElementComponent.identifier, options?.parent);
 
 		this._htmlElement =
-			htmlElement instanceof HTMLElement ? htmlElement : document.createElement(htmlElement as Extract<keyof HTMLElementTagNameMap, T>);
+			typeof htmlElement === "string"
+				? document.createElement(htmlElement as Extract<keyof HTMLElementTagNameMap, T>)
+				: (htmlElement as HTMLElementTagNameMap[T]);
 
 		this._classes = options?.classes ? options.classes : [];
 	}

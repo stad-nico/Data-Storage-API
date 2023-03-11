@@ -1,0 +1,19 @@
+.side-by-side {
+	width: 100%;
+	height: 100%;
+
+	padding: 6% 10%;
+
+	display: flex;
+	flex-flow: row;
+}
+
+.side-by-side .directory-tree {
+	width: 40%;
+	height: 100%;
+}
+
+.side-by-side .directory-contents-collection {
+	width: 60%;
+	height: 100%;
+}

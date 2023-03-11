@@ -1,5 +1,7 @@
 import { DirectoryContentsCollection } from "./components/directoryContentsCollection/DirectoryContentsCollection.js";
+import { DirectoryTree } from "./components/directoryTree/DirectoryTree.js";
 import { DOMComponent } from "./components/DOM.js";
+import { SideBySide } from "./components/SideBySide.js";
 export enum Layout {
 	Floating,
 }
@@ -23,11 +25,7 @@ export function parseLayoutType(layoutType: Layout): any {
 // };
 
 export const LayoutMap = {
-	[Layout.Floating]: [
-		{
-			component: DirectoryContentsCollection,
-		},
-	],
+	[Layout.Floating]: [{ component: SideBySide }],
 };
 
 // function f<T extends keyof ComponentMap>(e: T): ComponentMap[T] {

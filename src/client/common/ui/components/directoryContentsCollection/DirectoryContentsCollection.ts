@@ -5,8 +5,7 @@ import { DirectoryContentFolder } from "./DirectoryContentFolder.js";
 import { GridColumnOrderBar } from "./gridColumnOrderBar/GridColumnOrderBar.js";
 import { EventEmitter } from "src/client/common/EventEmitter.js";
 import { toKebabCase } from "src/client/common/string.js";
-
-type DirectoryContentComponents = DirectoryContentFile | DirectoryContentFolder;
+import { DirectoryContentElement } from "./DirectoryContentElement.js";
 
 export class DirectoryContentsCollection extends HTMLElementComponent<"section"> {
 	/**
@@ -17,7 +16,7 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	/**
 	 * Array that holds the current directory components
 	 */
-	private _components: DirectoryContentComponents[];
+	private _components: DirectoryContentElement[];
 
 	/**
 	 * The component that handles dragging elements in a header-like bar to rearrange the order in which the name, last edited and size etc components of a DirectoryContentComponent are displayed
@@ -35,6 +34,11 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	private _eventEmitter: EventEmitter;
 
 	/**
+	 * Reference to the current selected element
+	 */
+	private _selectedComponent: DirectoryContentElement;
+
+	/**
 	 * Creates a new DirectoryContentsCollection instance
 	 */
 	constructor(parent: Component) {
@@ -46,6 +50,7 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 
 		this._eventEmitter = new EventEmitter();
 		this._eventEmitter.on("update-column-order", data => this._updateColumnOrder(data.data));
+		this._eventEmitter.on("select", data => this._selectElement(data.data));
 
 		this._gridColumnOrderBar = new GridColumnOrderBar(this, this._eventEmitter);
 		this._componentsContainer = new HTMLElementComponent("main", {
@@ -55,26 +60,26 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		});
 
 		this._components = [
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
-			new DirectoryContentFile(this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
-			new DirectoryContentFolder(this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
+			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now())),
+			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now())),
 		];
 
 		this.setAttribute("data-first-column", "name");
@@ -87,5 +92,14 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		for (let key in attributes) {
 			this.setAttribute("data-" + toKebabCase(key), attributes[key]!);
 		}
+	}
+
+	private _selectElement(component: DirectoryContentElement): void {
+		if (this._selectedComponent) {
+			this._selectedComponent.unselect();
+		}
+
+		component.select();
+		this._selectedComponent = component;
 	}
 }

@@ -1,6 +1,4 @@
 .directory-content-element {
-	height: 40px;
-
 	grid-column-start: 1;
 	grid-column-end: 5;
 
@@ -12,6 +10,10 @@
 	padding: 0;
 
 	z-index: 1;
+}
+
+.directory-content-element.selected .name {
+	color: var(--directory-contents-hover-text-color);
 }
 
 .directory-content-element:not(:last-child) {
@@ -41,17 +43,23 @@
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	gap: 8px;
 
 	grid-column-start: 4;
+
+	height: 40px;
 }
 
 .directory-content-element :is(.wrapper, .icon-wrapper) .icon {
 	width: 24px;
 	height: 24px;
 
-	background-color: blue;
 	border-radius: 50%;
+
+	fill: var(--directory-contents-icon-color);
+}
+
+.directory-content-element .icon-wrapper .icon:hover {
+	fill: var(--directory-contents-icon-hover-color);
 }
 
 *[data-first-column="name"] .directory-contents-container .directory-content-element .wrapper {

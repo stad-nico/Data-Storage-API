@@ -1,3 +1,4 @@
+import { EventEmitter } from "src/client/common/EventEmitter.js";
 import { withByteSizeSuffix } from "src/client/common/number.js";
 import { Component } from "src/client/common/ui/Component.js";
 import { DirectoryContentElement } from "src/client/common/ui/components/directoryContentsCollection/DirectoryContentElement.js";
@@ -14,8 +15,8 @@ export class DirectoryContentFile extends DirectoryContentElement {
 	private _extensionComponent: HTMLElementComponent<"span">;
 	private _sizeComponent: HTMLElementComponent<"p">;
 
-	constructor(parent: Component, name: string, extension: Extension, size: number, lastEdited: Date) {
-		super({
+	constructor(eventEmitter: EventEmitter, parent: Component, name: string, extension: Extension, size: number, lastEdited: Date) {
+		super(eventEmitter, {
 			name: name,
 			lastEdited: lastEdited,
 			type: extension,
