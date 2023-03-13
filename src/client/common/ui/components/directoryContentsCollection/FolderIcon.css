@@ -24,7 +24,7 @@
 	border-radius: var(--border-radius);
 	background-color: #ffca28;
 
-	transition: all 0.05s linear;
+	transition: all 0.1s linear;
 }
 
 .folder-icon .back {
@@ -47,7 +47,7 @@
 	width: 83.333334%;
 	height: 58.333334%;
 	left: 8.333333%;
-	top: 25%;
+	top: 24.4%;
 	border-radius: var(--border-radius);
 	border-top-left-radius: 0;
 	background-color: #ffa000;

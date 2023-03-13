@@ -3,6 +3,7 @@ import { LayoutMap, Layout } from "src/client/common/ui/Layout.js";
 import { DOMComponent } from "src/client/common/ui/components/DOM.js";
 import { toKebabCase } from "../string.js";
 import { Theme } from "../ui/Theme.js";
+import { EventEmitter } from "../EventEmitter.js";
 
 export interface IUserInterfaceService extends IService {}
 
@@ -45,8 +46,10 @@ export class UserInterfaceService extends Service implements IUserInterfaceServi
 	private _buildLayout(): void {
 		let config = LayoutMap[this._layout];
 
+		let eventEmitter = new EventEmitter();
+
 		for (let componentConfig of config) {
-			new componentConfig.component(this._domComponent);
+			new componentConfig.component(this._domComponent, eventEmitter);
 		}
 
 		this._domComponent.build();

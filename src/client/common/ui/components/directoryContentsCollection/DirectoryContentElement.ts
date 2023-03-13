@@ -63,6 +63,10 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			parent: this._iconWrapperComponent,
 			dpath: "M7 21q-.825 0-1.412-.587Q5 19.825 5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413Q17.825 21 17 21ZM17 6H7v13h10ZM9 17h2V8H9Zm4 0h2V8h-2ZM7 6v13Z",
 		});
+
+		this._deleteIconComponent.addEventListener("click", function (e) {
+			e.stopPropagation();
+		});
 	}
 
 	private _createDownloadIconComponent(): void {
@@ -71,6 +75,10 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			classes: ["DownloadIcon"],
 			parent: this._iconWrapperComponent,
 			dpath: "M6 20q-.825 0-1.412-.587Q4 18.825 4 18v-3h2v3h12v-3h2v3q0 .825-.587 1.413Q18.825 20 18 20Zm6-4-5-5 1.4-1.45 2.6 2.6V4h2v8.15l2.6-2.6L17 11Z",
+		});
+
+		this._downloadIconComponent.addEventListener("click", function (e) {
+			e.stopPropagation();
 		});
 	}
 
@@ -96,8 +104,6 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			this._lastEditedComponent.addInnerText(" " + toHHMM(this._lastEdited, ":"));
 		}
 	}
-
-	protected abstract _createIconComponent();
 
 	public getNameComponent(): HTMLElementComponent<"p"> {
 		return this._nameComponent;

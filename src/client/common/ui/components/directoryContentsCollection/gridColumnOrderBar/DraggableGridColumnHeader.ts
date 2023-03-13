@@ -65,8 +65,11 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 	private _setInitialAbsolutePosition(): void {
 		this._htmlElement.style.width = this._htmlElement.getBoundingClientRect().width + "px";
 		this._htmlElement.style.left =
-			this._htmlElement.getBoundingClientRect().x - +getComputedStyle(this._htmlElement).marginLeft.replace(/px/, "") + "px";
-		this._htmlElement.style.top = this._htmlElement.getBoundingClientRect().y + "px";
+			this._htmlElement.getBoundingClientRect().x -
+			this._htmlElement.parentElement!.getBoundingClientRect().x -
+			+getComputedStyle(this._htmlElement).marginLeft.replace(/px/, "") +
+			"px";
+		this._htmlElement.style.top = this._htmlElement.getBoundingClientRect().y - this._htmlElement.parentElement!.getBoundingClientRect().y + "px";
 		this.addClassName("dragging");
 	}
 
@@ -95,18 +98,23 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 		let parent = this._htmlElement.parentElement!;
 
 		if (e.clientX - this._dragOffsetX <= parent.getBoundingClientRect().x + +getComputedStyle(parent).paddingLeft.slice(0, -2)) {
-			this._htmlElement.style.left = parent.getBoundingClientRect().x + +getComputedStyle(parent).paddingLeft.slice(0, -2) + "px";
+			this._htmlElement.style.left = +getComputedStyle(parent).paddingLeft.slice(0, -2) + "px";
 		} else if (
 			e.clientX - this._dragOffsetX + this._htmlElement.getBoundingClientRect().width >
 			parent.getBoundingClientRect().right - +getComputedStyle(parent).paddingRight.slice(0, -2)
 		) {
 			this._htmlElement.style.left =
-				parent.getBoundingClientRect().right -
+				parent.getBoundingClientRect().width -
 				this._htmlElement.getBoundingClientRect().width -
 				+getComputedStyle(parent).paddingRight.slice(0, -2) +
 				"px";
 		} else {
-			this._htmlElement.style.left = e.clientX - this._dragOffsetX - +getComputedStyle(this._htmlElement).marginLeft.replace(/px/, "") + "px";
+			this._htmlElement.style.left =
+				e.clientX -
+				parent.getBoundingClientRect().x -
+				this._dragOffsetX -
+				+getComputedStyle(this._htmlElement).marginLeft.replace(/px/, "") +
+				"px";
 		}
 
 		this._eventEmitter.fire("move", { x: e.clientX, text: this._title });

@@ -2,7 +2,6 @@ import { Component } from "../Component.js";
 import { HTMLElementComponent, HTMLElementComponentOptions } from "./HTMLElementComponent.js";
 
 interface SVGIconOptions extends HTMLElementComponentOptions {
-	parent: Component;
 	dpath: string;
 }
 

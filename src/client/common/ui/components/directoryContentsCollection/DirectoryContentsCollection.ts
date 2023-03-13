@@ -41,14 +41,14 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	/**
 	 * Creates a new DirectoryContentsCollection instance
 	 */
-	constructor(parent: Component) {
+	constructor(parent: Component, eventEmitter: EventEmitter) {
 		super("section", {
 			identifier: DirectoryContentsCollection.identifier,
 			classes: [DirectoryContentsCollection.identifier],
 			parent: parent,
 		});
 
-		this._eventEmitter = new EventEmitter();
+		this._eventEmitter = eventEmitter;
 		this._eventEmitter.on("update-column-order", data => this._updateColumnOrder(data.data));
 		this._eventEmitter.on("select", data => this._selectElement(data.data));
 

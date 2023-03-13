@@ -1,0 +1,51 @@
+.collapsable-directory-tree-item-header .name {
+	margin-left: 8px;
+
+	pointer-events: none;
+	user-select: none;
+
+	font-family: Montserrat Medium;
+	font-weight: 500;
+	font-size: medium;
+
+	white-space: nowrap;
+
+	color: var(--directory-tree-item-text-color);
+}
+
+.collapsable-directory-tree-item-header:hover .icon-wrapper {
+	opacity: 1;
+	pointer-events: all;
+}
+
+.collapsable-directory-tree-item-header .icon-wrapper {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	margin-left: auto;
+
+	opacity: 0;
+	pointer-events: none;
+}
+
+.collapsable-directory-tree-item-header .icon-wrapper *.icon {
+	fill: var(--directory-tree-item-icon-color);
+}
+
+.collapsable-directory-tree-item-header .icon-wrapper *.icon:hover {
+	fill: var(--directory-tree-item-icon-hover-color);
+}
+
+.collapsable-directory-tree-item-header .collapsable-arrow:hover {
+	fill: var(--directory-tree-item-arrow-icon-hover-color);
+}
+
+.collapsable-directory-tree-item-header .collapsable-arrow {
+	fill: var(--directory-tree-item-arrow-icon-color);
+	transition: transform 0.2s;
+}
+
+.collapsable-directory-tree-item.collapsed .collapsable-directory-tree-item-header .collapsable-arrow {
+	transform: rotate(-90deg);
+}

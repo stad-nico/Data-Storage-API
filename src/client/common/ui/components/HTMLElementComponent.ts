@@ -152,4 +152,34 @@ export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends
 	public removeClassName(className: string): void {
 		this._htmlElement.classList.remove(className);
 	}
+
+	/**
+	 * add eventlistener to this component
+	 *
+	 * @param type The event type
+	 * @param listener The event listener
+	 * @param options Optional options
+	 */
+	public addEventListener(
+		type: string,
+		listener: EventListenerOrEventListenerObject,
+		options?: boolean | AddEventListenerOptions | undefined
+	): void {
+		this._htmlElement.addEventListener(type, listener, options);
+	}
+
+	/**
+	 * remove eventlistener to this component
+	 *
+	 * @param type The event type
+	 * @param listener The event listener
+	 * @param options Optional options
+	 */
+	public removeEventListener(
+		type: string,
+		listener: EventListenerOrEventListenerObject,
+		options?: boolean | EventListenerOptions | undefined
+	): void {
+		this._htmlElement.removeEventListener(type, listener, options);
+	}
 }
