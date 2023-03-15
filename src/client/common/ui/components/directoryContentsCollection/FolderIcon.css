@@ -40,14 +40,14 @@
 	top: 16.666666%;
 	border-top-left-radius: var(--border-radius);
 	background-color: #ffa000;
-	clip-path: polygon(0 0, 75% 0, 100% 100%, 0 100%);
+	clip-path: polygon(0 0, 75% 0, 100% calc(100% + 0.5px), -0.5px calc(100% + 0.5px));
 }
 
 .folder-icon .back .basic {
 	width: 83.333334%;
 	height: 58.333334%;
 	left: 8.333333%;
-	top: 24.4%;
+	top: 25%;
 	border-radius: var(--border-radius);
 	border-top-left-radius: 0;
 	background-color: #ffa000;

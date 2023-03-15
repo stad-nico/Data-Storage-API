@@ -96,7 +96,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._nameComponent.innerText(this._name);
 	}
 
-	private _createLastEditedComponent(shouldShowLastEditedTimestamp: boolean = false): void {
+	private _createLastEditedComponent(shouldShowLastEditedTimestamp: boolean = true): void {
 		this._lastEditedComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("p", "LastEdited", ["LastEdited"], this);
 		this._lastEditedComponent.innerText(toDDMMYYYYWithLeadingZeros(this._lastEdited, "."));
 
