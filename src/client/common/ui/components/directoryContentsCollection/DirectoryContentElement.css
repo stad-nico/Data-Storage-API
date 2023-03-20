@@ -20,8 +20,11 @@
 	margin-bottom: 2px;
 }
 
-.directory-content-element :is(.name, .last-edited, .size) {
+.directory-content-element :is(.name, .wrapper, .last-edited, .size) {
 	pointer-events: none;
+}
+
+.directory-content-element :is(.name, .last-edited, .size) {
 	user-select: none;
 
 	font-family: Montserrat Medium;
@@ -65,7 +68,7 @@
 	fill: var(--directory-contents-icon-hover-color);
 }
 
-.directory-content-element.directory-content-folder:is(:hover, .selected) .folder-icon .front {
+.directory-content-element.directory-content-folder:is(:hover, .selected, .drag-hover) .folder-icon .front {
 	display: block;
 	width: 76%;
 	height: 41.666667%;

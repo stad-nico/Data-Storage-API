@@ -1,5 +1,7 @@
 import { EventEmitter } from "src/client/common/EventEmitter.js";
 import { Component } from "../../Component.js";
+import { Draggable } from "../../Draggable.js";
+import { DropTarget } from "../../DropTarget.js";
 import { DirectoryContentElement } from "./DirectoryContentElement.js";
 import { FolderIcon } from "./FolderIcon.js";
 
@@ -17,6 +19,9 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 			classes: [DirectoryContentFolder.identifier],
 			parent: parent,
 		});
+
+		new Draggable(this._htmlElement);
+		new DropTarget(this._htmlElement, () => console.log("DroP"));
 
 		this._createIconComponent();
 	}

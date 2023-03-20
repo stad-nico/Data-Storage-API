@@ -3,6 +3,7 @@ import { withByteSizeSuffix } from "src/client/common/number.js";
 import { Component } from "src/client/common/ui/Component.js";
 import { DirectoryContentElement } from "src/client/common/ui/components/directoryContentsCollection/DirectoryContentElement.js";
 import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
+import { Draggable } from "../../Draggable.js";
 
 type Extension = "txt";
 
@@ -25,6 +26,7 @@ export class DirectoryContentFile extends DirectoryContentElement {
 			parent: parent,
 		});
 
+		new Draggable(this._htmlElement);
 		this._extension = extension;
 		this._size = size;
 

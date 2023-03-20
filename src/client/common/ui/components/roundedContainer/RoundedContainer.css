@@ -13,12 +13,10 @@
 	border-radius: 15px;
 }
 
-.rounded-container.selected {
+.rounded-container:is(:hover, .selected, .drag-hover) {
 	background-color: var(--rounded-container-hover-background-color);
 }
 
 .rounded-container:hover {
 	cursor: pointer;
-
-	background-color: var(--rounded-container-hover-background-color);
 }
