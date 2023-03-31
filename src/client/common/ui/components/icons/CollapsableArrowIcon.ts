@@ -5,7 +5,7 @@ import { SVGIcon } from "../SVGIcon.js";
 export class CollapsableArrowIcon extends SVGIcon {
 	public static readonly identifier: string = "CollapsableArrow";
 
-	constructor(parent: Component, collapsed: boolean = true) {
+	constructor(parent?: Component, collapsed: boolean = true) {
 		super({
 			identifier: CollapsableArrowIcon.identifier,
 			classes: [CollapsableArrowIcon.identifier],

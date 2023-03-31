@@ -3,6 +3,7 @@ import { Component } from "../../Component.js";
 import { Draggable } from "../../Draggable.js";
 import { DropTarget } from "../../DropTarget.js";
 import { DirectoryContentElement } from "./DirectoryContentElement.js";
+import { DirectoryContentFolderContextMenu } from "../contextMenus/directoryContentFolderContextMenu/DirectoryContentFolderContextMenu.js";
 import { FolderIcon } from "./FolderIcon.js";
 
 export class DirectoryContentFolder extends DirectoryContentElement {
@@ -24,6 +25,8 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 		new DropTarget(this._htmlElement, () => console.log("DroP"));
 
 		this._createIconComponent();
+
+		this.addEventListener("contextmenu", this._openContextMenu);
 	}
 
 	protected _createIconComponent() {
@@ -33,5 +36,21 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 		});
 
 		this._iconAndNameWrapperComponent.prependChild(this._folderIcon);
+	}
+
+	private _openContextMenu(e: MouseEvent) {
+		e.preventDefault();
+
+		var contextMenu: DirectoryContentFolderContextMenu = new DirectoryContentFolderContextMenu(document.body, 0, 0);
+
+		document.addEventListener(
+			"mousedown",
+			function (e) {
+				contextMenu.remove();
+			},
+			{
+				once: true,
+			}
+		);
 	}
 }

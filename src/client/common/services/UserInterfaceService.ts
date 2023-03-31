@@ -1,13 +1,10 @@
-import { Service, IService } from "src/client/common/services/Service.js";
 import { LayoutMap, Layout } from "src/client/common/ui/Layout.js";
 import { DOMComponent } from "src/client/common/ui/components/DOM.js";
 import { toKebabCase } from "../string.js";
 import { Theme } from "../ui/Theme.js";
 import { EventEmitter } from "../EventEmitter.js";
 
-export interface IUserInterfaceService extends IService {}
-
-export class UserInterfaceService extends Service implements IUserInterfaceService {
+export class UserInterfaceService {
 	/**
 	 * Layout
 	 */
@@ -29,8 +26,6 @@ export class UserInterfaceService extends Service implements IUserInterfaceServi
 	 * @param layout The layout
 	 */
 	constructor(layout: Layout, theme: Theme) {
-		super();
-
 		this._layout = layout;
 		this._theme = theme;
 

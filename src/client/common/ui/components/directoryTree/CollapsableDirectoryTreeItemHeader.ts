@@ -2,9 +2,10 @@ import { Component } from "../../Component.js";
 import { RoundedContainer } from "../roundedContainer/RoundedContainer.js";
 import { HTMLElementComponent } from "../HTMLElementComponent.js";
 import { FolderIcon } from "../directoryContentsCollection/FolderIcon.js";
-import { CollapsableArrowIcon } from "./CollapsableArrowIcon.js";
+import { CollapsableArrowIcon } from "../icons/CollapsableArrowIcon.js";
 import { OpenInNewTabIcon } from "./OpenInNewTabIcon.js";
 import { EventEmitter } from "src/client/common/EventEmitter.js";
+import { Draggable } from "../../Draggable.js";
 
 export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header"> {
 	public static readonly identifier: string = "CollapsableDirectoryTreeItemHeader";
@@ -32,6 +33,8 @@ export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header
 		this._nameComponent.innerText(name);
 		this._iconWrapper = HTMLElementComponent.fromOptionsAsMultipleParameters("div", "IconWrapper", ["IconWrapper"], this);
 		this._openInNewTabIcon = new OpenInNewTabIcon(this._iconWrapper);
+
+		new Draggable(this._htmlElement);
 	}
 
 	public setOnCollapsableArrowIconClickHandler(handler: (...args: any[]) => void) {

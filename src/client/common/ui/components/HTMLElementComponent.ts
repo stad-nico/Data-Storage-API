@@ -182,4 +182,11 @@ export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends
 	): void {
 		this._htmlElement.removeEventListener(type, listener, options);
 	}
+
+	/**
+	 * get the htmlelement
+	 */
+	public getHTMLElement(): HTMLElement {
+		return this._htmlElement;
+	}
 }
