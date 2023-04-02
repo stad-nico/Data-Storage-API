@@ -1,4 +1,4 @@
-main[data-theme="light"] {
+html:has(main[data-theme="light"]) {
 	--directory-contents-text-color: rgb(102, 113, 168);
 	--directory-contents-hover-text-color: rgb(57, 97, 237);
 	--directory-contents-order-bar-header-text-color: rgb(158, 165, 199);
@@ -14,7 +14,15 @@ main[data-theme="light"] {
 	--directory-tree-item-arrow-icon-hover-color: rgb(57, 97, 237);
 	--directory-tree-item-icon-color: rgb(169, 174, 199);
 	--directory-tree-item-icon-hover-color: rgb(57, 97, 237);
+	--context-menu-element-title-color: rgb(102, 113, 168);
+	--context-menu-element-hotkey-color: rgb(158, 165, 199);
+	--context-menu-element-icon-color: rgb(102, 113, 168);
+	--context-menu-element-hover-background-color: hsl(224, 90%, 96%);
+	--context-menu-danger-element-hover-background-color: hsl(354, 100%, 97%);
+	--context-menu-danger-element-hover-title-color: #ff5768;
+	--context-menu-danger-element-hover-icon-color: #ff5768;
+	--context-menu-danger-element-hover-hotkey-color: #ff5768;
 }
 
-main[data-theme="dark"] {
+html:has(main[data-theme="dark"]) {
 }

@@ -4,7 +4,8 @@ import { HTMLElementComponent, HTMLElementComponentOptions } from "../HTMLElemen
 import { DeleteIcon } from "../icons/DeleteIcon.js";
 import { DownloadIcon } from "../icons/DownloadIcon.js";
 import { RoundedContainer } from "../roundedContainer/RoundedContainer.js";
-import { SVGIcon } from "../SVGIcon.js";
+import { DeleteIcon24 } from "src/client/common/ui/components/icons/24/DeleteIcon24.js";
+import { DownloadIcon24 } from "src/client/common/ui/components/icons/24/DownloadIcon24.js";
 
 type DirectoryContentElementType = "folder" | "txt";
 
@@ -30,7 +31,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	private _deleteIconComponent: DeleteIcon;
 	private _downloadIconComponent: DownloadIcon;
 
-	private _selected: boolean;
+	protected _selected: boolean;
 
 	private _eventEmitter: EventEmitter;
 
@@ -59,7 +60,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	}
 
 	private _createDeleteIconComponent(): void {
-		this._deleteIconComponent = new DeleteIcon(this._iconWrapperComponent);
+		this._deleteIconComponent = new DeleteIcon24(this._iconWrapperComponent);
 
 		this._deleteIconComponent.addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -67,7 +68,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	}
 
 	private _createDownloadIconComponent(): void {
-		this._downloadIconComponent = new DownloadIcon(this._iconWrapperComponent);
+		this._downloadIconComponent = new DownloadIcon24(this._iconWrapperComponent);
 
 		this._downloadIconComponent.addEventListener("click", function (e) {
 			e.stopPropagation();

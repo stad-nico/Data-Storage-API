@@ -8,8 +8,6 @@
 	grid-auto-flow: column;
 
 	padding: 0;
-
-	z-index: 1;
 }
 
 .directory-content-element.selected .name {

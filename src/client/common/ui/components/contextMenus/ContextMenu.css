@@ -1,0 +1,75 @@
+.context-menu-wrapper {
+	position: absolute;
+
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+}
+
+.context-menu {
+	position: absolute;
+
+	width: 200px;
+	background-color: white;
+
+	padding: 4px;
+	border-radius: 14px;
+}
+
+.context-menu-element {
+	height: 30px;
+	border-radius: 10px;
+
+	padding-left: 6px;
+	gap: 2px;
+}
+.context-menu-element:not(:last-child) {
+	margin-bottom: 1px;
+}
+
+.context-menu-element:hover {
+	background-color: var(--context-menu-element-hover-background-color);
+}
+
+.context-menu-element.delete:hover {
+	background-color: var(--context-menu-danger-element-hover-background-color);
+}
+
+.context-menu-element.delete:hover .icon {
+	fill: var(--context-menu-danger-element-hover-icon-color);
+}
+
+.context-menu-element.delete:hover .title {
+	color: var(--context-menu-danger-element-hover-title-color);
+}
+
+.context-menu-element.delete:hover .hotkey {
+	color: var(--context-menu-danger-element-hover-hotkey-color);
+}
+
+.context-menu :is(.hotkey, .title) {
+	user-select: none;
+	font-family: Montserrat Medium;
+	font-weight: 500;
+	font-size: small;
+	white-space: nowrap;
+}
+
+.context-menu .icon {
+	fill: var(--context-menu-element-icon-color);
+
+	width: 22px;
+	height: 22px;
+
+	shape-rendering: geometricPrecision;
+}
+
+.context-menu .hotkey {
+	margin-left: auto;
+	color: var(--context-menu-element-hotkey-color);
+}
+
+.context-menu .title {
+	color: var(--context-menu-element-title-color);
+}

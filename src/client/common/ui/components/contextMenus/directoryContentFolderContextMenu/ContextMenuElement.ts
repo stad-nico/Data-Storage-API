@@ -2,8 +2,9 @@ import { Hotkey } from "src/client/common/hotkeys/Hotkey.js";
 import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
 import { Component } from "../../../Component.js";
 import { SVGIcon } from "../../SVGIcon.js";
+import { RoundedContainer } from "../../roundedContainer/RoundedContainer.js";
 
-export class ContextMenuElement extends HTMLElementComponent<"div"> {
+export class ContextMenuElement extends RoundedContainer<"div"> {
 	public static readonly identifier: string = "ContextMenuElement";
 
 	private readonly icon: SVGIcon;
@@ -16,7 +17,7 @@ export class ContextMenuElement extends HTMLElementComponent<"div"> {
 	constructor(parent: Component, icon: SVGIcon, title: string, hotkey: Hotkey) {
 		super("div", {
 			identifier: ContextMenuElement.identifier,
-			classes: [ContextMenuElement.identifier],
+			classes: [ContextMenuElement.identifier, title],
 			parent: parent,
 		});
 

@@ -26,7 +26,7 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 
 		this._createIconComponent();
 
-		this.addEventListener("contextmenu", this._openContextMenu);
+		this.addEventListener("contextmenu", this._openContextMenu.bind(this));
 	}
 
 	protected _createIconComponent() {
@@ -41,7 +41,11 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 	private _openContextMenu(e: MouseEvent) {
 		e.preventDefault();
 
-		var contextMenu: DirectoryContentFolderContextMenu = new DirectoryContentFolderContextMenu(document.body, 0, 0);
+		if (!this._selected) {
+			return;
+		}
+
+		var contextMenu: DirectoryContentFolderContextMenu = new DirectoryContentFolderContextMenu(document.body, e.clientX, e.clientY);
 
 		document.addEventListener(
 			"mousedown",
