@@ -1,3 +1,4 @@
+import { Event } from "src/client/common/ui/Event.js";
 import { Component } from "../../../Component.js";
 import { HTMLElementComponent } from "../../HTMLElementComponent.js";
 import { DraggableGridColumnHeader } from "./DraggableGridColumnHeader.js";
@@ -19,8 +20,8 @@ export class GridColumnOrderBar extends HTMLElementComponent<"header"> {
 		});
 
 		this._eventEmitter = eventEmitter;
-		this._eventEmitter.on("set", this._setColumn.bind(this));
-		this._eventEmitter.on("dropped", this._onDrop.bind(this));
+		this._eventEmitter.on(Event.DirectoryContentColumnHeaderIndexSet, this._setColumn.bind(this));
+		this._eventEmitter.on(Event.DirectoryContentColumnHeaderDropped, this._onDrop.bind(this));
 
 		this._headings = [
 			new DraggableGridColumnHeader(this, "Name", this._eventEmitter),
@@ -43,7 +44,7 @@ export class GridColumnOrderBar extends HTMLElementComponent<"header"> {
 
 	private _onDrop(event: { data: { index: number; identifier: string } }) {
 		this._setColumn(event);
-		this._eventEmitter.fire("update-column-order", this._htmlElement.dataset);
+		this._eventEmitter.fire(Event.DirectoryContentColumnOrderUpdated, this._htmlElement.dataset);
 
 		for (let key in this._htmlElement.dataset) {
 			this.removeAttribute("data-" + toKebabCase(key));

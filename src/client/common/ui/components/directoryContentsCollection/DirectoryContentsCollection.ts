@@ -7,6 +7,7 @@ import { EventEmitter } from "src/client/common/EventEmitter.js";
 import { toKebabCase } from "src/client/common/string.js";
 import { DirectoryContentElement } from "./DirectoryContentElement.js";
 import { DropTarget } from "src/client/common/ui/DropTarget.js";
+import { Event } from "src/client/common/ui/Event.js";
 
 export class DirectoryContentsCollection extends HTMLElementComponent<"section"> {
 	/**
@@ -50,9 +51,9 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		});
 
 		this._eventEmitter = eventEmitter;
-		this._eventEmitter.on("update-column-order", data => this._updateColumnOrder(data.data));
-		this._eventEmitter.on("select", data => this._selectElement(data.data));
-		this._eventEmitter.on("select-by-id", data => this._selectElementById(data.data));
+		this._eventEmitter.on(Event.DirectoryContentColumnOrderUpdated, data => this._updateColumnOrder(data.data));
+		this._eventEmitter.on(Event.DirectoryContentElementSelected, data => this._selectElement(data.data));
+		this._eventEmitter.on(Event.DirectoryContentElementSelectedById, data => this._selectElementById(data.data));
 
 		this._gridColumnOrderBar = new GridColumnOrderBar(this, this._eventEmitter);
 		this._componentsContainer = new HTMLElementComponent("main", {

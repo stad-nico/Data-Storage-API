@@ -4,6 +4,7 @@ import { DropTarget } from "../../DropTarget.js";
 import { DirectoryContentElement } from "./DirectoryContentElement.js";
 import { DirectoryContentFolderContextMenu } from "../contextMenus/directoryContentFolderContextMenu/DirectoryContentFolderContextMenu.js";
 import { FolderIcon } from "./FolderIcon.js";
+import { Event } from "src/client/common/ui/Event.js";
 
 export class DirectoryContentFolder extends DirectoryContentElement {
 	public static readonly identifier: string = "DirectoryContentFolder";
@@ -23,7 +24,7 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 
 		new DropTarget(this._htmlElement, () => {
 			console.log("DroP");
-			eventEmitter.fire("select-by-id", this._id);
+			eventEmitter.fire(Event.DirectoryContentElementSelectedById, this._id);
 		});
 
 		this._createIconComponent();

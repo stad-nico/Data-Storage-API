@@ -7,6 +7,7 @@ import { RoundedContainer } from "../roundedContainer/RoundedContainer.js";
 import { DeleteIcon24 } from "src/client/common/ui/components/icons/24/DeleteIcon24.js";
 import { DownloadIcon24 } from "src/client/common/ui/components/icons/24/DownloadIcon24.js";
 import { Draggable } from "src/client/common/ui/Draggable.js";
+import { Event } from "src/client/common/ui/Event.js";
 
 type DirectoryContentElementType = "folder" | "txt";
 
@@ -60,7 +61,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._eventEmitter = eventEmitter;
 		this._selected = false;
 
-		this._htmlElement.addEventListener("click", e => this._eventEmitter.fire("select", this));
+		this._htmlElement.addEventListener("click", e => this._eventEmitter.fire(Event.DirectoryContentElementSelected, this));
 		this._htmlElement.setAttribute("data-id", "" + this._id);
 
 		new Draggable(this._htmlElement);

@@ -1,3 +1,4 @@
+import { Event } from "src/client/common/ui/Event.js";
 import { Component } from "../../../Component.js";
 import { HTMLElementComponent } from "../../HTMLElementComponent.js";
 import { EventEmitter } from "src/client/common/EventEmitter.js";
@@ -30,7 +31,7 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 		this.innerText(title);
 		this._title = title.replaceAll(/\s/gim, "-");
 
-		eventEmitter.on("move", this._onOtherHeaderMove.bind(this));
+		eventEmitter.on(Event.DirectoryContentColumnHeaderMoved, this._onOtherHeaderMove.bind(this));
 		this._eventEmitter = eventEmitter;
 
 		this._htmlElement.addEventListener("mousedown", this._onMouseDown.bind(this));
@@ -74,13 +75,13 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 	}
 
 	private _registerIndexListeners(): void {
-		this._eventEmitter.on("increase", this._incIndexListener);
-		this._eventEmitter.on("decrease", this._decIndexListener);
+		this._eventEmitter.on(Event.DirectoryContentColumnHeaderIndexIncreased, this._incIndexListener);
+		this._eventEmitter.on(Event.DirectoryContentColumnHeaderIndexDecreased, this._decIndexListener);
 	}
 
 	private _removeIndexListeners(): void {
-		this._eventEmitter.off("increase", this._incIndexListener);
-		this._eventEmitter.off("decrease", this._decIndexListener);
+		this._eventEmitter.off(Event.DirectoryContentColumnHeaderIndexIncreased, this._incIndexListener);
+		this._eventEmitter.off(Event.DirectoryContentColumnHeaderIndexDecreased, this._decIndexListener);
 	}
 
 	private _onMouseDown(e: MouseEvent): void {
@@ -117,7 +118,7 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 				"px";
 		}
 
-		this._eventEmitter.fire("move", { x: e.clientX, text: this._title });
+		this._eventEmitter.fire(Event.DirectoryContentColumnHeaderMoved, { x: e.clientX, text: this._title });
 	}
 
 	private _onMouseUp(e: MouseEvent): void {
@@ -127,7 +128,7 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 		this.removeClassName("dragging");
 		this.removeAttribute("style");
 
-		this._eventEmitter.fire("dropped", { index: this._index, identifier: this._title });
+		this._eventEmitter.fire(Event.DirectoryContentColumnHeaderDropped, { index: this._index, identifier: this._title });
 	}
 
 	private _onOtherHeaderMove(event: { data: { x: number; text: string } }) {
@@ -140,14 +141,14 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 
 		if (event.data.x >= boundingClientRect.x && event.data.x < boundingClientRect.x + boundingClientRect.width / 2) {
 			index--;
-			this._eventEmitter.fire("increase");
+			this._eventEmitter.fire(Event.DirectoryContentColumnHeaderIndexIncreased);
 		} else if (event.data.x <= boundingClientRect.right && event.data.x > boundingClientRect.x + boundingClientRect.width / 2) {
 			index++;
-			this._eventEmitter.fire("decrease");
+			this._eventEmitter.fire(Event.DirectoryContentColumnHeaderIndexDecreased);
 		} else {
 			return;
 		}
 
-		this._eventEmitter.fire(`set`, { index: index, identifier: this._title });
+		this._eventEmitter.fire(Event.DirectoryContentColumnHeaderIndexSet, { index: index, identifier: this._title });
 	}
 }
