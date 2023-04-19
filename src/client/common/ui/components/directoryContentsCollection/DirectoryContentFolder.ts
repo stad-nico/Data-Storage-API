@@ -1,6 +1,5 @@
 import { EventEmitter } from "src/client/common/EventEmitter.js";
 import { Component } from "../../Component.js";
-import { Draggable } from "../../Draggable.js";
 import { DropTarget } from "../../DropTarget.js";
 import { DirectoryContentElement } from "./DirectoryContentElement.js";
 import { DirectoryContentFolderContextMenu } from "../contextMenus/directoryContentFolderContextMenu/DirectoryContentFolderContextMenu.js";
@@ -11,7 +10,7 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 
 	private _folderIcon: FolderIcon;
 
-	constructor(eventEmitter: EventEmitter, parent: Component, name: string, lastEdited: Date) {
+	constructor(eventEmitter: EventEmitter, parent: Component, name: string, lastEdited: Date, id: number) {
 		super(eventEmitter, {
 			name: name,
 			lastEdited: lastEdited,
@@ -19,10 +18,13 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 			identifier: DirectoryContentFolder.identifier,
 			classes: [DirectoryContentFolder.identifier],
 			parent: parent,
+			id: id,
 		});
 
-		new Draggable(this._htmlElement);
-		new DropTarget(this._htmlElement, () => console.log("DroP"));
+		new DropTarget(this._htmlElement, () => {
+			console.log("DroP");
+			eventEmitter.fire("select-by-id", this._id);
+		});
 
 		this._createIconComponent();
 

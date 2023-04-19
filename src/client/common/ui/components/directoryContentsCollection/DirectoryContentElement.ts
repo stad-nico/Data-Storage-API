@@ -6,6 +6,7 @@ import { DownloadIcon } from "../icons/DownloadIcon.js";
 import { RoundedContainer } from "../roundedContainer/RoundedContainer.js";
 import { DeleteIcon24 } from "src/client/common/ui/components/icons/24/DeleteIcon24.js";
 import { DownloadIcon24 } from "src/client/common/ui/components/icons/24/DownloadIcon24.js";
+import { Draggable } from "src/client/common/ui/Draggable.js";
 
 type DirectoryContentElementType = "folder" | "txt";
 
@@ -14,6 +15,7 @@ export interface DirectoryContentElementOptions extends HTMLElementComponentOpti
 	lastEdited: Date;
 	shouldShowLastEditedTimestamp?: boolean;
 	type: DirectoryContentElementType;
+	id: number;
 }
 
 export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
@@ -22,6 +24,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	private _name: string;
 	private _lastEdited: Date;
 	private _type: DirectoryContentElementType;
+	protected _id: number;
 
 	protected _iconAndNameWrapperComponent: HTMLElementComponent<"header">;
 	private _iconComponent: HTMLElementComponent<"div">;
@@ -45,6 +48,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._name = options.name;
 		this._lastEdited = options.lastEdited;
 		this._type = options.type;
+		this._id = options.id;
 
 		this._createIconAndNameWrapperComponent();
 		this._createNameComponent();
@@ -57,6 +61,9 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._selected = false;
 
 		this._htmlElement.addEventListener("click", e => this._eventEmitter.fire("select", this));
+		this._htmlElement.setAttribute("data-id", "" + this._id);
+
+		new Draggable(this._htmlElement);
 	}
 
 	private _createDeleteIconComponent(): void {

@@ -34,8 +34,6 @@ export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 		this._headerComponent.setOnCollapsableArrowIconClickHandler(this._onCollapsableArrowIconClick.bind(this));
 		this._bodyComponent = new CollapsableDirectoryTreeItemBody(this);
 
-		new DropTarget(this._htmlElement, () => console.log("DROP"));
-
 		if (this._collapsed) {
 			this.collapse();
 		} else {

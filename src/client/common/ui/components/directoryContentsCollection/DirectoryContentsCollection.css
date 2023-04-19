@@ -12,6 +12,10 @@
 	flex-direction: column;
 }
 
+.directory-contents-collection.drag-hover {
+	background-color: var(--directory-contents-drag-hover-background-color);
+}
+
 .directory-contents-collection .directory-contents-container {
 	display: grid;
 

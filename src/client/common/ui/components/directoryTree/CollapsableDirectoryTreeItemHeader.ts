@@ -7,6 +7,7 @@ import { OpenInNewTabIcon } from "./OpenInNewTabIcon.js";
 import { EventEmitter } from "src/client/common/EventEmitter.js";
 import { Draggable } from "../../Draggable.js";
 import { CollapsableArrowIcon24 } from "../icons/24/CollapsableArrowIcon24.js";
+import { DropTarget } from "src/client/common/ui/DropTarget.js";
 
 export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header"> {
 	public static readonly identifier: string = "CollapsableDirectoryTreeItemHeader";
@@ -36,6 +37,7 @@ export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header
 		this._openInNewTabIcon = new OpenInNewTabIcon(this._iconWrapper);
 
 		new Draggable(this._htmlElement);
+		new DropTarget(this._htmlElement, () => console.log("DROP"));
 	}
 
 	public setOnCollapsableArrowIconClickHandler(handler: (...args: any[]) => void) {

@@ -3,7 +3,6 @@ import { withByteSizeSuffix } from "src/client/common/number.js";
 import { Component } from "src/client/common/ui/Component.js";
 import { DirectoryContentElement } from "src/client/common/ui/components/directoryContentsCollection/DirectoryContentElement.js";
 import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
-import { Draggable } from "../../Draggable.js";
 
 type Extension = "txt";
 
@@ -16,7 +15,7 @@ export class DirectoryContentFile extends DirectoryContentElement {
 	private _extensionComponent: HTMLElementComponent<"span">;
 	private _sizeComponent: HTMLElementComponent<"p">;
 
-	constructor(eventEmitter: EventEmitter, parent: Component, name: string, extension: Extension, size: number, lastEdited: Date) {
+	constructor(eventEmitter: EventEmitter, parent: Component, name: string, extension: Extension, size: number, lastEdited: Date, id: number) {
 		super(eventEmitter, {
 			name: name,
 			lastEdited: lastEdited,
@@ -24,9 +23,9 @@ export class DirectoryContentFile extends DirectoryContentElement {
 			identifier: DirectoryContentFile.identifier,
 			classes: [DirectoryContentFile.identifier],
 			parent: parent,
+			id: id,
 		});
 
-		new Draggable(this._htmlElement);
 		this._extension = extension;
 		this._size = size;
 
