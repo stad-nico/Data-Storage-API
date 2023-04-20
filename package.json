@@ -2,11 +2,10 @@
 	"name": "file-server",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"compile-typescript": "tsc && tsc-alias",
-		"watch-typescript": "concurrently --kill-others \"tsc -w\" \"tsc-alias -w\""
+		"dev": "parcel --port 3000 --open chrome --dist-dir ./dev",
+		"build": "parcel build src/client/common/index.html --dist-dir ./build/ --no-source-maps"
 	},
 	"repository": {
 		"type": "git",
@@ -20,11 +19,16 @@
 	},
 	"homepage": "https://github.com/stad-nico/File-Server#readme",
 	"devDependencies": {
+		"@babel/core": "^7.21.4",
+		"@babel/plugin-transform-flow-strip-types": "^7.21.0",
 		"@types/node": "^18.14.6",
-		"concurrently": "^7.6.0",
-		"fantasticon": "^2.0.0",
-		"parcel": "^2.8.3",
-		"tsc-alias": "^1.8.2",
-		"typescript": "^4.9.5"
+		"flow-bin": "^0.204.0",
+		"parcel": "^2.8.3"
+	},
+	"source": "src/client/common/index.html",
+	"alias": {
+		"src": "./src/",
+		"common": "./src/client/common/",
+		"browser": "./src/client/browser/"
 	}
 }

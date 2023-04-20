@@ -1,5 +1,4 @@
-import { Component } from "../Component.js";
-import { HTMLElementComponent, HTMLElementComponentOptions } from "./HTMLElementComponent.js";
+import { HTMLElementComponent, HTMLElementComponentOptions } from "common/ui/components/HTMLElementComponent";
 
 export interface SVGIconOptions extends HTMLElementComponentOptions {
 	dpath: string;

@@ -1,9 +1,9 @@
-import { Event } from "src/client/common/ui/Event.js";
-import { Component } from "../../../Component.js";
-import { HTMLElementComponent } from "../../HTMLElementComponent.js";
-import { DraggableGridColumnHeader } from "./DraggableGridColumnHeader.js";
-import { EventEmitter } from "src/client/common/EventEmitter.js";
-import { toKebabCase } from "src/client/common/string.js";
+import { Event } from "common/ui/Event";
+import { Component } from "common/ui/Component";
+import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent";
+import { DraggableGridColumnHeader } from "common/ui/components/directoryContentsCollection/gridColumnOrderBar/DraggableGridColumnHeader";
+import { EventEmitter } from "common/EventEmitter";
+import { toKebabCase } from "common/string";
 
 export class GridColumnOrderBar extends HTMLElementComponent<"header"> {
 	public static readonly identifier: string = "GridColumnOrderBar";

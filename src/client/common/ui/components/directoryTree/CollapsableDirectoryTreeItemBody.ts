@@ -1,6 +1,6 @@
-import { DropTarget } from "src/client/common/ui/DropTarget.js";
-import { Component } from "../../Component.js";
-import { HTMLElementComponent } from "../HTMLElementComponent.js";
+import { DropTarget } from "src/client/common/ui/DropTarget";
+import { Component } from "../../Component";
+import { HTMLElementComponent } from "../HTMLElementComponent";
 
 export class CollapsableDirectoryTreeItemBody extends HTMLElementComponent<"main"> {
 	public static readonly identifier: string = "CollapsableDirectoryTreeItemBody";

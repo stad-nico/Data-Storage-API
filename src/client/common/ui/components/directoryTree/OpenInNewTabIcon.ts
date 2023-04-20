@@ -1,5 +1,5 @@
-import { Component } from "../../Component.js";
-import { SVGIcon } from "../SVGIcon.js";
+import { Component } from "common/ui/Component";
+import { SVGIcon } from "common/ui/components/SVGIcon";
 
 export class OpenInNewTabIcon extends SVGIcon {
 	public static readonly identifier: string = "OpenInNewTabIcon";

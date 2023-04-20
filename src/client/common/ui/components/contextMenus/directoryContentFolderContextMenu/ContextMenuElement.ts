@@ -1,8 +1,8 @@
-import { Hotkey } from "src/client/common/hotkeys/Hotkey.js";
-import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
-import { Component } from "../../../Component.js";
-import { SVGIcon } from "../../SVGIcon.js";
-import { RoundedContainer } from "../../roundedContainer/RoundedContainer.js";
+import { Hotkey } from "src/client/common/hotkeys/Hotkey";
+import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent";
+import { Component } from "../../../Component";
+import { SVGIcon } from "../../SVGIcon";
+import { RoundedContainer } from "../../roundedContainer/RoundedContainer";
 
 export class ContextMenuElement extends RoundedContainer<"div"> {
 	public static readonly identifier: string = "ContextMenuElement";

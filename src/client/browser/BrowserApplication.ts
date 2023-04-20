@@ -1,7 +1,7 @@
-import { Application, IApplication } from "src/client/common/Application.js";
-import { Layout } from "src/client/common/ui/Layout.js";
-import { Environment } from "../common/Environment.js";
-import { Theme } from "../common/ui/Theme.js";
+import { Application, IApplication } from "src/client/common/Application";
+import { Layout } from "src/client/common/ui/Layout";
+import { Environment } from "../common/Environment";
+import { Theme } from "../common/ui/Theme";
 
 export interface IBrowserApplication extends IApplication {}
 

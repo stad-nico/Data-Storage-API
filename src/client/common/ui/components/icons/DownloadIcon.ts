@@ -1,4 +1,4 @@
-import { SVGIcon, SVGIconOptions } from "../SVGIcon.js";
+import { SVGIcon, SVGIconOptions } from "common/ui/components/SVGIcon";
 
 export abstract class DownloadIcon extends SVGIcon {
 	public static readonly identifier: string = "DownloadIcon";

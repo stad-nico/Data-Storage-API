@@ -1,7 +1,7 @@
-import { EventEmitter } from "src/client/common/EventEmitter.js";
-import { Component } from "../../Component.js";
-import { HTMLElementComponent } from "../HTMLElementComponent.js";
-import { CollapsableDirectoryTreeItem } from "./CollapsableDirectoryTreeItem.js";
+import { EventEmitter } from "src/client/common/EventEmitter";
+import { Component } from "../../Component";
+import { HTMLElementComponent } from "../HTMLElementComponent";
+import { CollapsableDirectoryTreeItem } from "./CollapsableDirectoryTreeItem";
 
 export class DirectoryTree extends HTMLElementComponent<"section"> {
 	public static readonly identifier: string = "DirectoryTree";

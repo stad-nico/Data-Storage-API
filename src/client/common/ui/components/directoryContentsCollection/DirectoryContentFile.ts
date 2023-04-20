@@ -1,8 +1,8 @@
-import { EventEmitter } from "src/client/common/EventEmitter.js";
-import { withByteSizeSuffix } from "src/client/common/number.js";
-import { Component } from "src/client/common/ui/Component.js";
-import { DirectoryContentElement } from "src/client/common/ui/components/directoryContentsCollection/DirectoryContentElement.js";
-import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
+import { EventEmitter } from "common/EventEmitter";
+import { withByteSizeSuffix } from "common/number";
+import { Component } from "common/ui/Component";
+import { DirectoryContentElement } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
+import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent";
 
 type Extension = "txt";
 

@@ -1,4 +1,4 @@
-import { DRAG_SOURCE_ATTRIBUTE } from "./Draggable.js";
+import { DRAG_SOURCE_ATTRIBUTE } from "common/ui/Draggable";
 
 const DRAG_HOVER_CSS_CLASS = "drag-hover";
 

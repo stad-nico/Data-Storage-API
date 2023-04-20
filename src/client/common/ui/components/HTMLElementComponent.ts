@@ -1,5 +1,5 @@
-import { Component } from "src/client/common/ui/Component.js";
-import { toKebabCase } from "src/client/common/string.js";
+import { Component } from "common/ui/Component";
+import { toKebabCase } from "common/string";
 
 export interface HTMLElementComponentOptions {
 	parent?: Component;

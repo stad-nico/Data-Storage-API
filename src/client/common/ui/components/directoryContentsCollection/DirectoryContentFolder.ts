@@ -1,10 +1,10 @@
-import { EventEmitter } from "src/client/common/EventEmitter.js";
-import { Component } from "../../Component.js";
-import { DropTarget } from "../../DropTarget.js";
-import { DirectoryContentElement } from "./DirectoryContentElement.js";
-import { DirectoryContentFolderContextMenu } from "../contextMenus/directoryContentFolderContextMenu/DirectoryContentFolderContextMenu.js";
-import { FolderIcon } from "./FolderIcon.js";
-import { Event } from "src/client/common/ui/Event.js";
+import { EventEmitter } from "common/EventEmitter";
+import { Component } from "common/ui/Component";
+import { DropTarget } from "common/ui/DropTarget";
+import { DirectoryContentElement } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
+import { DirectoryContentFolderContextMenu } from "common/ui/components/contextMenus/directoryContentFolderContextMenu/DirectoryContentFolderContextMenu";
+import { FolderIcon } from "./FolderIcon";
+import { Event } from "common/ui/Event";
 
 export class DirectoryContentFolder extends DirectoryContentElement {
 	public static readonly identifier: string = "DirectoryContentFolder";

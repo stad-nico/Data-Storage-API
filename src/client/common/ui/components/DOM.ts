@@ -1,4 +1,4 @@
-import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
+import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent";
 
 export class DOMComponent extends HTMLElementComponent<"main"> {
 	/**

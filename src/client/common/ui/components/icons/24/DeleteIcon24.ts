@@ -1,5 +1,5 @@
-import { Component } from "src/client/common/ui/Component.js";
-import { DeleteIcon } from "src/client/common/ui/components/icons/DeleteIcon.js";
+import { Component } from "common/ui/Component";
+import { DeleteIcon } from "common/ui/components/icons/DeleteIcon";
 
 export class DeleteIcon24 extends DeleteIcon {
 	public static readonly identifier: string = "24";

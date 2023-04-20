@@ -1,13 +1,13 @@
-import { HTMLElementComponent } from "src/client/common/ui/components/HTMLElementComponent.js";
-import { Component } from "src/client/common/ui/Component.js";
-import { DirectoryContentFile } from "./DirectoryContentFile.js";
-import { DirectoryContentFolder } from "./DirectoryContentFolder.js";
-import { GridColumnOrderBar } from "./gridColumnOrderBar/GridColumnOrderBar.js";
-import { EventEmitter } from "src/client/common/EventEmitter.js";
-import { toKebabCase } from "src/client/common/string.js";
-import { DirectoryContentElement } from "./DirectoryContentElement.js";
-import { DropTarget } from "src/client/common/ui/DropTarget.js";
-import { Event } from "src/client/common/ui/Event.js";
+import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent";
+import { Component } from "common/ui/Component";
+import { DirectoryContentFile } from "common/ui/components/directoryContentsCollection/DirectoryContentFile";
+import { DirectoryContentFolder } from "common/ui/components/directoryContentsCollection/DirectoryContentFolder";
+import { GridColumnOrderBar } from "common/ui/components/directoryContentsCollection/gridColumnOrderBar/GridColumnOrderBar";
+import { EventEmitter } from "common/EventEmitter";
+import { toKebabCase } from "common/string";
+import { DirectoryContentElement } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
+import { DropTarget } from "common/ui/DropTarget";
+import { Event } from "common/ui/Event";
 
 export class DirectoryContentsCollection extends HTMLElementComponent<"section"> {
 	/**

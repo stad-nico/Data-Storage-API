@@ -1,4 +1,4 @@
-import { HTMLElementComponent, HTMLElementComponentOptions } from "../HTMLElementComponent.js";
+import { HTMLElementComponent, HTMLElementComponentOptions } from "common/ui/components/HTMLElementComponent";
 
 export class RoundedContainer<T extends keyof HTMLElementTagNameMap> extends HTMLElementComponent<T> {
 	public static readonly identifier: string = "RoundedContainer";

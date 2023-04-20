@@ -1,13 +1,13 @@
-import { EventEmitter } from "src/client/common/EventEmitter.js";
-import { toDDMMYYYYWithLeadingZeros, toHHMM } from "../../../string.js";
-import { HTMLElementComponent, HTMLElementComponentOptions } from "../HTMLElementComponent.js";
-import { DeleteIcon } from "../icons/DeleteIcon.js";
-import { DownloadIcon } from "../icons/DownloadIcon.js";
-import { RoundedContainer } from "../roundedContainer/RoundedContainer.js";
-import { DeleteIcon24 } from "src/client/common/ui/components/icons/24/DeleteIcon24.js";
-import { DownloadIcon24 } from "src/client/common/ui/components/icons/24/DownloadIcon24.js";
-import { Draggable } from "src/client/common/ui/Draggable.js";
-import { Event } from "src/client/common/ui/Event.js";
+import { EventEmitter } from "common/EventEmitter";
+import { toDDMMYYYYWithLeadingZeros, toHHMM } from "common/string";
+import { HTMLElementComponent, HTMLElementComponentOptions } from "common/ui/components/HTMLElementComponent";
+import { DeleteIcon } from "common/ui/components/icons/DeleteIcon";
+import { DownloadIcon } from "common/ui/components/icons/DownloadIcon";
+import { RoundedContainer } from "common/ui/components/roundedContainer/RoundedContainer";
+import { DeleteIcon24 } from "common/ui/components/icons/24/DeleteIcon24";
+import { DownloadIcon24 } from "common/ui/components/icons/24/DownloadIcon24";
+import { Draggable } from "common/ui/Draggable";
+import { Event } from "common/ui/Event";
 
 type DirectoryContentElementType = "folder" | "txt";
 

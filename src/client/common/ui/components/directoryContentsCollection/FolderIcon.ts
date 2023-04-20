@@ -1,4 +1,4 @@
-import { HTMLElementComponent, HTMLElementComponentOptions } from "../HTMLElementComponent.js";
+import { HTMLElementComponent, HTMLElementComponentOptions } from "common/ui/components/HTMLElementComponent";
 
 /**
  * Doesnt extends SVGIcon because this icon will be implemented with elements

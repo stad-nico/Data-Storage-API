@@ -1,8 +1,8 @@
-import { DeleteIcon24 } from "src/client/common/ui/components/icons/24/DeleteIcon24.js";
-import { HTMLElementComponent } from "../../HTMLElementComponent.js";
-import { ContextMenuElement } from "./ContextMenuElement.js";
-import { Hotkey } from "src/client/common/hotkeys/Hotkey.js";
-import { DownloadIcon24 } from "src/client/common/ui/components/icons/24/DownloadIcon24.js";
+import { DeleteIcon24 } from "src/client/common/ui/components/icons/24/DeleteIcon24";
+import { HTMLElementComponent } from "../../HTMLElementComponent";
+import { ContextMenuElement } from "./ContextMenuElement";
+import { Hotkey } from "src/client/common/hotkeys/Hotkey";
+import { DownloadIcon24 } from "src/client/common/ui/components/icons/24/DownloadIcon24";
 
 export class DirectoryContentFolderContextMenu extends HTMLElementComponent<"main"> {
 	public static readonly identifier: string = "DirectoryContentFolderContextMenu";

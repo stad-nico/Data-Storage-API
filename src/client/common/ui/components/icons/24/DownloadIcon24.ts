@@ -1,5 +1,5 @@
-import { Component } from "src/client/common/ui/Component.js";
-import { DownloadIcon } from "src/client/common/ui/components/icons/DownloadIcon.js";
+import { Component } from "common/ui/Component";
+import { DownloadIcon } from "common/ui/components/icons/DownloadIcon";
 
 export class DownloadIcon24 extends DownloadIcon {
 	public static readonly identifier: string = "24";

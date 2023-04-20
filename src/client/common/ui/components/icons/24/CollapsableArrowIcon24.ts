@@ -1,5 +1,5 @@
-import { Component } from "../../../Component.js";
-import { CollapsableArrowIcon } from "../CollapsableArrowIcon.js";
+import { Component } from "common/ui/Component";
+import { CollapsableArrowIcon } from "common/ui/components/icons/CollapsableArrowIcon";
 
 export class CollapsableArrowIcon24 extends CollapsableArrowIcon {
 	public static readonly identifier: string = "24";

@@ -1,8 +1,8 @@
-import { LayoutMap, Layout } from "src/client/common/ui/Layout.js";
-import { DOMComponent } from "src/client/common/ui/components/DOM.js";
-import { toKebabCase } from "../string.js";
-import { Theme } from "../ui/Theme.js";
-import { EventEmitter } from "../EventEmitter.js";
+import { LayoutMap, Layout } from "common/ui/Layout";
+import { DOMComponent } from "common/ui/components/DOM";
+import { toKebabCase } from "common/string";
+import { Theme } from "common/ui/Theme";
+import { EventEmitter } from "common/EventEmitter";
 
 export class UserInterfaceService {
 	/**

@@ -1,7 +1,7 @@
-import { Event } from "src/client/common/ui/Event.js";
-import { Component } from "../../../Component.js";
-import { HTMLElementComponent } from "../../HTMLElementComponent.js";
-import { EventEmitter } from "src/client/common/EventEmitter.js";
+import { Event } from "src/client/common/ui/Event";
+import { Component } from "../../../Component";
+import { HTMLElementComponent } from "../../HTMLElementComponent";
+import { EventEmitter } from "src/client/common/EventEmitter";
 
 /**
  * Doesnt extend the Draggable because drag functionality will be implemented via mouse events

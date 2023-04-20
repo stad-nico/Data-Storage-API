@@ -1,7 +1,7 @@
-import { UserInterfaceService } from "src/client/common/services/UserInterfaceService.js";
-import { Layout } from "src/client/common/ui/Layout.js";
-import { Environment } from "./Environment.js";
-import { Theme } from "./ui/Theme.js";
+import { UserInterfaceService } from "common/services/UserInterfaceService";
+import { Layout } from "common/ui/Layout";
+import { Environment } from "common/Environment";
+import { Theme } from "common/ui/Theme";
 
 export interface IApplication {
 	readonly userInterfaceService: UserInterfaceService;

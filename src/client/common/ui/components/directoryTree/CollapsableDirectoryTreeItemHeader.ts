@@ -1,13 +1,13 @@
-import { Component } from "../../Component.js";
-import { RoundedContainer } from "../roundedContainer/RoundedContainer.js";
-import { HTMLElementComponent } from "../HTMLElementComponent.js";
-import { FolderIcon } from "../directoryContentsCollection/FolderIcon.js";
-import { CollapsableArrowIcon } from "../icons/CollapsableArrowIcon.js";
-import { OpenInNewTabIcon } from "./OpenInNewTabIcon.js";
-import { EventEmitter } from "src/client/common/EventEmitter.js";
-import { Draggable } from "../../Draggable.js";
-import { CollapsableArrowIcon24 } from "../icons/24/CollapsableArrowIcon24.js";
-import { DropTarget } from "src/client/common/ui/DropTarget.js";
+import { Component } from "../../Component";
+import { RoundedContainer } from "../roundedContainer/RoundedContainer";
+import { HTMLElementComponent } from "../HTMLElementComponent";
+import { FolderIcon } from "../directoryContentsCollection/FolderIcon";
+import { CollapsableArrowIcon } from "../icons/CollapsableArrowIcon";
+import { OpenInNewTabIcon } from "./OpenInNewTabIcon";
+import { EventEmitter } from "src/client/common/EventEmitter";
+import { Draggable } from "../../Draggable";
+import { CollapsableArrowIcon24 } from "../icons/24/CollapsableArrowIcon24";
+import { DropTarget } from "src/client/common/ui/DropTarget";
 
 export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header"> {
 	public static readonly identifier: string = "CollapsableDirectoryTreeItemHeader";

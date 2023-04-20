@@ -1,10 +1,10 @@
-import { Component } from "../../Component.js";
-import { HTMLElementComponent } from "../HTMLElementComponent.js";
-import { CollapsableDirectoryTreeItemHeader } from "./CollapsableDirectoryTreeItemHeader.js";
-import { CollapsableDirectoryTreeItemBody } from "./CollapsableDirectoryTreeItemBody.js";
-import { EventEmitter } from "src/client/common/EventEmitter.js";
-import { DropTarget } from "../../DropTarget.js";
-import { Draggable } from "../../Draggable.js";
+import { Component } from "../../Component";
+import { HTMLElementComponent } from "../HTMLElementComponent";
+import { CollapsableDirectoryTreeItemHeader } from "./CollapsableDirectoryTreeItemHeader";
+import { CollapsableDirectoryTreeItemBody } from "./CollapsableDirectoryTreeItemBody";
+import { EventEmitter } from "src/client/common/EventEmitter";
+import { DropTarget } from "../../DropTarget";
+import { Draggable } from "../../Draggable";
 
 export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 	public static readonly identifier: string = "CollapsableDirectoryTreeItem";
