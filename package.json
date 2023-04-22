@@ -4,7 +4,8 @@
 	"description": "",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "parcel --port 3000 --open chrome --dist-dir ./dev",
+		"dev-hot-compile": "parcel watch --dist-dir ./dev",
+		"dev-hot-server": "nodemon ./src/server.ts",
 		"build": "parcel build src/client/common/index.html --dist-dir ./build/ --no-source-maps"
 	},
 	"repository": {
@@ -22,8 +23,19 @@
 		"@babel/core": "^7.21.4",
 		"@babel/plugin-transform-flow-strip-types": "^7.21.0",
 		"@types/node": "^18.14.6",
+		"buffer": "^5.7.1",
+		"dotenv": "^16.0.3",
 		"flow-bin": "^0.204.0",
-		"parcel": "^2.8.3"
+		"nodemon": "^2.0.22",
+		"parcel": "^2.8.3",
+		"ts-node": "^10.9.1"
+	},
+	"dependencies": {
+		"@types/express": "^4.17.17",
+		"express": "^4.18.2",
+		"socket.io": "^4.6.1",
+		"socket.io-client": "^4.6.1",
+		"typescript": "^5.0.4"
 	},
 	"source": "src/client/common/index.html",
 	"alias": {

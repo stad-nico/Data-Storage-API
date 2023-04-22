@@ -3,7 +3,8 @@
 		"baseUrl": "./src/",
 		"paths": {
 			"common/*": ["client/common/*"],
-			"browser/*": ["client/browser/*"]
+			"browser/*": ["client/browser/*"],
+			"src/*": ["./*"]
 		}
 	}
 }

@@ -2,6 +2,7 @@ import { UserInterfaceService } from "common/services/UserInterfaceService";
 import { Layout } from "common/ui/Layout";
 import { Environment } from "common/Environment";
 import { Theme } from "common/ui/Theme";
+import { Socket } from "common/Socket";
 
 export interface IApplication {
 	readonly userInterfaceService: UserInterfaceService;
@@ -25,6 +26,6 @@ export abstract class Application implements IApplication {
 	protected constructor(layout: Layout, theme: Theme, environment: Environment) {
 		this.environment = environment;
 
-		this.userInterfaceService = new UserInterfaceService(layout, theme);
+		this.userInterfaceService = new UserInterfaceService(layout, theme, new Socket());
 	}
 }

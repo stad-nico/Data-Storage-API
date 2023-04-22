@@ -3,6 +3,7 @@ import { DOMComponent } from "common/ui/components/DOM";
 import { toKebabCase } from "common/string";
 import { Theme } from "common/ui/Theme";
 import { EventEmitter } from "common/EventEmitter";
+import { APIBridge } from "src/APIBridge";
 
 export class UserInterfaceService {
 	/**
@@ -16,20 +17,26 @@ export class UserInterfaceService {
 	private _theme: Theme;
 
 	/**
-	 * DOMComponent that handles UI Component creation
+	 * root UI component, all components are injected into this component
 	 */
 	private readonly _domComponent: DOMComponent;
+
+	/**
+	 * root EventEmitter that handles communication between ui components and backend
+	 */
+	private readonly _eventEmitter: EventEmitter;
 
 	/**
 	 * Creates a new UserInterfaceService instance
 	 *
 	 * @param layout The layout
 	 */
-	constructor(layout: Layout, theme: Theme) {
+	constructor(layout: Layout, theme: Theme, api: APIBridge) {
 		this._layout = layout;
 		this._theme = theme;
+		this._eventEmitter = new EventEmitter();
+		this._domComponent = new DOMComponent(api, this._eventEmitter);
 
-		this._domComponent = new DOMComponent(document.body);
 		this._buildLayout();
 		this._domComponent.setAttribute("data-layout", toKebabCase(Layout[layout]));
 		this._domComponent.setAttribute("data-theme", toKebabCase(this._theme));

@@ -1,6 +1,6 @@
 export abstract class Component {
 	/**
-	 * The unique component identifier (multiple instances of the same component carry the same identifier!)
+	 * The component identifier (multiple instances of the same component carry the same identifier!)
 	 */
 	protected readonly _identifier: string;
 

@@ -1,8 +1,8 @@
 {
 	"emeraldwalk.runonsave": {},
 	"cSpell.words": ["collapsable"],
-	"typescript.preferences.importModuleSpecifierEnding": "js",
+	"typescript.preferences.importModuleSpecifierEnding": "minimal",
 	"typescript.preferences.importModuleSpecifier": "non-relative",
 	"javascript.preferences.importModuleSpecifier": "non-relative",
-	"javascript.preferences.importModuleSpecifierEnding": "js"
+	"javascript.preferences.importModuleSpecifierEnding": "minimal"
 }
