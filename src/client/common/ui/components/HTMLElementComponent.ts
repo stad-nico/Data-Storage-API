@@ -89,6 +89,12 @@ export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends
 	public build(recursive: boolean = true): HTMLElementTagNameMap[T] {
 		this._applyClassNames();
 
+		for (let child of Array.from(this._htmlElement.childNodes)) {
+			if (child.nodeType === 1) {
+				child.remove();
+			}
+		}
+
 		if (recursive) {
 			for (let child of this._children) {
 				this._htmlElement.append(child.build());

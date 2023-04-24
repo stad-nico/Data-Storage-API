@@ -8,6 +8,7 @@ import { toKebabCase } from "common/string";
 import { DirectoryContentElement } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
 import { DropTarget } from "common/ui/DropTarget";
 import { Event } from "common/ui/Event";
+import { FrontendToBackendEvent } from "src/APIEvents";
 
 export class DirectoryContentsCollection extends HTMLElementComponent<"section"> {
 	/**
@@ -54,6 +55,7 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		this._eventEmitter.on(Event.DirectoryContentColumnOrderUpdated, data => this._updateColumnOrder(data.data));
 		this._eventEmitter.on(Event.DirectoryContentElementSelected, data => this._selectElement(data.data));
 		this._eventEmitter.on(Event.DirectoryContentElementSelectedById, data => this._selectElementById(data.data));
+		this._eventEmitter.on(Event.DirectoryContentFolderElementOpened, data => this._openFolderElement(data.data));
 
 		this._gridColumnOrderBar = new GridColumnOrderBar(this, this._eventEmitter);
 		this._componentsContainer = new HTMLElementComponent("main", {
@@ -85,6 +87,17 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		new DropTarget(this._htmlElement, (e: DragEvent) => {
 			console.log("external drop");
 		});
+	}
+
+	private _empty(): void {
+		this._componentsContainer.clearChildren();
+
+		this.build();
+	}
+
+	private _openFolderElement(component: DirectoryContentFolder): void {
+		this._eventEmitter.fire(FrontendToBackendEvent.GetDirectoryContents, "testpath");
+		this._empty();
 	}
 
 	private _updateColumnOrder(attributes: DOMStringMap): void {

@@ -1,7 +1,7 @@
 import { EventEmitter } from "common/EventEmitter";
 import { withByteSizeSuffix } from "common/number";
 import { Component } from "common/ui/Component";
-import { DirectoryContentElement } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
+import { DirectoryContentElement, DirectoryContentElementType } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
 import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent";
 
 type Extension = "txt";
@@ -19,7 +19,7 @@ export class DirectoryContentFile extends DirectoryContentElement {
 		super(eventEmitter, {
 			name: name,
 			lastEdited: lastEdited,
-			type: extension,
+			type: DirectoryContentElementType.File,
 			identifier: DirectoryContentFile.identifier,
 			classes: [DirectoryContentFile.identifier],
 			parent: parent,
@@ -32,6 +32,8 @@ export class DirectoryContentFile extends DirectoryContentElement {
 		this._createExtensionComponent();
 		this._createSizeComponent();
 	}
+
+	protected override _onSelect(e: MouseEvent): void {}
 
 	private _createExtensionComponent(): void {
 		this._extensionComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("span", "Extension", ["Extension"], this.getNameComponent());

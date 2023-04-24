@@ -48,10 +48,8 @@ export class UserInterfaceService {
 	private _buildLayout(): void {
 		let config = LayoutMap[this._layout];
 
-		let eventEmitter = new EventEmitter();
-
 		for (let componentConfig of config) {
-			new componentConfig.component(this._domComponent, eventEmitter);
+			new componentConfig.component(this._domComponent, this._eventEmitter);
 		}
 
 		this._domComponent.build();

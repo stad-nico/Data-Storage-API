@@ -1,10 +1,11 @@
 import { EventEmitter } from "common/EventEmitter";
 import { Component } from "common/ui/Component";
 import { DropTarget } from "common/ui/DropTarget";
-import { DirectoryContentElement } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
+import { DirectoryContentElement, DirectoryContentElementType } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
 import { DirectoryContentFolderContextMenu } from "common/ui/components/contextMenus/directoryContentFolderContextMenu/DirectoryContentFolderContextMenu";
 import { FolderIcon } from "./FolderIcon";
 import { Event } from "common/ui/Event";
+import { FrontendToBackendEvent } from "src/APIEvents";
 
 export class DirectoryContentFolder extends DirectoryContentElement {
 	public static readonly identifier: string = "DirectoryContentFolder";
@@ -15,7 +16,7 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 		super(eventEmitter, {
 			name: name,
 			lastEdited: lastEdited,
-			type: "folder",
+			type: DirectoryContentElementType.Folder,
 			identifier: DirectoryContentFolder.identifier,
 			classes: [DirectoryContentFolder.identifier],
 			parent: parent,
@@ -30,6 +31,12 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 		this._createIconComponent();
 
 		this.addEventListener("contextmenu", this._openContextMenu.bind(this));
+	}
+
+	protected override _onSelect(e: MouseEvent): void {
+		if (this._selected) {
+			this._eventEmitter.fire(Event.DirectoryContentFolderElementOpened, this);
+		}
 	}
 
 	protected _createIconComponent() {

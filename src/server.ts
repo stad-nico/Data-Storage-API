@@ -26,6 +26,10 @@ io.on("connection", (client: Socket) => {
 	client.on(FrontendToBackendEvent.ValidatePath, data => {
 		console.log("event validate path received on server");
 	});
+
+	client.on(FrontendToBackendEvent.GetDirectoryContents, data => {
+		console.log("event send directory contents received");
+	});
 });
 
 server.listen(PORT, () => {

@@ -9,7 +9,11 @@ import { DownloadIcon24 } from "common/ui/components/icons/24/DownloadIcon24";
 import { Draggable } from "common/ui/Draggable";
 import { Event } from "common/ui/Event";
 
-type DirectoryContentElementType = "folder" | "txt";
+export enum DirectoryContentElementType {
+	Any,
+	Folder,
+	File,
+}
 
 export interface DirectoryContentElementOptions extends HTMLElementComponentOptions {
 	name: string;
@@ -37,7 +41,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 
 	protected _selected: boolean;
 
-	private _eventEmitter: EventEmitter;
+	protected _eventEmitter: EventEmitter;
 
 	constructor(eventEmitter: EventEmitter, options: DirectoryContentElementOptions) {
 		super("div", {
@@ -61,7 +65,11 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._eventEmitter = eventEmitter;
 		this._selected = false;
 
-		this._htmlElement.addEventListener("click", e => this._eventEmitter.fire(Event.DirectoryContentElementSelected, this));
+		this._htmlElement.addEventListener("click", e => {
+			this._onSelect(e);
+			this._eventEmitter.fire(Event.DirectoryContentElementSelected, this);
+		});
+
 		this._htmlElement.setAttribute("data-id", "" + this._id);
 
 		new Draggable(this._htmlElement);
@@ -105,6 +113,8 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			this._lastEditedComponent.addInnerText(" " + toHHMM(this._lastEdited, ":"));
 		}
 	}
+
+	protected abstract _onSelect(e: MouseEvent): void;
 
 	public getNameComponent(): HTMLElementComponent<"p"> {
 		return this._nameComponent;

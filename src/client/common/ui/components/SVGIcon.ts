@@ -7,6 +7,8 @@ export interface SVGIconOptions extends HTMLElementComponentOptions {
 export abstract class SVGIcon extends HTMLElementComponent<any> {
 	public static readonly identifier: string = "SVGIcon";
 
+	private _path: SVGPathElement;
+
 	constructor(options: SVGIconOptions, width: number = 24, height: number = 24) {
 		super(document.createElementNS("http://www.w3.org/2000/svg", "svg"), {
 			identifier: options?.identifier || SVGIcon.identifier,
@@ -18,9 +20,14 @@ export abstract class SVGIcon extends HTMLElementComponent<any> {
 		this._htmlElement.setAttributeNS(null, "width", width);
 		this._htmlElement.setAttributeNS(null, "height", height);
 
-		let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-		path.setAttribute("d", options.dpath);
+		this._path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+		this._path.setAttribute("d", options.dpath);
+	}
 
-		this._htmlElement.append(path);
+	public override build(recursive?: boolean): HTMLElement {
+		super.build();
+		this._htmlElement.append(this._path);
+
+		return this._htmlElement;
 	}
 }
