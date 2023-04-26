@@ -1,5 +1,3 @@
-import { API } from "src/API";
-import { DirectoryContentType } from "common/DirectoryContentType";
 import { io, Socket as IOSocket } from "socket.io-client";
 import { APIBridge } from "src/APIBridge";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "src/APIEvents";
@@ -24,7 +22,9 @@ export class Socket extends APIBridge {
 		}
 
 		for (let item in FrontendToBackendEvent) {
-			this._on(FrontendToBackendEvent[item], data => this._socket.emit(FrontendToBackendEvent[item], data));
+			this._on(FrontendToBackendEvent[item], (data, callback) =>
+				this._socket.emit(FrontendToBackendEvent[item], data, response => callback(response))
+			);
 		}
 	}
 }

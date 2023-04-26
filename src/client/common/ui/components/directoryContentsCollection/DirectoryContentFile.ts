@@ -3,6 +3,7 @@ import { withByteSizeSuffix } from "common/number";
 import { Component } from "common/ui/Component";
 import { DirectoryContentElement, DirectoryContentElementType } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
 import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent";
+import { APIBridge } from "src/APIBridge";
 
 type Extension = "txt";
 
@@ -15,8 +16,17 @@ export class DirectoryContentFile extends DirectoryContentElement {
 	private _extensionComponent: HTMLElementComponent<"span">;
 	private _sizeComponent: HTMLElementComponent<"p">;
 
-	constructor(eventEmitter: EventEmitter, parent: Component, name: string, extension: Extension, size: number, lastEdited: Date, id: number) {
-		super(eventEmitter, {
+	constructor(
+		apiBridge: APIBridge,
+		eventEmitter: EventEmitter,
+		parent: Component,
+		name: string,
+		extension: Extension,
+		size: number,
+		lastEdited: Date,
+		id: number
+	) {
+		super(apiBridge, eventEmitter, {
 			name: name,
 			lastEdited: lastEdited,
 			type: DirectoryContentElementType.File,
@@ -36,13 +46,20 @@ export class DirectoryContentFile extends DirectoryContentElement {
 	protected override _onSelect(e: MouseEvent): void {}
 
 	private _createExtensionComponent(): void {
-		this._extensionComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("span", "Extension", ["Extension"], this.getNameComponent());
+		this._extensionComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			this._apiBridge,
+			this._eventEmitter,
+			"span",
+			"Extension",
+			["Extension"],
+			this.getNameComponent()
+		);
 
 		this._extensionComponent.innerText("." + this._extension);
 	}
 
 	private _createSizeComponent(): void {
-		this._sizeComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("p", "Size", ["Size"]);
+		this._sizeComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(this._apiBridge, this._eventEmitter, "p", "Size", ["Size"]);
 		this.insertAfter(this.getLastEditedComponent(), this._sizeComponent);
 		this._sizeComponent.innerText(withByteSizeSuffix(this._size));
 	}

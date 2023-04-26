@@ -8,6 +8,7 @@ import { DeleteIcon24 } from "common/ui/components/icons/24/DeleteIcon24";
 import { DownloadIcon24 } from "common/ui/components/icons/24/DownloadIcon24";
 import { Draggable } from "common/ui/Draggable";
 import { Event } from "common/ui/Event";
+import { APIBridge } from "src/APIBridge";
 
 export enum DirectoryContentElementType {
 	Any,
@@ -41,10 +42,8 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 
 	protected _selected: boolean;
 
-	protected _eventEmitter: EventEmitter;
-
-	constructor(eventEmitter: EventEmitter, options: DirectoryContentElementOptions) {
-		super("div", {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, options: DirectoryContentElementOptions) {
+		super(apiBridge, eventEmitter, "div", {
 			identifier: options?.identifier || DirectoryContentElement.identifier,
 			classes: options?.classes ? options.classes.concat([DirectoryContentElement.identifier]) : [DirectoryContentElement.identifier],
 			parent: options?.parent,
@@ -62,7 +61,6 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._createDownloadIconComponent();
 		this._createDeleteIconComponent();
 
-		this._eventEmitter = eventEmitter;
 		this._selected = false;
 
 		this._htmlElement.addEventListener("click", e => {
@@ -76,7 +74,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	}
 
 	private _createDeleteIconComponent(): void {
-		this._deleteIconComponent = new DeleteIcon24(this._iconWrapperComponent);
+		this._deleteIconComponent = new DeleteIcon24(this._apiBridge, this._eventEmitter, this._iconWrapperComponent);
 
 		this._deleteIconComponent.addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -84,7 +82,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	}
 
 	private _createDownloadIconComponent(): void {
-		this._downloadIconComponent = new DownloadIcon24(this._iconWrapperComponent);
+		this._downloadIconComponent = new DownloadIcon24(this._apiBridge, this._eventEmitter, this._iconWrapperComponent);
 
 		this._downloadIconComponent.addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -92,21 +90,49 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	}
 
 	private _createIconWrapperComponent(): void {
-		this._iconWrapperComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("footer", "IconWrapper", ["IconWrapper"], this);
+		this._iconWrapperComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			this._apiBridge,
+			this._eventEmitter,
+			"footer",
+			"IconWrapper",
+			["IconWrapper"],
+			this
+		);
 	}
 
 	private _createIconAndNameWrapperComponent(): void {
-		this._iconAndNameWrapperComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("header", "Wrapper", ["Wrapper"], this);
+		this._iconAndNameWrapperComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			this._apiBridge,
+			this._eventEmitter,
+			"header",
+			"Wrapper",
+			["Wrapper"],
+			this
+		);
 	}
 
 	private _createNameComponent(): void {
-		this._nameComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("p", "Name", ["Name"], this._iconAndNameWrapperComponent);
+		this._nameComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			this._apiBridge,
+			this._eventEmitter,
+			"p",
+			"Name",
+			["Name"],
+			this._iconAndNameWrapperComponent
+		);
 
 		this._nameComponent.innerText(this._name);
 	}
 
 	private _createLastEditedComponent(shouldShowLastEditedTimestamp: boolean = false): void {
-		this._lastEditedComponent = HTMLElementComponent.fromOptionsAsMultipleParameters("p", "LastEdited", ["LastEdited"], this);
+		this._lastEditedComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			this._apiBridge,
+			this._eventEmitter,
+			"p",
+			"LastEdited",
+			["LastEdited"],
+			this
+		);
 		this._lastEditedComponent.innerText(toDDMMYYYYWithLeadingZeros(this._lastEdited, "."));
 
 		if (shouldShowLastEditedTimestamp) {

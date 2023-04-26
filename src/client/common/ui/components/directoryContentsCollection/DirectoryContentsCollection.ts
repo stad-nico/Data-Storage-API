@@ -3,12 +3,14 @@ import { Component } from "common/ui/Component";
 import { DirectoryContentFile } from "common/ui/components/directoryContentsCollection/DirectoryContentFile";
 import { DirectoryContentFolder } from "common/ui/components/directoryContentsCollection/DirectoryContentFolder";
 import { GridColumnOrderBar } from "common/ui/components/directoryContentsCollection/gridColumnOrderBar/GridColumnOrderBar";
-import { EventEmitter } from "common/EventEmitter";
 import { toKebabCase } from "common/string";
 import { DirectoryContentElement } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
 import { DropTarget } from "common/ui/DropTarget";
 import { Event } from "common/ui/Event";
-import { FrontendToBackendEvent } from "src/APIEvents";
+import { BackendToFrontendEvent, FrontendToBackendEvent } from "src/APIEvents";
+import { APIBridge } from "src/APIBridge";
+import { EventEmitter } from "common/EventEmitter";
+import { DirectoryContentElement as DirectoryContentDataElement } from "src/DirectoryContentElement";
 
 export class DirectoryContentsCollection extends HTMLElementComponent<"section"> {
 	/**
@@ -32,11 +34,6 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	private _componentsContainer: HTMLElementComponent<"main">;
 
 	/**
-	 * EventEmitter responsible for communicating with its components
-	 */
-	private _eventEmitter: EventEmitter;
-
-	/**
 	 * Reference to the current selected element
 	 */
 	private _selectedComponent: DirectoryContentElement;
@@ -44,40 +41,32 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	/**
 	 * Creates a new DirectoryContentsCollection instance
 	 */
-	constructor(parent: Component, eventEmitter: EventEmitter) {
-		super("section", {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: Component) {
+		super(apiBridge, eventEmitter, "section", {
 			identifier: DirectoryContentsCollection.identifier,
 			classes: [DirectoryContentsCollection.identifier],
 			parent: parent,
 		});
 
-		this._eventEmitter = eventEmitter;
 		this._eventEmitter.on(Event.DirectoryContentColumnOrderUpdated, data => this._updateColumnOrder(data.data));
 		this._eventEmitter.on(Event.DirectoryContentElementSelected, data => this._selectElement(data.data));
 		this._eventEmitter.on(Event.DirectoryContentElementSelectedById, data => this._selectElementById(data.data));
 		this._eventEmitter.on(Event.DirectoryContentFolderElementOpened, data => this._openFolderElement(data.data));
 
-		this._gridColumnOrderBar = new GridColumnOrderBar(this, this._eventEmitter);
-		this._componentsContainer = new HTMLElementComponent("main", {
+		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () =>
+			this._apiBridge.fire(FrontendToBackendEvent.GetDirectoryContents, "/", (data: DirectoryContentDataElement[]) =>
+				this._displayFolderElements(data)
+			)
+		);
+
+		this._gridColumnOrderBar = new GridColumnOrderBar(apiBridge, eventEmitter, this);
+		this._componentsContainer = new HTMLElementComponent(apiBridge, eventEmitter, "main", {
 			identifier: "DirectoryContentsContainer",
 			classes: ["DirectoryContentsContainer"],
 			parent: this,
 		});
 
-		this._components = [
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 0),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 1),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 2),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 3),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 4),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 5),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 6),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 7),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now()), 8),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 9),
-			new DirectoryContentFile(this._eventEmitter, this._componentsContainer, "hi", "txt", 0, new Date(Date.now()), 10),
-			new DirectoryContentFolder(this._eventEmitter, this._componentsContainer, "folder", new Date(Date.now()), 11),
-		];
+		this._components = [];
 
 		this.setAttribute("data-first-column", "name");
 		this.setAttribute("data-second-column", "last-edited");
@@ -91,13 +80,31 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 
 	private _empty(): void {
 		this._componentsContainer.clearChildren();
+		this.build();
+	}
 
+	private _displayFolderElements(elements: DirectoryContentDataElement[]): void {
+		for (let i = 0; i < elements.length; i++) {
+			this._componentsContainer.appendChild(
+				new DirectoryContentFolder(
+					this._apiBridge,
+					this._eventEmitter,
+					this._componentsContainer,
+					elements[i].name,
+					new Date(elements[i].lastEdited),
+					i
+				)
+			);
+			i++;
+		}
 		this.build();
 	}
 
 	private _openFolderElement(component: DirectoryContentFolder): void {
-		this._eventEmitter.fire(FrontendToBackendEvent.GetDirectoryContents, "testpath");
 		this._empty();
+		this._apiBridge.fire(FrontendToBackendEvent.GetDirectoryContents, "/test/", (data: DirectoryContentDataElement[]) =>
+			this._displayFolderElements(data)
+		);
 	}
 
 	private _updateColumnOrder(attributes: DOMStringMap): void {

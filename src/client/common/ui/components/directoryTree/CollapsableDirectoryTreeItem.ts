@@ -5,6 +5,8 @@ import { CollapsableDirectoryTreeItemBody } from "./CollapsableDirectoryTreeItem
 import { EventEmitter } from "src/client/common/EventEmitter";
 import { DropTarget } from "../../DropTarget";
 import { Draggable } from "../../Draggable";
+import { APIEventEmitter } from "common/APIEventEmitter";
+import { APIBridge } from "src/APIBridge";
 
 export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 	public static readonly identifier: string = "CollapsableDirectoryTreeItem";
@@ -17,10 +19,8 @@ export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 	private _name: string;
 	private _collapsed: boolean;
 
-	private _eventEmitter: EventEmitter;
-
-	constructor(name: string, parent: Component, eventEmitter: EventEmitter, collapsed: boolean = true) {
-		super("div", {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, name: string, parent: Component, collapsed: boolean = true) {
+		super(apiBridge, eventEmitter, "div", {
 			identifier: CollapsableDirectoryTreeItem.identifier,
 			classes: [CollapsableDirectoryTreeItem.identifier],
 			parent: parent,
@@ -28,11 +28,10 @@ export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 
 		this._name = name;
 		this._collapsed = collapsed;
-		this._eventEmitter = eventEmitter;
 
-		this._headerComponent = new CollapsableDirectoryTreeItemHeader(this._name, this);
+		this._headerComponent = new CollapsableDirectoryTreeItemHeader(apiBridge, eventEmitter, this._name, this);
 		this._headerComponent.setOnCollapsableArrowIconClickHandler(this._onCollapsableArrowIconClick.bind(this));
-		this._bodyComponent = new CollapsableDirectoryTreeItemBody(this);
+		this._bodyComponent = new CollapsableDirectoryTreeItemBody(apiBridge, eventEmitter, this);
 
 		if (this._collapsed) {
 			this.collapse();

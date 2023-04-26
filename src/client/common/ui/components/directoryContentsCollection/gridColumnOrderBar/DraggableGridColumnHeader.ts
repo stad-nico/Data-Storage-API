@@ -2,14 +2,14 @@ import { Event } from "src/client/common/ui/Event";
 import { Component } from "../../../Component";
 import { HTMLElementComponent } from "../../HTMLElementComponent";
 import { EventEmitter } from "src/client/common/EventEmitter";
+import { APIEventEmitter } from "common/APIEventEmitter";
+import { APIBridge } from "src/APIBridge";
 
 /**
  * Doesnt extend the Draggable because drag functionality will be implemented via mouse events
  */
 export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 	public static readonly identifier: string = "DraggableGridColumnHeader";
-
-	private readonly _eventEmitter: EventEmitter;
 
 	private _title: string;
 
@@ -21,8 +21,8 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 	private _incIndexListener: () => void;
 	private _decIndexListener: () => void;
 
-	constructor(parent: Component, title: string, eventEmitter: EventEmitter) {
-		super("div", {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: Component, title: string) {
+		super(apiBridge, eventEmitter, "div", {
 			identifier: DraggableGridColumnHeader.identifier,
 			classes: [DraggableGridColumnHeader.identifier, title.replaceAll(/\s/gim, "-")],
 			parent: parent,
@@ -32,7 +32,6 @@ export class DraggableGridColumnHeader extends HTMLElementComponent<"div"> {
 		this._title = title.replaceAll(/\s/gim, "-");
 
 		eventEmitter.on(Event.DirectoryContentColumnHeaderMoved, this._onOtherHeaderMove.bind(this));
-		this._eventEmitter = eventEmitter;
 
 		this._htmlElement.addEventListener("mousedown", this._onMouseDown.bind(this));
 		this._bindListeners();

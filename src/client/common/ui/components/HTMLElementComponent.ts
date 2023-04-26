@@ -1,5 +1,7 @@
 import { Component } from "common/ui/Component";
 import { toKebabCase } from "common/string";
+import { APIBridge } from "src/APIBridge";
+import { EventEmitter } from "common/EventEmitter";
 
 export interface HTMLElementComponentOptions {
 	parent?: Component;
@@ -9,12 +11,14 @@ export interface HTMLElementComponentOptions {
 
 export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends Component {
 	public static fromOptionsAsMultipleParameters<T extends keyof HTMLElementTagNameMap>(
+		apiBridge: APIBridge,
+		eventEmitter: EventEmitter,
 		htmlElement?: HTMLElementTagNameMap[T] | Extract<keyof HTMLElementTagNameMap, T>,
 		identifier?: string,
 		classes?: string[],
 		parent?: Component
 	): HTMLElementComponent<T> {
-		return new HTMLElementComponent(htmlElement, {
+		return new HTMLElementComponent(apiBridge, eventEmitter, htmlElement, {
 			identifier: identifier,
 			classes: classes,
 			parent: parent,
@@ -41,8 +45,13 @@ export class HTMLElementComponent<T extends keyof HTMLElementTagNameMap> extends
 	 *
 	 * @param parent The parent component
 	 */
-	constructor(htmlElement?: HTMLElementTagNameMap[T] | Extract<keyof HTMLElementTagNameMap, T>, options?: HTMLElementComponentOptions) {
-		super(options?.identifier || HTMLElementComponent.identifier, options?.parent);
+	constructor(
+		apiBridge: APIBridge,
+		eventEmitter: EventEmitter,
+		htmlElement?: HTMLElementTagNameMap[T] | Extract<keyof HTMLElementTagNameMap, T>,
+		options?: HTMLElementComponentOptions
+	) {
+		super(apiBridge, eventEmitter, options?.identifier || HTMLElementComponent.identifier, options?.parent);
 
 		this._htmlElement =
 			typeof htmlElement === "string"

@@ -1,11 +1,15 @@
+import { EventEmitter } from "common/EventEmitter";
 import { Component } from "common/ui/Component";
 import { CollapsableArrowIcon } from "common/ui/components/icons/CollapsableArrowIcon";
+import { APIBridge } from "src/APIBridge";
 
 export class CollapsableArrowIcon24 extends CollapsableArrowIcon {
 	public static readonly identifier: string = "24";
 
-	constructor(parent?: Component) {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent?: Component) {
 		super(
+			apiBridge,
+			eventEmitter,
 			{
 				identifier: CollapsableArrowIcon24.identifier,
 				classes: [CollapsableArrowIcon24.identifier],

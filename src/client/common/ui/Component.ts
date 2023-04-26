@@ -1,3 +1,6 @@
+import { EventEmitter } from "common/EventEmitter";
+import { APIBridge } from "src/APIBridge";
+
 export abstract class Component {
 	/**
 	 * The component identifier (multiple instances of the same component carry the same identifier!)
@@ -15,11 +18,23 @@ export abstract class Component {
 	protected _children: Component[];
 
 	/**
+	 * Allows components to make request to backend
+	 */
+	protected readonly _apiBridge: APIBridge;
+
+	/**
+	 * For communication between components
+	 */
+	protected readonly _eventEmitter: EventEmitter;
+
+	/**
 	 * Creates a new Component
 	 *
 	 * @param parent The parent
 	 */
-	protected constructor(identifier: string, parent?: Component) {
+	protected constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, identifier: string, parent?: Component) {
+		this._apiBridge = apiBridge;
+		this._eventEmitter = eventEmitter;
 		this._identifier = identifier;
 		this._parent = parent;
 		this._children = [];

@@ -53,6 +53,19 @@ export interface Event {
 	once: boolean;
 }
 
+export interface IEventEmitter {
+	isValidType(type: string): boolean;
+	isValidHandler(handler: EventHandler): boolean;
+	on(type: string, handler: EventHandler): boolean;
+	once(type: string, handler: EventHandler): boolean;
+	off(type?: string, handler?: EventHandler): void;
+	offAll(): void;
+	fire(type: string, data?: any): void;
+	has(type: string, handler?: EventHandler): boolean;
+	getHandlers(type: string): EventHandler[];
+	createEvent(type: string, data?: any, once?: boolean): Event;
+}
+
 /**
  * It's a class for managing events.
  * It can be extended to provide event functionality for other classes or object.
@@ -60,7 +73,7 @@ export interface Event {
  * @export
  * @class EventEmitter
  */
-export class EventEmitter {
+export class EventEmitter implements IEventEmitter {
 	/**
 	 * the all event handlers are added.
 	 * it's a Map data structure(key-value), the key is event type, and the value is event handler.

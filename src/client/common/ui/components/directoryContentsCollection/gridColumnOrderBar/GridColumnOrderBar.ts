@@ -4,30 +4,29 @@ import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent"
 import { DraggableGridColumnHeader } from "common/ui/components/directoryContentsCollection/gridColumnOrderBar/DraggableGridColumnHeader";
 import { EventEmitter } from "common/EventEmitter";
 import { toKebabCase } from "common/string";
+import { APIEventEmitter } from "common/APIEventEmitter";
+import { APIBridge } from "src/APIBridge";
 
 export class GridColumnOrderBar extends HTMLElementComponent<"header"> {
 	public static readonly identifier: string = "GridColumnOrderBar";
 
 	private _headings: DraggableGridColumnHeader[];
 
-	private _eventEmitter: EventEmitter;
-
-	constructor(parent: Component, eventEmitter: EventEmitter) {
-		super("header", {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: Component) {
+		super(apiBridge, eventEmitter, "header", {
 			identifier: GridColumnOrderBar.identifier,
 			classes: [GridColumnOrderBar.identifier],
 			parent: parent,
 		});
 
-		this._eventEmitter = eventEmitter;
 		this._eventEmitter.on(Event.DirectoryContentColumnHeaderIndexSet, this._setColumn.bind(this));
 		this._eventEmitter.on(Event.DirectoryContentColumnHeaderDropped, this._onDrop.bind(this));
 
 		this._headings = [
-			new DraggableGridColumnHeader(this, "Name", this._eventEmitter),
-			new DraggableGridColumnHeader(this, "Last edited", this._eventEmitter),
-			new DraggableGridColumnHeader(this, "Size", this._eventEmitter),
-			new DraggableGridColumnHeader(this, "Icons", this._eventEmitter),
+			new DraggableGridColumnHeader(apiBridge, eventEmitter, this, "Name"),
+			new DraggableGridColumnHeader(apiBridge, eventEmitter, this, "Last edited"),
+			new DraggableGridColumnHeader(apiBridge, eventEmitter, this, "Size"),
+			new DraggableGridColumnHeader(apiBridge, eventEmitter, this, "Icons"),
 		];
 	}
 

@@ -26,6 +26,8 @@ export class UserInterfaceService {
 	 */
 	private readonly _eventEmitter: EventEmitter;
 
+	private readonly _apiBridge: APIBridge;
+
 	/**
 	 * Creates a new UserInterfaceService instance
 	 *
@@ -34,6 +36,8 @@ export class UserInterfaceService {
 	constructor(layout: Layout, theme: Theme, api: APIBridge) {
 		this._layout = layout;
 		this._theme = theme;
+		this._apiBridge = api;
+
 		this._eventEmitter = new EventEmitter();
 		this._domComponent = new DOMComponent(api, this._eventEmitter);
 
@@ -49,7 +53,7 @@ export class UserInterfaceService {
 		let config = LayoutMap[this._layout];
 
 		for (let componentConfig of config) {
-			new componentConfig.component(this._domComponent, this._eventEmitter);
+			new componentConfig.component(this._apiBridge, this._eventEmitter, this._domComponent);
 		}
 
 		this._domComponent.build();

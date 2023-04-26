@@ -1,11 +1,15 @@
+import { EventEmitter } from "common/EventEmitter";
 import { Component } from "common/ui/Component";
 import { DeleteIcon } from "common/ui/components/icons/DeleteIcon";
+import { APIBridge } from "src/APIBridge";
 
 export class DeleteIcon24 extends DeleteIcon {
 	public static readonly identifier: string = "24";
 
-	constructor(parent?: Component) {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent?: Component) {
 		super(
+			apiBridge,
+			eventEmitter,
 			{
 				identifier: DeleteIcon24.identifier,
 				classes: [DeleteIcon24.identifier],

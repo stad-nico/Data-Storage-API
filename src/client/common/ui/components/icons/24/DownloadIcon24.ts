@@ -1,11 +1,15 @@
+import { EventEmitter } from "common/EventEmitter";
 import { Component } from "common/ui/Component";
 import { DownloadIcon } from "common/ui/components/icons/DownloadIcon";
+import { APIBridge } from "src/APIBridge";
 
 export class DownloadIcon24 extends DownloadIcon {
 	public static readonly identifier: string = "24";
 
-	constructor(parent?: Component) {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent?: Component) {
 		super(
+			apiBridge,
+			eventEmitter,
 			{
 				identifier: DownloadIcon24.identifier,
 				classes: [DownloadIcon24.identifier],

@@ -6,14 +6,15 @@ import { DirectoryContentFolderContextMenu } from "common/ui/components/contextM
 import { FolderIcon } from "./FolderIcon";
 import { Event } from "common/ui/Event";
 import { FrontendToBackendEvent } from "src/APIEvents";
+import { APIBridge } from "src/APIBridge";
 
 export class DirectoryContentFolder extends DirectoryContentElement {
 	public static readonly identifier: string = "DirectoryContentFolder";
 
 	private _folderIcon: FolderIcon;
 
-	constructor(eventEmitter: EventEmitter, parent: Component, name: string, lastEdited: Date, id: number) {
-		super(eventEmitter, {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: Component, name: string, lastEdited: Date, id: number) {
+		super(apiBridge, eventEmitter, {
 			name: name,
 			lastEdited: lastEdited,
 			type: DirectoryContentElementType.Folder,
@@ -40,7 +41,7 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 	}
 
 	protected _createIconComponent() {
-		this._folderIcon = new FolderIcon({
+		this._folderIcon = new FolderIcon(this._apiBridge, this._eventEmitter, {
 			identifier: "FolderIcon",
 			classes: ["FolderIcon", "ToggleOnHover"],
 		});
@@ -55,7 +56,13 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 			return;
 		}
 
-		var contextMenu: DirectoryContentFolderContextMenu = new DirectoryContentFolderContextMenu(document.body, e.clientX, e.clientY);
+		var contextMenu: DirectoryContentFolderContextMenu = new DirectoryContentFolderContextMenu(
+			this._apiBridge,
+			this._eventEmitter,
+			document.body,
+			e.clientX,
+			e.clientY
+		);
 
 		document.addEventListener(
 			"mousedown",

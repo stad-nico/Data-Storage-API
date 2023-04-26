@@ -3,6 +3,8 @@ import { HTMLElementComponent } from "../../HTMLElementComponent";
 import { ContextMenuElement } from "./ContextMenuElement";
 import { Hotkey } from "src/client/common/hotkeys/Hotkey";
 import { DownloadIcon24 } from "src/client/common/ui/components/icons/24/DownloadIcon24";
+import { APIBridge } from "src/APIBridge";
+import { EventEmitter } from "common/EventEmitter";
 
 export class DirectoryContentFolderContextMenu extends HTMLElementComponent<"main"> {
 	public static readonly identifier: string = "DirectoryContentFolderContextMenu";
@@ -11,20 +13,55 @@ export class DirectoryContentFolderContextMenu extends HTMLElementComponent<"mai
 
 	private readonly _contextMenu: HTMLElementComponent<"main">;
 
-	constructor(parent: HTMLElement, x: number, y: number) {
-		super("main", {
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: HTMLElement, x: number, y: number) {
+		super(apiBridge, eventEmitter, "main", {
 			identifier: DirectoryContentFolderContextMenu.identifier,
 			classes: [DirectoryContentFolderContextMenu.identifier, "ContextMenuWrapper"],
 		});
 
 		this._parentElement = parent;
 
-		this._contextMenu = HTMLElementComponent.fromOptionsAsMultipleParameters("main", "ContextMenu", ["ContextMenu"], this);
+		this._contextMenu = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			this._apiBridge,
+			this._eventEmitter,
+			"main",
+			"ContextMenu",
+			["ContextMenu"],
+			this
+		);
 
-		new ContextMenuElement(this._contextMenu, new DownloadIcon24(), "Properties", new Hotkey());
-		new ContextMenuElement(this._contextMenu, new DownloadIcon24(), "Properties", new Hotkey());
-		new ContextMenuElement(this._contextMenu, new DownloadIcon24(), "Properties", new Hotkey());
-		new ContextMenuElement(this._contextMenu, new DeleteIcon24(), "Delete", new Hotkey());
+		new ContextMenuElement(
+			this._apiBridge,
+			this._eventEmitter,
+			this._contextMenu,
+			new DownloadIcon24(this._apiBridge, this._eventEmitter),
+			"Properties",
+			new Hotkey()
+		);
+		new ContextMenuElement(
+			this._apiBridge,
+			this._eventEmitter,
+			this._contextMenu,
+			new DownloadIcon24(this._apiBridge, this._eventEmitter),
+			"Properties",
+			new Hotkey()
+		);
+		new ContextMenuElement(
+			this._apiBridge,
+			this._eventEmitter,
+			this._contextMenu,
+			new DownloadIcon24(this._apiBridge, this._eventEmitter),
+			"Properties",
+			new Hotkey()
+		);
+		new ContextMenuElement(
+			this._apiBridge,
+			this._eventEmitter,
+			this._contextMenu,
+			new DeleteIcon24(this._apiBridge, this._eventEmitter),
+			"Delete",
+			new Hotkey()
+		);
 
 		this._parentElement.append(this.build());
 

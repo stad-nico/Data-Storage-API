@@ -1,13 +1,15 @@
+import { EventEmitter } from "common/EventEmitter";
 import { Component } from "common/ui/Component";
 import { SVGIcon } from "common/ui/components/SVGIcon";
+import { APIBridge } from "src/APIBridge";
 
 export class OpenInNewTabIcon extends SVGIcon {
 	public static readonly identifier: string = "OpenInNewTabIcon";
 
 	private _collapsed: boolean;
 
-	constructor(parent: Component, collapsed: boolean = true) {
-		super({
+	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: Component, collapsed: boolean = true) {
+		super(apiBridge, eventEmitter, {
 			identifier: OpenInNewTabIcon.identifier,
 			classes: [OpenInNewTabIcon.identifier],
 			parent: parent,
