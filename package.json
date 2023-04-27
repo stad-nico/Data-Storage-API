@@ -3,9 +3,9 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "jest",
 		"dev-hot-compile": "parcel watch --dist-dir ./dev",
-		"dev-hot-server": "nodemon ./src/server.ts",
+		"dev-hot-server": "nodemon ./src/server/server.ts",
 		"build": "parcel build src/client/common/index.html --dist-dir ./build/ --no-source-maps"
 	},
 	"repository": {
@@ -22,12 +22,15 @@
 	"devDependencies": {
 		"@babel/core": "^7.21.4",
 		"@babel/plugin-transform-flow-strip-types": "^7.21.0",
+		"@jest/globals": "^29.5.0",
 		"@types/node": "^18.14.6",
 		"buffer": "^5.7.1",
 		"dotenv": "^16.0.3",
 		"flow-bin": "^0.204.0",
+		"jest": "^29.5.0",
 		"nodemon": "^2.0.22",
 		"parcel": "^2.8.3",
+		"ts-jest": "^29.1.0",
 		"ts-node": "^10.9.1"
 	},
 	"dependencies": {
