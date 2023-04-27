@@ -22,15 +22,17 @@ export interface DirectoryContentElementOptions extends HTMLElementComponentOpti
 	shouldShowLastEditedTimestamp?: boolean;
 	type: DirectoryContentElementType;
 	id: number;
+	relativePath: string;
 }
 
 export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	public static readonly identifier: string = "DirectoryContentElement";
+	public readonly id: number;
 
-	private _name: string;
-	private _lastEdited: Date;
-	private _type: DirectoryContentElementType;
-	protected _id: number;
+	public readonly name: string;
+	public readonly lastEdited: Date;
+	public readonly type: DirectoryContentElementType;
+	public readonly relativePath: string;
 
 	protected _iconAndNameWrapperComponent: HTMLElementComponent<"header">;
 	private _iconComponent: HTMLElementComponent<"div">;
@@ -39,6 +41,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	private _iconWrapperComponent: HTMLElementComponent<"footer">;
 	private _deleteIconComponent: DeleteIcon;
 	private _downloadIconComponent: DownloadIcon;
+	private _relativePathComponent: HTMLElementComponent<"p">;
 
 	protected _selected: boolean;
 
@@ -49,10 +52,11 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			parent: options?.parent,
 		});
 
-		this._name = options.name;
-		this._lastEdited = options.lastEdited;
-		this._type = options.type;
-		this._id = options.id;
+		this.name = options.name;
+		this.lastEdited = options.lastEdited;
+		this.type = options.type;
+		this.id = options.id;
+		this.relativePath = options.relativePath;
 
 		this._createIconAndNameWrapperComponent();
 		this._createNameComponent();
@@ -60,6 +64,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._createIconWrapperComponent();
 		this._createDownloadIconComponent();
 		this._createDeleteIconComponent();
+		this._createRelativePathComponent();
 
 		this._selected = false;
 
@@ -68,9 +73,22 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			this._eventEmitter.fire(Event.DirectoryContentElementSelected, this);
 		});
 
-		this._htmlElement.setAttribute("data-id", "" + this._id);
+		this._htmlElement.setAttribute("data-id", "" + this.id);
 
 		new Draggable(this._htmlElement);
+	}
+
+	private _createRelativePathComponent(): void {
+		this._relativePathComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
+			this._apiBridge,
+			this._eventEmitter,
+			"p",
+			"relativePath",
+			["relativePath"],
+			this
+		);
+		this._relativePathComponent.setAttribute("hidden", "true");
+		this._relativePathComponent.innerText(this.relativePath);
 	}
 
 	private _createDeleteIconComponent(): void {
@@ -121,7 +139,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			this._iconAndNameWrapperComponent
 		);
 
-		this._nameComponent.innerText(this._name);
+		this._nameComponent.innerText(this.name);
 	}
 
 	private _createLastEditedComponent(shouldShowLastEditedTimestamp: boolean = false): void {
@@ -133,10 +151,10 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			["LastEdited"],
 			this
 		);
-		this._lastEditedComponent.innerText(toDDMMYYYYWithLeadingZeros(this._lastEdited, "."));
+		this._lastEditedComponent.innerText(toDDMMYYYYWithLeadingZeros(this.lastEdited, "."));
 
 		if (shouldShowLastEditedTimestamp) {
-			this._lastEditedComponent.addInnerText(" " + toHHMM(this._lastEdited, ":"));
+			this._lastEditedComponent.addInnerText(" " + toHHMM(this.lastEdited, ":"));
 		}
 	}
 

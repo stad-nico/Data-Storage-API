@@ -19,6 +19,10 @@ describe("isPathSubdirectory module", () => {
 	});
 
 	test("same path should return false", () => {
-		expect(isPathSubdirectory("C:/test/", "./")).toBe(false);
+		expect(isPathSubdirectory("C:/test/", "C:/test/")).toBe(false);
+	});
+
+	test("two valid absolute paths should return true", () => {
+		expect(isPathSubdirectory("C:/test/", "C:/test/test2/")).toBe(true);
 	});
 });

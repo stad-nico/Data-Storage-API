@@ -4,13 +4,12 @@ import { Component } from "common/ui/Component";
 import { DirectoryContentElement, DirectoryContentElementType } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
 import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent";
 import { APIBridge } from "src/APIBridge";
-
-type Extension = "txt";
+import { FileExtension } from "src/FileExtension";
 
 export class DirectoryContentFile extends DirectoryContentElement {
 	public static readonly identifier: string = "DirectoryContentFile";
 
-	private _extension: Extension;
+	private _extension: FileExtension;
 	private _size: number;
 
 	private _extensionComponent: HTMLElementComponent<"span">;
@@ -21,10 +20,11 @@ export class DirectoryContentFile extends DirectoryContentElement {
 		eventEmitter: EventEmitter,
 		parent: Component,
 		name: string,
-		extension: Extension,
+		extension: FileExtension,
 		size: number,
 		lastEdited: Date,
-		id: number
+		id: number,
+		relativePath: string
 	) {
 		super(apiBridge, eventEmitter, {
 			name: name,
@@ -34,6 +34,7 @@ export class DirectoryContentFile extends DirectoryContentElement {
 			classes: [DirectoryContentFile.identifier],
 			parent: parent,
 			id: id,
+			relativePath: relativePath,
 		});
 
 		this._extension = extension;

@@ -23,7 +23,7 @@
 		"@babel/core": "^7.21.4",
 		"@babel/plugin-transform-flow-strip-types": "^7.21.0",
 		"@jest/globals": "^29.5.0",
-		"@types/node": "^18.14.6",
+		"@types/node": "^18.16.1",
 		"buffer": "^5.7.1",
 		"dotenv": "^16.0.3",
 		"flow-bin": "^0.204.0",

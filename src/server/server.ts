@@ -1,11 +1,12 @@
 import { Response, Request } from "express";
 import { Socket } from "socket.io";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "../APIEvents";
-import { Event } from "../client/common/EventEmitter";
-import { DirectoryContentElement } from "../DirectoryContentElement";
 import { DirectoryContentType } from "../DirectoryContentType";
 import { isPathSubdirectory } from "./src/isPathSubdirectory";
 import { isAbsolutePathEqual } from "./src/isPathEqual";
+import { getDirectoryContents } from "./src/getDirectoryContents";
+import { doesPathExist } from "./src/doesPathExist";
+import { DirectoryContentElement } from "../DirectoryContentElement";
 
 require("dotenv").config();
 
@@ -35,10 +36,13 @@ io.on("connection", (client: Socket) => {
 	});
 
 	client.on(FrontendToBackendEvent.GetDirectoryContents, async (data: any, callback: (...args: any) => void) => {
-		console.log("event send directory contents received", data);
-		console.log(isPathSubdirectory(SAVE_LOCATION, data) || isAbsolutePathEqual(SAVE_LOCATION, path.resolve(path.join(SAVE_LOCATION, data))));
-
-		callback([new DirectoryContentElement(DirectoryContentType.Folder, "test", 100, new Date(Date.now()))]);
+		const testPath = path.resolve(path.join(SAVE_LOCATION, data));
+		if (isPathSubdirectory(SAVE_LOCATION, testPath) || isAbsolutePathEqual(SAVE_LOCATION, testPath)) {
+			if (await doesPathExist(testPath)) {
+				let contents: DirectoryContentElement[] = await getDirectoryContents(SAVE_LOCATION, testPath, DirectoryContentType.FolderOrFile);
+				callback(contents);
+			}
+		}
 	});
 });
 

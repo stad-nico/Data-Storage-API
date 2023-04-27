@@ -5,16 +5,16 @@ const path = require("path");
 /**
  * Test if a subpath is a valid subdirectory of a parent path
  *
- * @param parent The parent path
- * @param subpath The path of the subdirectory to be checked
+ * @param absoluteParentPath The parent path
+ * @param absoluteSubPath The path of the subdirectory to be checked
  * @returns
  */
-export function isPathSubdirectory(parent: string, subpath: string): boolean {
-	if (!path.isAbsolute(subpath)) {
-		subpath = path.join(parent, subpath);
+export function isPathSubdirectory(absoluteParentPath: string, absoluteSubPath: string): boolean {
+	if (!path.isAbsolute(absoluteSubPath)) {
+		absoluteSubPath = path.join(absoluteParentPath, absoluteSubPath);
 	}
 
-	let relativePath = path.relative(parent, subpath);
+	let relativePath = path.relative(absoluteParentPath, absoluteSubPath);
 
 	return relativePath.length > 0 && !relativePath.startsWith("..") && !path.isAbsolute(relativePath);
 }

@@ -1,7 +1,7 @@
 import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent";
 import { Component } from "common/ui/Component";
-import { DirectoryContentFile } from "common/ui/components/directoryContentsCollection/DirectoryContentFile";
 import { DirectoryContentFolder } from "common/ui/components/directoryContentsCollection/DirectoryContentFolder";
+import { DirectoryContentFile } from "common/ui/components/directoryContentsCollection/DirectoryContentFile";
 import { GridColumnOrderBar } from "common/ui/components/directoryContentsCollection/gridColumnOrderBar/GridColumnOrderBar";
 import { toKebabCase } from "common/string";
 import { DirectoryContentElement } from "common/ui/components/directoryContentsCollection/DirectoryContentElement";
@@ -10,7 +10,9 @@ import { Event } from "common/ui/Event";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "src/APIEvents";
 import { APIBridge } from "src/APIBridge";
 import { EventEmitter } from "common/EventEmitter";
-import { DirectoryContentElement as DirectoryContentDataElement } from "src/DirectoryContentElement";
+import { DirectoryContentFolder as DirectoryContentFolderData } from "src/DirectoryContentFolder";
+import { DirectoryContentFile as DirectoryContentFileData } from "src/DirectoryContentFile";
+import { DirectoryContentType } from "src/DirectoryContentType";
 
 export class DirectoryContentsCollection extends HTMLElementComponent<"section"> {
 	/**
@@ -54,8 +56,10 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		this._eventEmitter.on(Event.DirectoryContentFolderElementOpened, data => this._openFolderElement(data.data));
 
 		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () =>
-			this._apiBridge.fire(FrontendToBackendEvent.GetDirectoryContents, "/", (data: DirectoryContentDataElement[]) =>
-				this._displayFolderElements(data)
+			this._apiBridge.fire(
+				FrontendToBackendEvent.GetDirectoryContents,
+				"/",
+				(data: (DirectoryContentFileData | DirectoryContentFolderData)[]) => this._displayFolderElements(data)
 			)
 		);
 
@@ -79,30 +83,55 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	}
 
 	private _empty(): void {
+		this._components = [];
 		this._componentsContainer.clearChildren();
 		this.build();
 	}
 
-	private _displayFolderElements(elements: DirectoryContentDataElement[]): void {
+	private _displayFolderElements(elements: (DirectoryContentFileData | DirectoryContentFolderData)[]): void {
+		console.log(elements);
+		elements = elements.sort((a, b) => a.type - b.type);
+		console.log(elements);
 		for (let i = 0; i < elements.length; i++) {
-			this._componentsContainer.appendChild(
-				new DirectoryContentFolder(
+			let component: DirectoryContentFolder | DirectoryContentFile;
+			if (elements[i].type === DirectoryContentType.File) {
+				let data = elements[i] as DirectoryContentFileData;
+
+				component = new DirectoryContentFile(
 					this._apiBridge,
 					this._eventEmitter,
 					this._componentsContainer,
-					elements[i].name,
-					new Date(elements[i].lastEdited),
-					i
-				)
-			);
-			i++;
+					data.name,
+					data.extension,
+					data.size,
+					new Date(data.lastEdited),
+					i,
+					data.relativePath
+				);
+			} else if (elements[i].type === DirectoryContentType.Folder) {
+				let data = elements[i] as DirectoryContentFolderData;
+				component = new DirectoryContentFolder(
+					this._apiBridge,
+					this._eventEmitter,
+					this._componentsContainer,
+					data.name,
+					new Date(data.lastEdited),
+					i,
+					data.relativePath
+				);
+			}
+			this._componentsContainer.appendChild(component);
+			this._components.push(component);
 		}
+
 		this.build();
 	}
 
 	private _openFolderElement(component: DirectoryContentFolder): void {
+		let relativePath = [component.relativePath === "/" ? "" : component.relativePath, component.name].join("/");
 		this._empty();
-		this._apiBridge.fire(FrontendToBackendEvent.GetDirectoryContents, "/test/", (data: DirectoryContentDataElement[]) =>
+
+		this._apiBridge.fire(FrontendToBackendEvent.GetDirectoryContents, relativePath, (data: DirectoryContentFolderData[]) =>
 			this._displayFolderElements(data)
 		);
 	}

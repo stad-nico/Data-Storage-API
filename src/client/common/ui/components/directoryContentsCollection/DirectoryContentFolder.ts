@@ -13,7 +13,15 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 
 	private _folderIcon: FolderIcon;
 
-	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: Component, name: string, lastEdited: Date, id: number) {
+	constructor(
+		apiBridge: APIBridge,
+		eventEmitter: EventEmitter,
+		parent: Component,
+		name: string,
+		lastEdited: Date,
+		id: number,
+		relativePath: string
+	) {
 		super(apiBridge, eventEmitter, {
 			name: name,
 			lastEdited: lastEdited,
@@ -22,11 +30,12 @@ export class DirectoryContentFolder extends DirectoryContentElement {
 			classes: [DirectoryContentFolder.identifier],
 			parent: parent,
 			id: id,
+			relativePath: relativePath,
 		});
 
 		new DropTarget(this._htmlElement, () => {
 			console.log("DroP");
-			eventEmitter.fire(Event.DirectoryContentElementSelectedById, this._id);
+			eventEmitter.fire(Event.DirectoryContentElementSelectedById, this.id);
 		});
 
 		this._createIconComponent();
