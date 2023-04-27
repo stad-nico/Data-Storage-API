@@ -55,6 +55,13 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		this._eventEmitter.on(Event.DirectoryContentElementSelectedById, data => this._selectElementById(data.data));
 		this._eventEmitter.on(Event.DirectoryContentFolderElementOpened, data => this._openFolderElement(data.data));
 
+		this.addEventListener("click", () => {
+			if (this._selectedComponent) {
+				this._selectedComponent.unselect();
+				this._selectedComponent = undefined;
+			}
+		});
+
 		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () =>
 			this._apiBridge.fire(
 				FrontendToBackendEvent.GetDirectoryContents,
@@ -89,9 +96,8 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	}
 
 	private _displayFolderElements(elements: (DirectoryContentFileData | DirectoryContentFolderData)[]): void {
-		console.log(elements);
 		elements = elements.sort((a, b) => a.type - b.type);
-		console.log(elements);
+
 		for (let i = 0; i < elements.length; i++) {
 			let component: DirectoryContentFolder | DirectoryContentFile;
 			if (elements[i].type === DirectoryContentType.File) {

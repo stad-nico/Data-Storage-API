@@ -71,6 +71,7 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._htmlElement.addEventListener("click", e => {
 			this._onSelect(e);
 			this._eventEmitter.fire(Event.DirectoryContentElementSelected, this);
+			e.stopPropagation();
 		});
 
 		this._htmlElement.setAttribute("data-id", "" + this.id);
