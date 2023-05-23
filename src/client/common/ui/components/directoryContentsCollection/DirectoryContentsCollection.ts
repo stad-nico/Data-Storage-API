@@ -62,13 +62,13 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 			}
 		});
 
-		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () =>
-			this._apiBridge.fire(
-				FrontendToBackendEvent.GetDirectoryContents,
-				"/",
-				(data: (DirectoryContentFileData | DirectoryContentFolderData)[]) => this._displayFolderElements(data)
-			)
-		);
+		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () => {
+			this._apiBridge
+				.fire(FrontendToBackendEvent.GetDirectoryContents, "/")
+				.then(data => this._displayFolderElements(data))
+				.catch(error => console.log(error));
+			console.log("connected");
+		});
 
 		this._gridColumnOrderBar = new GridColumnOrderBar(apiBridge, eventEmitter, this);
 		this._componentsContainer = new HTMLElementComponent(apiBridge, eventEmitter, "main", {
@@ -96,6 +96,7 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	}
 
 	private _displayFolderElements(elements: (DirectoryContentFileData | DirectoryContentFolderData)[]): void {
+		console.log(elements);
 		elements = elements.sort((a, b) => a.type - b.type);
 
 		for (let i = 0; i < elements.length; i++) {
@@ -137,9 +138,10 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		let relativePath = [component.relativePath === "/" ? "" : component.relativePath, component.name].join("/");
 		this._empty();
 
-		this._apiBridge.fire(FrontendToBackendEvent.GetDirectoryContents, relativePath, (data: DirectoryContentFolderData[]) =>
-			this._displayFolderElements(data)
-		);
+		this._apiBridge
+			.fire(FrontendToBackendEvent.GetDirectoryContents, relativePath)
+			.then(data => console.log(data))
+			.catch(error => console.log(error));
 	}
 
 	private _updateColumnOrder(attributes: DOMStringMap): void {

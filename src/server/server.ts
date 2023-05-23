@@ -7,8 +7,13 @@ import { isAbsolutePathEqual } from "./src/isPathEqual";
 import { getDirectoryContents } from "./src/getDirectoryContents";
 import { doesPathExist } from "./src/doesPathExist";
 import { DirectoryContentElement } from "../DirectoryContentElement";
+import { Response as ServerResponse } from "../Response";
+import { createSaveLocation } from "./src/createSaveLocation";
 
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
+
+createSaveLocation();
 
 const path = require("path");
 
@@ -19,7 +24,7 @@ const io = require("socket.io")(server);
 
 const PORT = process.env.SERVER_PORT || 4000;
 
-const SAVE_LOCATION = "C:\\Users\\stadl\\Desktop\\File Server Save Location";
+const SAVE_LOCATION = process.env.SAVE_LOCATION;
 
 app.use(express.static(path.join(__dirname, "../../dev")));
 
@@ -40,9 +45,13 @@ io.on("connection", (client: Socket) => {
 		if (isPathSubdirectory(SAVE_LOCATION, testPath) || isAbsolutePathEqual(SAVE_LOCATION, testPath)) {
 			if (await doesPathExist(testPath)) {
 				let contents: DirectoryContentElement[] = await getDirectoryContents(SAVE_LOCATION, testPath, DirectoryContentType.FolderOrFile);
-				callback(contents);
+				callback(ServerResponse.Ok, contents);
 			}
+
+			callback(ServerResponse.Error, "Path does not exist");
 		}
+
+		callback(ServerResponse.Error, "Path is not valid");
 	});
 });
 
