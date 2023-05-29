@@ -1,3 +1,11 @@
+.collapsable-directory-tree-item:hover > .collapsable-directory-tree-item-body {
+	background-color: var(--directory-tree-item-body-background-color);
+}
+
+.collapsable-directory-tree-item:hover > .collapsable-directory-tree-item-header {
+	background-color: var(--directory-tree-item-header-background-color);
+}
+
 .collapsable-directory-tree-item-header .name {
 	margin-left: 8px;
 
@@ -9,13 +17,20 @@
 	font-size: medium;
 
 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 
 	color: var(--directory-tree-item-text-color);
+}
+
+.collapsable-directory-tree-item-header :is(.folder-icon, .collapsable-arrow) {
+	flex-shrink: 0;
 }
 
 .collapsable-directory-tree-item-header:hover .icon-wrapper {
 	opacity: 1;
 	pointer-events: all;
+	width: fit-content;
 }
 
 .collapsable-directory-tree-item-header:hover + .collapsable-directory-tree-item-body {
@@ -31,6 +46,7 @@
 
 	opacity: 0;
 	pointer-events: none;
+	width: 0;
 }
 
 .collapsable-directory-tree-item-header .icon-wrapper *.icon {
@@ -59,8 +75,12 @@
 	overflow: hidden;
 }
 
-.collapsable-directory-tree-item-body {
-	padding-left: 20px;
-	padding-top: 20px;
+.collapsable-directory-tree-item:not(.collapsed) > .collapsable-directory-tree-item-body {
+	padding: 21px 0 0 20px;
+	/* padding-left: 20px; */
+	/* padding-top: 20px; */
+
 	margin-top: -20px;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
 }

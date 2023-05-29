@@ -45,6 +45,8 @@ export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header
 
 		new Draggable(this._htmlElement);
 		new DropTarget(this._htmlElement, () => console.log("DROP"));
+
+		this.setAttribute("title", name);
 	}
 
 	public setOnCollapsableArrowIconClickHandler(handler: (...args: any[]) => void) {

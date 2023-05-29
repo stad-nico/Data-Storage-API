@@ -40,6 +40,8 @@ export class DirectoryContentFile extends DirectoryContentElement {
 		this._extension = extension;
 		this._size = size;
 
+		this.setAttribute("title", `${this.name}.${this._extension}`);
+
 		this._createExtensionComponent();
 		this._createSizeComponent();
 	}
