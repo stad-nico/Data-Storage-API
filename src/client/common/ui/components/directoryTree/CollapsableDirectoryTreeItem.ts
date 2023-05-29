@@ -3,9 +3,6 @@ import { HTMLElementComponent } from "../HTMLElementComponent";
 import { CollapsableDirectoryTreeItemHeader } from "./CollapsableDirectoryTreeItemHeader";
 import { CollapsableDirectoryTreeItemBody } from "./CollapsableDirectoryTreeItemBody";
 import { EventEmitter } from "src/client/common/EventEmitter";
-import { DropTarget } from "../../DropTarget";
-import { Draggable } from "../../Draggable";
-import { APIEventEmitter } from "common/APIEventEmitter";
 import { APIBridge } from "src/APIBridge";
 
 export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
@@ -38,6 +35,10 @@ export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 		} else {
 			this.unfold();
 		}
+	}
+
+	public getBodyComponent(): CollapsableDirectoryTreeItemBody {
+		return this._bodyComponent;
 	}
 
 	private _onCollapsableArrowIconClick(): void {

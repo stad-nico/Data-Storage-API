@@ -4,7 +4,6 @@ import { HTMLElementComponent } from "common/ui/components/HTMLElementComponent"
 import { DraggableGridColumnHeader } from "common/ui/components/directoryContentsCollection/gridColumnOrderBar/DraggableGridColumnHeader";
 import { EventEmitter } from "common/EventEmitter";
 import { toKebabCase } from "common/string";
-import { APIEventEmitter } from "common/APIEventEmitter";
 import { APIBridge } from "src/APIBridge";
 
 export class GridColumnOrderBar extends HTMLElementComponent<"header"> {

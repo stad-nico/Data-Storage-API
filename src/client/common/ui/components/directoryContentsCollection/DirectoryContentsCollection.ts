@@ -21,6 +21,12 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	public static readonly identifier: string = "DirectoryContentsCollection";
 
 	/**
+	 * A counter to keep track of the index new folder/file elements get assigned at creation
+	 * This counter will be reset after calling this.empty()
+	 */
+	private _elementCounter: number;
+
+	/**
 	 * Array that holds the current directory components
 	 */
 	private _components: DirectoryContentElement[];
@@ -50,10 +56,12 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 			parent: parent,
 		});
 
+		this._elementCounter = 0;
+
 		this._eventEmitter.on(Event.DirectoryContentColumnOrderUpdated, data => this._updateColumnOrder(data.data));
 		this._eventEmitter.on(Event.DirectoryContentElementSelected, data => this._selectElement(data.data));
 		this._eventEmitter.on(Event.DirectoryContentElementSelectedById, data => this._selectElementById(data.data));
-		this._eventEmitter.on(Event.DirectoryContentFolderElementOpened, data => this._openFolderElement(data.data));
+		this._eventEmitter.on(Event.DirectoryContentFolderElementOpened, data => this._openFolder(data.data));
 
 		this.addEventListener("click", () => {
 			if (this._selectedComponent) {
@@ -64,10 +72,9 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 
 		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () => {
 			this._apiBridge
-				.fire(FrontendToBackendEvent.GetDirectoryContents, "/")
-				.then(data => this._displayFolderElements(data))
-				.catch(error => console.log(error));
-			console.log("connected");
+				.fire(FrontendToBackendEvent.GetDirectoryContents, { path: "/", contentType: DirectoryContentType.FolderOrFile })
+				.then(data => this._displayElements(data))
+				.catch(error => console.error(error));
 		});
 
 		this._gridColumnOrderBar = new GridColumnOrderBar(apiBridge, eventEmitter, this);
@@ -90,57 +97,76 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 	}
 
 	private _empty(): void {
+		this._elementCounter = 0;
+
 		this._components = [];
 		this._componentsContainer.clearChildren();
 		this.build();
 	}
 
-	private _displayFolderElements(elements: (DirectoryContentFileData | DirectoryContentFolderData)[]): void {
-		console.log(elements);
+	private _addDirectoryContentFile(data: DirectoryContentFileData, updateUI: boolean = true) {
+		let file: DirectoryContentFile = new DirectoryContentFile(
+			this._apiBridge,
+			this._eventEmitter,
+			this._componentsContainer,
+			data.name,
+			data.extension,
+			data.size,
+			new Date(data.lastEdited),
+			this._elementCounter++,
+			data.relativePath
+		);
+
+		this._componentsContainer.appendChild(file);
+		this._components.push(file);
+
+		if (updateUI) {
+			this.build();
+		}
+	}
+
+	private _addDirectoryContentFolder(data: DirectoryContentFolderData, updateUI: boolean = true) {
+		let file: DirectoryContentFolder = new DirectoryContentFolder(
+			this._apiBridge,
+			this._eventEmitter,
+			this._componentsContainer,
+			data.name,
+			new Date(data.lastEdited),
+			this._elementCounter++,
+			data.relativePath
+		);
+
+		this._componentsContainer.appendChild(file);
+		this._components.push(file);
+
+		if (updateUI) {
+			this.build();
+		}
+	}
+
+	private _displayElements(elements: (DirectoryContentFileData | DirectoryContentFolderData)[]): void {
+		this._empty();
+
 		elements = elements.sort((a, b) => a.type - b.type);
 
-		for (let i = 0; i < elements.length; i++) {
-			let component: DirectoryContentFolder | DirectoryContentFile;
-			if (elements[i].type === DirectoryContentType.File) {
-				let data = elements[i] as DirectoryContentFileData;
-
-				component = new DirectoryContentFile(
-					this._apiBridge,
-					this._eventEmitter,
-					this._componentsContainer,
-					data.name,
-					data.extension,
-					data.size,
-					new Date(data.lastEdited),
-					i,
-					data.relativePath
-				);
-			} else if (elements[i].type === DirectoryContentType.Folder) {
-				let data = elements[i] as DirectoryContentFolderData;
-				component = new DirectoryContentFolder(
-					this._apiBridge,
-					this._eventEmitter,
-					this._componentsContainer,
-					data.name,
-					new Date(data.lastEdited),
-					i,
-					data.relativePath
-				);
+		for (let element of elements) {
+			if (element.type === DirectoryContentType.File) {
+				this._addDirectoryContentFile(element as DirectoryContentFileData, false);
 			}
-			this._componentsContainer.appendChild(component);
-			this._components.push(component);
+			if (element.type === DirectoryContentType.Folder) {
+				this._addDirectoryContentFolder(element as DirectoryContentFolderData, false);
+			}
 		}
 
 		this.build();
 	}
 
-	private _openFolderElement(component: DirectoryContentFolder): void {
+	private _openFolder(component: DirectoryContentFolder): void {
 		let relativePath = [component.relativePath === "/" ? "" : component.relativePath, component.name].join("/");
-		this._empty();
 
 		this._apiBridge
-			.fire(FrontendToBackendEvent.GetDirectoryContents, relativePath)
-			.then(data => console.log(data))
+			.fire(FrontendToBackendEvent.GetDirectoryContents, { path: relativePath, contentType: DirectoryContentType.FolderOrFile })
+			.then(data => this._displayElements(data))
 			.catch(error => console.log(error));
 	}
 

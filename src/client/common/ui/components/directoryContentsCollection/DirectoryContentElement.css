@@ -10,12 +10,22 @@
 	padding: 0;
 }
 
+.directory-content-element p {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
 .directory-content-element.selected .name {
 	color: var(--directory-contents-hover-text-color);
 }
 
 .directory-content-element:not(:last-child) {
 	margin-bottom: 2px;
+}
+
+.directory-content-element > :is(.wrapper, .last-edited, .size, .icon-wrapper) {
+	overflow-x: hidden;
 }
 
 .directory-content-element :is(.name, .wrapper, .last-edited, .size) {
@@ -40,9 +50,13 @@
 	gap: 8px;
 }
 
+.directory-content-element .wrapper div {
+	flex-shrink: 0;
+}
+
 .directory-content-element .icon-wrapper {
-	pointer-events: none;
-	opacity: 0;
+	/* pointer-events: none; */
+	/* opacity: 0; */
 
 	display: flex;
 	align-items: center;

@@ -15,6 +15,7 @@ html:has(main[data-theme="light"]) {
 	--directory-tree-item-arrow-icon-hover-color: rgb(57, 97, 237);
 	--directory-tree-item-icon-color: rgb(169, 174, 199);
 	--directory-tree-item-icon-hover-color: rgb(57, 97, 237);
+	--directory-tree-item-body-background-color: rgb(246, 249, 255);
 	--context-menu-element-title-color: rgb(102, 113, 168);
 	--context-menu-element-hotkey-color: rgb(158, 165, 199);
 	--context-menu-element-icon-color: rgb(102, 113, 168);

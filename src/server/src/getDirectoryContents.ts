@@ -9,12 +9,20 @@ import { DirectoryContentType } from "../../DirectoryContentType";
 import { FileExtension } from "../../FileExtension";
 import { getDirectorySize } from "./getDirectorySize";
 
-export async function getDirectoryContents(
+type ReturnTypeMapType = Record<DirectoryContentType, any>;
+export type ReturnType<T extends DirectoryContentType, M extends ReturnTypeMapType = ReturnTypeMap> = M[T];
+type ReturnTypeMap = {
+	[DirectoryContentType.File]: DirectoryContentFile[];
+	[DirectoryContentType.Folder]: DirectoryContentFolder[];
+	[DirectoryContentType.FolderOrFile]: (DirectoryContentFile | DirectoryContentFolder)[];
+};
+
+export async function getDirectoryContents<T extends DirectoryContentType>(
 	baseDirectoryAbsolutePath: string,
 	absoluteDirectoryPath: string,
-	contentType: DirectoryContentType
-): Promise<DirectoryContentElement[]> {
-	let contents: DirectoryContentElement[] = [];
+	contentType: T
+): Promise<ReturnType<T, ReturnTypeMap>> {
+	let contents = [];
 	let directoryPath = path.resolve(absoluteDirectoryPath);
 
 	try {

@@ -41,7 +41,6 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 	private _iconWrapperComponent: HTMLElementComponent<"footer">;
 	private _deleteIconComponent: DeleteIcon;
 	private _downloadIconComponent: DownloadIcon;
-	private _relativePathComponent: HTMLElementComponent<"p">;
 
 	protected _selected: boolean;
 
@@ -64,7 +63,6 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 		this._createIconWrapperComponent();
 		this._createDownloadIconComponent();
 		this._createDeleteIconComponent();
-		this._createRelativePathComponent();
 
 		this._selected = false;
 
@@ -74,22 +72,10 @@ export abstract class DirectoryContentElement extends RoundedContainer<"div"> {
 			e.stopPropagation();
 		});
 
-		this._htmlElement.setAttribute("data-id", "" + this.id);
+		this.setAttribute("data-id", "" + this.id);
+		this.setAttribute("title", this.name);
 
 		new Draggable(this._htmlElement);
-	}
-
-	private _createRelativePathComponent(): void {
-		this._relativePathComponent = HTMLElementComponent.fromOptionsAsMultipleParameters(
-			this._apiBridge,
-			this._eventEmitter,
-			"p",
-			"relativePath",
-			["relativePath"],
-			this
-		);
-		this._relativePathComponent.setAttribute("hidden", "true");
-		this._relativePathComponent.innerText(this.relativePath);
 	}
 
 	private _createDeleteIconComponent(): void {

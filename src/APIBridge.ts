@@ -1,41 +1,62 @@
+import { EventMap } from "common/Socket";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "src/APIEvents";
 
-type EventHandler = (data: any, callback: (response: any) => void) => void;
+export type EventMapType = Record<BackendToFrontendEvent | FrontendToBackendEvent, Options>;
 
-export abstract class APIBridge {
-	private _backendHandlers: Record<string, (data: any) => any | undefined>;
-	private _frontendHandlers: Record<string, (data: any) => Promise<any> | undefined>;
+type Options = {
+	argType?: unknown;
+	returnType: unknown;
+};
+
+type Handler<T extends FrontendToBackendEvent | BackendToFrontendEvent, E extends EventMapType> = E[T] extends { argType: any }
+	? (arg: ArgumentType<T, E>) => ReturnType<T, E>
+	: () => ReturnType<T, E>;
+
+type PromiseHandler<T extends FrontendToBackendEvent | BackendToFrontendEvent, E extends EventMapType> = E[T] extends { returnType: any }
+	? (arg: ArgumentType<T, E>) => Promise<ReturnType<T, E>>
+	: () => Promise<ReturnType<T, E>>;
+
+export type ReturnType<T extends FrontendToBackendEvent | BackendToFrontendEvent, E extends EventMapType> = E[T]["returnType"];
+export type ArgumentType<T extends FrontendToBackendEvent | BackendToFrontendEvent, E extends EventMapType> = E[T]["argType"];
+
+export abstract class APIBridge<E extends EventMapType = EventMap> {
+	private _backendHandlers: Record<string, Handler<BackendToFrontendEvent, E>[]>;
+	private _frontendHandlers: Record<string, PromiseHandler<FrontendToBackendEvent, E>>;
 
 	constructor() {
 		this._backendHandlers = {};
 		this._frontendHandlers = {};
 	}
 
-	protected _on(event: FrontendToBackendEvent, handler: (data: any) => Promise<any>): void {
+	protected _on<T extends FrontendToBackendEvent>(event: T, handler: PromiseHandler<T, E>): void {
 		if (!this._frontendHandlers[event]) {
 			this._frontendHandlers[event] = handler;
 		}
 	}
 
-	protected _fire(event: BackendToFrontendEvent, data?: any): void {
+	protected _fire<T extends BackendToFrontendEvent>(event: T, arg: ArgumentType<T, E>): void {
 		if (!this._backendHandlers[event]) {
 			return;
 		}
 
-		return this._backendHandlers[event](data);
-	}
-
-	public on(event: BackendToFrontendEvent, handler: (data: any) => any): void {
-		if (!this._backendHandlers[event]) {
-			this._backendHandlers[event] = handler;
+		for (let handler of this._backendHandlers[event]) {
+			handler(arg);
 		}
 	}
 
-	public fire(event: FrontendToBackendEvent, data?: any): Promise<any> {
+	public on<T extends BackendToFrontendEvent>(event: T, handler: Handler<T, E>): void {
+		if (!this._backendHandlers[event]) {
+			this._backendHandlers[event] = [];
+		}
+
+		this._backendHandlers[event].push(handler);
+	}
+
+	public fire<T extends FrontendToBackendEvent>(event: T, arg: ArgumentType<T, E>): Promise<ReturnType<T, E>> {
 		if (!this._frontendHandlers[event]) {
 			return;
 		}
 
-		return this._frontendHandlers[event](data);
+		return this._frontendHandlers[event](arg);
 	}
 }
