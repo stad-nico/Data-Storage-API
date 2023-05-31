@@ -54,4 +54,12 @@ export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header
 		this._onCollapsableArrowIconClick = handler;
 		this._collapsableArrowIcon.addEventListener("click", this._onCollapsableArrowIconClick);
 	}
+
+	public hideArrow(): void {
+		this._collapsableArrowIcon.getHTMLElement().classList.add("hidden");
+	}
+
+	public showArrow(): void {
+		this._collapsableArrowIcon.getHTMLElement().classList.remove("hidden");
+	}
 }

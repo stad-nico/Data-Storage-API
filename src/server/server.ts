@@ -1,19 +1,16 @@
 import { Response, Request } from "express";
 import { Socket } from "socket.io";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "../APIEvents";
-import { DirectoryContentType } from "../DirectoryContentType";
 import { isPathSubdirectory } from "./src/isPathSubdirectory";
 import { isAbsolutePathEqual } from "./src/isPathEqual";
 import { getDirectoryContents } from "./src/getDirectoryContents";
 import { doesPathExist } from "./src/doesPathExist";
-import { DirectoryContentElement } from "../DirectoryContentElement";
 import { Response as ServerResponse } from "../Response";
 import { createSaveLocation } from "./src/createSaveLocation";
 import { ArgumentType, ReturnType } from "src/APIBridge";
 import { EventMap } from "common/Socket";
-import { DirectoryContentFile } from "src/DirectoryContentFile";
-import { DirectoryContentFolder } from "src/DirectoryContentFolder";
 import { ServerError } from "src/ServerError";
+import { getDirectoryContentsRecursive } from "./src/getDirectoryContentsRecursive";
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -51,25 +48,68 @@ io.on("connection", (client: Socket) => {
 			const testPath = path.resolve(path.join(SAVE_LOCATION, data.path));
 			if (isPathSubdirectory(SAVE_LOCATION, testPath) || isAbsolutePathEqual(SAVE_LOCATION, testPath)) {
 				if (await doesPathExist(testPath)) {
-					let contents: (DirectoryContentFile | DirectoryContentFolder)[] = await getDirectoryContents(
-						SAVE_LOCATION,
-						testPath,
-						data.contentType
-					);
-					callback(ServerResponse.Ok, contents);
+					try {
+						let result = await getDirectoryContents(SAVE_LOCATION, testPath, data.contentType);
+						return callback(ServerResponse.Ok, result);
+					} catch (error) {
+						return callback(ServerResponse.Error, {
+							message: error,
+							status: ServerResponse.Error,
+							event: FrontendToBackendEvent.GetDirectoryContents,
+						});
+					}
 				}
 
-				callback(ServerResponse.Error, {
+				return callback(ServerResponse.Error, {
 					message: "Path does not exist",
 					status: ServerResponse.Error,
 					event: FrontendToBackendEvent.GetDirectoryContents,
 				});
 			}
 
-			callback(ServerResponse.Error, {
+			return callback(ServerResponse.Error, {
 				message: "Path is not valid",
 				status: ServerResponse.Error,
 				event: FrontendToBackendEvent.GetDirectoryContents,
+			});
+		}
+	);
+
+	client.on(
+		FrontendToBackendEvent.GetDirectoryContentsRecursive,
+		async (
+			data: ArgumentType<FrontendToBackendEvent.GetDirectoryContentsRecursive, EventMap>,
+			callback: (
+				response: ServerResponse,
+				data: ReturnType<FrontendToBackendEvent.GetDirectoryContentsRecursive, EventMap> | ServerError
+			) => void
+		) => {
+			const testPath = path.resolve(path.join(SAVE_LOCATION, data.path));
+			if (isPathSubdirectory(SAVE_LOCATION, testPath) || isAbsolutePathEqual(SAVE_LOCATION, testPath)) {
+				if (await doesPathExist(testPath)) {
+					try {
+						let result = await getDirectoryContentsRecursive(SAVE_LOCATION, testPath /*, data.contentType*/);
+						return callback(ServerResponse.Ok, result);
+					} catch (error) {
+						return callback(ServerResponse.Error, {
+							message: error,
+							status: ServerResponse.Error,
+							event: FrontendToBackendEvent.GetDirectoryContentsRecursive,
+						});
+					}
+				}
+
+				return callback(ServerResponse.Error, {
+					message: "Path does not exist",
+					status: ServerResponse.Error,
+					event: FrontendToBackendEvent.GetDirectoryContentsRecursive,
+				});
+			}
+
+			return callback(ServerResponse.Error, {
+				message: "Path is not valid",
+				status: ServerResponse.Error,
+				event: FrontendToBackendEvent.GetDirectoryContentsRecursive,
 			});
 		}
 	);

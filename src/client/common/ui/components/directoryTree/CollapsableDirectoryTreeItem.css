@@ -1,9 +1,5 @@
-.collapsable-directory-tree-item:hover > .collapsable-directory-tree-item-body {
+.collapsable-directory-tree-item-body:not(:has(.collapsable-directory-tree-item:hover)):hover {
 	background-color: var(--directory-tree-item-body-background-color);
-}
-
-.collapsable-directory-tree-item:hover > .collapsable-directory-tree-item-header {
-	background-color: var(--directory-tree-item-header-background-color);
 }
 
 .collapsable-directory-tree-item-header .name {
@@ -70,7 +66,7 @@
 	transform: rotate(-90deg);
 }
 
-.collapsable-directory-tree-item.collapsed .collapsable-directory-tree-item-body {
+.collapsable-directory-tree-item.collapsed > .collapsable-directory-tree-item-body {
 	height: 0;
 	overflow: hidden;
 }
@@ -83,4 +79,9 @@
 	margin-top: -20px;
 	border-bottom-left-radius: 15px;
 	border-bottom-right-radius: 15px;
+}
+
+.collapsable-directory-tree-item-header > .collapsable-arrow.hidden {
+	opacity: 0;
+	pointer-events: none;
 }

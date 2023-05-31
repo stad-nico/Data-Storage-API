@@ -8,7 +8,7 @@ import { APIBridge } from "src/APIBridge";
 export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 	public static readonly identifier: string = "CollapsableDirectoryTreeItem";
 
-	private _subItems: CollapsableDirectoryTreeItem[];
+	private _contents: CollapsableDirectoryTreeItem[];
 
 	private _headerComponent: CollapsableDirectoryTreeItemHeader;
 	private _bodyComponent: CollapsableDirectoryTreeItemBody;
@@ -16,7 +16,14 @@ export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 	private _name: string;
 	private _collapsed: boolean;
 
-	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, name: string, parent: Component, collapsed: boolean = true) {
+	constructor(
+		apiBridge: APIBridge,
+		eventEmitter: EventEmitter,
+		name: string,
+		parent: Component,
+		contents: CollapsableDirectoryTreeItem[] = [],
+		collapsed: boolean = true
+	) {
 		super(apiBridge, eventEmitter, "div", {
 			identifier: CollapsableDirectoryTreeItem.identifier,
 			classes: [CollapsableDirectoryTreeItem.identifier],
@@ -25,16 +32,44 @@ export class CollapsableDirectoryTreeItem extends HTMLElementComponent<"div"> {
 
 		this._name = name;
 		this._collapsed = collapsed;
+		this._contents = contents;
 
 		this._headerComponent = new CollapsableDirectoryTreeItemHeader(apiBridge, eventEmitter, this._name, this);
 		this._headerComponent.setOnCollapsableArrowIconClickHandler(this._onCollapsableArrowIconClick.bind(this));
 		this._bodyComponent = new CollapsableDirectoryTreeItemBody(apiBridge, eventEmitter, this);
+
+		if (this._contents.length === 0) {
+			this._headerComponent.hideArrow();
+		}
 
 		if (this._collapsed) {
 			this.collapse();
 		} else {
 			this.unfold();
 		}
+	}
+
+	public updateArrowStatus(): void {
+		if (this._contents.length === 0) {
+			this._headerComponent.hideArrow();
+		} else {
+			this._headerComponent.showArrow();
+		}
+	}
+
+	public setContents(contents: CollapsableDirectoryTreeItem[]): void {
+		this._contents = contents;
+		this.updateArrowStatus();
+	}
+
+	public clearContents(): void {
+		this._contents = [];
+		this.updateArrowStatus();
+	}
+
+	public addContent(content: CollapsableDirectoryTreeItem): void {
+		this._contents.push(content);
+		this.updateArrowStatus();
 	}
 
 	public getBodyComponent(): CollapsableDirectoryTreeItemBody {

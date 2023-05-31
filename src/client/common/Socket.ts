@@ -3,6 +3,7 @@ import { APIBridge, EventMapType } from "src/APIBridge";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "src/APIEvents";
 import { DirectoryContentFile } from "src/DirectoryContentFile";
 import { DirectoryContentFolder } from "src/DirectoryContentFolder";
+import { DirectoryContentFolderRecursive } from "src/DirectoryContentFolderRecursive";
 import { DirectoryContentType } from "src/DirectoryContentType";
 import { Response } from "src/Response";
 import { ServerError } from "src/ServerError";
@@ -19,6 +20,14 @@ export type EventMap = {
 			contentType: DirectoryContentType;
 		};
 		returnType: ReturnType<EventMap[FrontendToBackendEvent.GetDirectoryContents]["argType"]["contentType"]>;
+	};
+
+	[FrontendToBackendEvent.GetDirectoryContentsRecursive]: {
+		argType: {
+			path: string;
+			contentType: DirectoryContentType;
+		};
+		returnType: DirectoryContentFolderRecursive[];
 	};
 };
 

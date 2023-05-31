@@ -5,13 +5,13 @@ import { CollapsableDirectoryTreeItem } from "./CollapsableDirectoryTreeItem";
 import { APIBridge } from "src/APIBridge";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "src/APIEvents";
 import { DirectoryContentType } from "src/DirectoryContentType";
-import { DirectoryContentFolder } from "src/DirectoryContentFolder";
-import { DirectoryContentFile } from "src/DirectoryContentFile";
+import { DirectoryContentFolderRecursive } from "src/DirectoryContentFolderRecursive";
+import { Event } from "common/ui/Event";
 
 export class DirectoryTree extends HTMLElementComponent<"section"> {
 	public static readonly identifier: string = "DirectoryTree";
 
-	private readonly _rootTreeItem: CollapsableDirectoryTreeItem;
+	private _rootTreeItem: CollapsableDirectoryTreeItem;
 
 	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: Component) {
 		super(apiBridge, eventEmitter, "section", {
@@ -20,27 +20,40 @@ export class DirectoryTree extends HTMLElementComponent<"section"> {
 			parent: parent,
 		});
 
-		this._rootTreeItem = new CollapsableDirectoryTreeItem(apiBridge, eventEmitter, "File Server", this, false);
-
 		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () => {
+			this._rootTreeItem = new CollapsableDirectoryTreeItem(apiBridge, eventEmitter, "File Server", this, [], false);
 			this._apiBridge
-				.fire(FrontendToBackendEvent.GetDirectoryContents, {
+				.fire(FrontendToBackendEvent.GetDirectoryContentsRecursive, {
 					path: "/",
 					contentType: DirectoryContentType.Folder,
 				})
-				.then((data: DirectoryContentFolder[]) => this._displayElements(data));
+				.then((data: DirectoryContentFolderRecursive[]) => this._displayElements(data));
 		});
 	}
 
-	private _displayElements(data: DirectoryContentFolder[]) {
+	private _displayElements(data: DirectoryContentFolderRecursive[]) {
 		for (let element of data) {
 			let folder: CollapsableDirectoryTreeItem = new CollapsableDirectoryTreeItem(
 				this._apiBridge,
 				this._eventEmitter,
 				element.name,
 				this._rootTreeItem.getBodyComponent(),
-				true
+				[]
 			);
+
+			this._rootTreeItem.addContent(folder);
+
+			for (let contentData of element.contents.filter(x => x.type === DirectoryContentType.Folder)) {
+				let content: CollapsableDirectoryTreeItem = new CollapsableDirectoryTreeItem(
+					this._apiBridge,
+					this._eventEmitter,
+					contentData.name,
+					folder.getBodyComponent(),
+					[]
+				);
+
+				folder.addContent(content);
+			}
 		}
 
 		this.build();
