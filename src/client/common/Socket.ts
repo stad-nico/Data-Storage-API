@@ -1,8 +1,7 @@
 import { io, Socket as IOSocket } from "socket.io-client";
-import { APIBridge, EventMapType } from "src/APIBridge";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { APIBridge, ConnectionStatus, EventMapType } from "src/APIBridge";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "src/APIEvents";
-import { DirectoryContentFile } from "src/DirectoryContentFile";
-import { DirectoryContentFolder } from "src/DirectoryContentFolder";
 import { DirectoryContentFolderRecursive } from "src/DirectoryContentFolderRecursive";
 import { DirectoryContentType } from "src/DirectoryContentType";
 import { Response } from "src/Response";
@@ -29,22 +28,22 @@ export type EventMap = {
 		};
 		returnType: DirectoryContentFolderRecursive[];
 	};
+
+	[FrontendToBackendEvent.DoesPathExist]: {
+		argType: string;
+		returnType: boolean;
+	};
+
+	[FrontendToBackendEvent.CheckLatency]: {
+		returnType: void;
+	};
 };
 
-type R<T extends DirectoryContentType> = ReturnType<T>;
-
 export class Socket extends APIBridge<EventMap> {
-	private readonly _socket: IOSocket;
+	private _socket!: IOSocket;
 
 	constructor() {
 		super();
-
-		this._socket = this._connectToServer();
-		this._bindEvents();
-	}
-
-	private _connectToServer(): IOSocket {
-		return io();
 	}
 
 	private _bindEvents(): void {
@@ -65,5 +64,28 @@ export class Socket extends APIBridge<EventMap> {
 				});
 			});
 		}
+	}
+
+	public connect(): void {
+		this._socket = io();
+		this._bindEvents();
+	}
+
+	public async checkConnection(): Promise<ConnectionStatus> {
+		const start = Date.now();
+
+		return this.fire(FrontendToBackendEvent.CheckLatency, 0)
+			.then(() => {
+				return {
+					status: Response.Ok,
+					latency: Date.now() - start,
+				};
+			})
+			.catch(() => {
+				return {
+					status: Response.Error,
+					latency: Infinity,
+				};
+			});
 	}
 }

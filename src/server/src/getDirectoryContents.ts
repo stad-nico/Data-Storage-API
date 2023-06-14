@@ -43,6 +43,7 @@ export async function getDirectoryContents<T extends DirectoryContentType>(
 		}
 
 		let relativePath = path.relative(baseDirectoryAbsolutePath, absoluteDirectoryPath) || "/";
+		relativePath = relativePath.endsWith("/") ? relativePath : relativePath + "/";
 
 		if (isDirectory) {
 			let size = await getDirectorySize(contentPath);

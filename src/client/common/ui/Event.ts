@@ -8,4 +8,5 @@ export enum Event {
 	DirectoryContentColumnHeaderIndexDecreased = "directory-content-column-header-index-decreased",
 	DirectoryContentColumnHeaderIndexSet = "directory-content-column-header-index-set",
 	DirectoryContentFolderElementOpened = "directory-content-folder-element-opened",
+	TreeFolderItemOpened = "tree-folder-item-opened",
 }

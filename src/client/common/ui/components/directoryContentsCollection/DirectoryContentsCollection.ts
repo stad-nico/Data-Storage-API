@@ -72,7 +72,7 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 
 		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () => {
 			this._apiBridge
-				.fire(FrontendToBackendEvent.GetDirectoryContents, { path: "/", contentType: DirectoryContentType.FolderOrFile })
+				.fire(FrontendToBackendEvent.GetDirectoryContents, { path: application.currentPath, contentType: DirectoryContentType.FolderOrFile })
 				.then(data => this._displayElements(data))
 				.catch(error => console.error(error));
 		});
@@ -161,8 +161,15 @@ export class DirectoryContentsCollection extends HTMLElementComponent<"section">
 		this.build();
 	}
 
-	private _openFolder(component: DirectoryContentFolder): void {
-		let relativePath = [component.relativePath === "/" ? "" : component.relativePath, component.name].join("/");
+	private _openFolder(componentOrRelativePath: DirectoryContentFolder | string): void {
+		if (componentOrRelativePath instanceof DirectoryContentFolder) {
+			var relativePath = [
+				componentOrRelativePath.relativePath === "/" ? "" : componentOrRelativePath.relativePath,
+				componentOrRelativePath.name,
+			].join("/");
+		} else {
+			var relativePath = componentOrRelativePath;
+		}
 
 		this._apiBridge
 			.fire(FrontendToBackendEvent.GetDirectoryContents, { path: relativePath, contentType: DirectoryContentType.FolderOrFile })

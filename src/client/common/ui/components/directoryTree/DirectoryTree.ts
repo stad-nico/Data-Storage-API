@@ -13,6 +13,8 @@ export class DirectoryTree extends HTMLElementComponent<"section"> {
 
 	private _rootTreeItem: CollapsableDirectoryTreeItem;
 
+	private _selectedItem: CollapsableDirectoryTreeItem;
+
 	constructor(apiBridge: APIBridge, eventEmitter: EventEmitter, parent: Component) {
 		super(apiBridge, eventEmitter, "section", {
 			identifier: DirectoryTree.identifier,
@@ -21,41 +23,19 @@ export class DirectoryTree extends HTMLElementComponent<"section"> {
 		});
 
 		this._apiBridge.on(BackendToFrontendEvent.ConnectedToServer, () => {
-			this._rootTreeItem = new CollapsableDirectoryTreeItem(apiBridge, eventEmitter, "File Server", this, [], false);
-			this._apiBridge
-				.fire(FrontendToBackendEvent.GetDirectoryContentsRecursive, {
-					path: "/",
-					contentType: DirectoryContentType.Folder,
-				})
-				.then((data: DirectoryContentFolderRecursive[]) => this._displayElements(data));
+			this._rootTreeItem = new CollapsableDirectoryTreeItem(apiBridge, eventEmitter, "File Server", "/", this, [], false);
+			this.build();
 		});
+
+		this._eventEmitter.on(Event.TreeFolderItemOpened, data => this._selectItem(data.data));
 	}
 
-	private _displayElements(data: DirectoryContentFolderRecursive[]) {
-		for (let element of data) {
-			let folder: CollapsableDirectoryTreeItem = new CollapsableDirectoryTreeItem(
-				this._apiBridge,
-				this._eventEmitter,
-				element.name,
-				this._rootTreeItem.getBodyComponent(),
-				[]
-			);
-
-			this._rootTreeItem.addContent(folder);
-
-			for (let contentData of element.contents.filter(x => x.type === DirectoryContentType.Folder)) {
-				let content: CollapsableDirectoryTreeItem = new CollapsableDirectoryTreeItem(
-					this._apiBridge,
-					this._eventEmitter,
-					contentData.name,
-					folder.getBodyComponent(),
-					[]
-				);
-
-				folder.addContent(content);
-			}
+	private _selectItem(component: CollapsableDirectoryTreeItem): void {
+		if (this._selectedItem) {
+			this._selectedItem.unselect();
 		}
 
-		this.build();
+		component.select();
+		this._selectedItem = component;
 	}
 }

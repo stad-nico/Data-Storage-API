@@ -30,9 +30,15 @@ const SAVE_LOCATION = process.env.SAVE_LOCATION;
 
 app.use(express.static(path.join(__dirname, "../../dev")));
 
-app.get("*", (req: Request, res: Response) => {
+app.get("*", async (req: Request, res: Response) => {
 	//! not needed, using express.static serves index.html automatically
-	// res.sendFile("index.html", { root: path.resolve(path.join(__dirname, "../../dev")) });
+	let fullPath = path.resolve(path.join(SAVE_LOCATION, req.path));
+
+	if (await doesPathExist(fullPath)) {
+		res.sendFile("index.html", { root: path.resolve(path.join(__dirname, "../../dev")) });
+	} else {
+		res.status(404).end();
+	}
 });
 
 io.on("connection", (client: Socket) => {
@@ -111,6 +117,43 @@ io.on("connection", (client: Socket) => {
 				status: ServerResponse.Error,
 				event: FrontendToBackendEvent.GetDirectoryContentsRecursive,
 			});
+		}
+	);
+
+	client.on(
+		FrontendToBackendEvent.DoesPathExist,
+		async (
+			data: ArgumentType<FrontendToBackendEvent.DoesPathExist, EventMap>,
+			callback: (response: ServerResponse, data: ReturnType<FrontendToBackendEvent.DoesPathExist, EventMap> | ServerError) => void
+		) => {
+			const testPath = path.resolve(path.join(SAVE_LOCATION, data));
+			if (isPathSubdirectory(SAVE_LOCATION, testPath) || isAbsolutePathEqual(SAVE_LOCATION, testPath)) {
+				if (await doesPathExist(testPath)) {
+					return callback(ServerResponse.Ok, true);
+				}
+
+				return callback(ServerResponse.Error, {
+					message: "Path does not exist",
+					status: ServerResponse.Error,
+					event: FrontendToBackendEvent.GetDirectoryContentsRecursive,
+				});
+			}
+
+			return callback(ServerResponse.Error, {
+				message: "Path is not valid",
+				status: ServerResponse.Error,
+				event: FrontendToBackendEvent.GetDirectoryContentsRecursive,
+			});
+		}
+	);
+
+	client.on(
+		FrontendToBackendEvent.CheckLatency,
+		async (
+			data: ArgumentType<FrontendToBackendEvent.CheckLatency, EventMap>,
+			callback: (response: ServerResponse, data: ReturnType<FrontendToBackendEvent.CheckLatency, EventMap> | ServerError) => void
+		) => {
+			callback(ServerResponse.Ok);
 		}
 	);
 });

@@ -1,5 +1,6 @@
 import { EventMap } from "common/Socket";
 import { BackendToFrontendEvent, FrontendToBackendEvent } from "src/APIEvents";
+import { Response } from "src/Response";
 
 export type EventMapType = Record<BackendToFrontendEvent | FrontendToBackendEvent, Options>;
 
@@ -18,6 +19,11 @@ type PromiseHandler<T extends FrontendToBackendEvent | BackendToFrontendEvent, E
 
 export type ReturnType<T extends FrontendToBackendEvent | BackendToFrontendEvent, E extends EventMapType> = E[T]["returnType"];
 export type ArgumentType<T extends FrontendToBackendEvent | BackendToFrontendEvent, E extends EventMapType> = E[T]["argType"];
+
+export type ConnectionStatus = {
+	latency: number;
+	status: Response;
+};
 
 export abstract class APIBridge<E extends EventMapType = EventMap> {
 	private _backendHandlers: Record<string, Handler<BackendToFrontendEvent, E>[]>;
@@ -43,6 +49,9 @@ export abstract class APIBridge<E extends EventMapType = EventMap> {
 			handler(arg);
 		}
 	}
+
+	public abstract checkConnection(): Promise<ConnectionStatus>;
+	public abstract connect(): unknown;
 
 	public on<T extends BackendToFrontendEvent>(event: T, handler: Handler<T, E>): void {
 		if (!this._backendHandlers[event]) {

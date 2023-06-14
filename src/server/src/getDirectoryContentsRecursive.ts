@@ -14,6 +14,7 @@ export async function getDirectoryContentsRecursive(
 	for (let element of contents) {
 		if (element instanceof DirectoryContentFolder) {
 			let recursiveFolderElement = new DirectoryContentFolderRecursive(element.name, element.size, element.lastEdited, element.relativePath);
+			// console.log(path.join(absoluteDirectoryPath, element.name));
 			let contents = await getDirectoryContents(
 				baseDirectoryAbsolutePath,
 				path.join(absoluteDirectoryPath, element.name),

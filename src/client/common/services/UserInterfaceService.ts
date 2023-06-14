@@ -33,12 +33,12 @@ export class UserInterfaceService {
 	 *
 	 * @param layout The layout
 	 */
-	constructor(layout: Layout, theme: Theme, api: APIBridge) {
+	constructor(layout: Layout, theme: Theme, api: APIBridge, eventEmitter: EventEmitter) {
 		this._layout = layout;
 		this._theme = theme;
 		this._apiBridge = api;
 
-		this._eventEmitter = new EventEmitter();
+		this._eventEmitter = eventEmitter;
 		this._domComponent = new DOMComponent(api, this._eventEmitter);
 
 		this._buildLayout();

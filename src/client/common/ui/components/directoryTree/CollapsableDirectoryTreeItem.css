@@ -2,6 +2,10 @@
 	border-radius: 15px;
 }
 
+.collapsable-directory-tree-item.selected > .collapsable-directory-tree-item-header {
+	background-color: var(--directory-tree-item-header-background-color);
+}
+
 .collapsable-directory-tree-item-header:hover + .collapsable-directory-tree-item-body {
 	background-color: var(--directory-tree-item-body-background-color);
 }
@@ -80,7 +84,7 @@
 }
 
 .collapsable-directory-tree-item:not(.collapsed) > .collapsable-directory-tree-item-body {
-	padding: 21px 0 0 20px;
+	padding: 20px 0 0 20px;
 
 	margin-top: -20px;
 	border-bottom-left-radius: 15px;
@@ -90,4 +94,8 @@
 .collapsable-directory-tree-item-header > .collapsable-arrow.hidden {
 	opacity: 0;
 	pointer-events: none;
+}
+
+.collapsable-directory-tree-item-body .collapsable-directory-tree-item {
+	margin-top: 1px;
 }

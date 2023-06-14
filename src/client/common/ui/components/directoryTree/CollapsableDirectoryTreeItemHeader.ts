@@ -9,7 +9,6 @@ import { Draggable } from "../../Draggable";
 import { CollapsableArrowIcon24 } from "../icons/24/CollapsableArrowIcon24";
 import { DropTarget } from "src/client/common/ui/DropTarget";
 import { APIBridge } from "src/APIBridge";
-import { Event } from "common/ui/Event";
 
 export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header"> {
 	public static readonly identifier: string = "CollapsableDirectoryTreeItemHeader";
@@ -52,7 +51,7 @@ export class CollapsableDirectoryTreeItemHeader extends RoundedContainer<"header
 	public setOnCollapsableArrowIconClickHandler(handler: (...args: any[]) => void) {
 		this._collapsableArrowIcon.removeEventListener("click", this._onCollapsableArrowIconClick);
 		this._onCollapsableArrowIconClick = handler;
-		this._collapsableArrowIcon.addEventListener("click", this._onCollapsableArrowIconClick);
+		this._collapsableArrowIcon.addEventListener("click", this._onCollapsableArrowIconClick.bind(this));
 	}
 
 	public hideArrow(): void {
